@@ -16,42 +16,56 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String email;
-
-    @Column(name = "google_id")
+    @Column(unique = true, name = "google_id")
     private String googleId;
 
-    @ColumnDefault("'unknown'")
-    @Column(nullable = false)
-    private String username;
+    @Column(unique = true, nullable = false)
+    private String email;
 
     @Column
     private String nickname;
+
+    @Column(nullable = false, length = 32)
+    @ColumnDefault("'TRIAL_USER'")
+    private String role;
+
+    @Column(name = "free_trial_started_at")
+    private LocalDateTime freeTrialStartedAt;
+
+    @Column(name = "free_trial_expires_at")
+    private LocalDateTime freeTrialExpiresAt;
+
+    @Column(name = "subscription_started_at")
+    private LocalDateTime subscriptionStartedAt;
+
+    @Column(name = "subscription_expires_at")
+    private LocalDateTime subscriptionExpiresAt;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
     @Column
     private String password;
 
     @Column(nullable = false)
-    private String role;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-    // 결제 및 무료 체험 관리 컬럼 추가
-    private LocalDateTime freeTrialStartedAt;
-    private LocalDateTime subscriptionStartedAt;
+    @ColumnDefault("'unknown'")
+    private String username;
 
     @Builder
-    public User(String googleId, String username, String nickname, String password, String email, String role) {
+    public User(String googleId, String email, String username, String nickname, String password, String role) {
         this.googleId = googleId;
+        this.email = email;
         this.username = username;
         this.nickname = nickname;
         this.password = password;
-        this.email = email;
-        this.role = role;
+        this.role = role != null ? role : "TRIAL_USER";
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.freeTrialStartedAt = LocalDateTime.now();
+        this.freeTrialExpiresAt = LocalDateTime.now().plusDays(7);
     }
 
     public void updateNickname(String nickname) {
@@ -64,53 +78,36 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void updateSubscription(LocalDateTime startedAt, LocalDateTime expiresAt) {
+        this.subscriptionStartedAt = startedAt;
+        this.subscriptionExpiresAt = expiresAt;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+        if (this.updatedAt == null) {
+            this.updatedAt = LocalDateTime.now();
+        }
+        if (this.freeTrialStartedAt == null) {
+            this.freeTrialStartedAt = LocalDateTime.now();
+        }
+        if (this.freeTrialExpiresAt == null) {
+            this.freeTrialExpiresAt = LocalDateTime.now().plusDays(7);
+        }
+        if (this.role == null) {
+            this.role = "TRIAL_USER";
+        }
+        if (this.username == null) {
+            this.username = "unknown";
+        }
+    }
+
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-    
-    // Getters for Lombok compatibility
-    public Long getId() {
-        return id;
-    }
-    
-    public String getEmail() {
-        return email;
-    }
-    
-    public String getGoogleId() {
-        return googleId;
-    }
-    
-    public String getUsername() {
-        return username;
-    }
-    
-    public String getNickname() {
-        return nickname;
-    }
-    
-    public String getPassword() {
-        return password;
-    }
-    
-    public String getRole() {
-        return role;
-    }
-    
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-    
-    public LocalDateTime getFreeTrialStartedAt() {
-        return freeTrialStartedAt;
-    }
-    
-    public LocalDateTime getSubscriptionStartedAt() {
-        return subscriptionStartedAt;
     }
 }

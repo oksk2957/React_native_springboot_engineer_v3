@@ -1,6 +1,6 @@
 -- DROP SCHEMA public;
 
-CREATE SCHEMA public AUTHORIZATION pg_database_owner;
+-- CREATE SCHEMA public AUTHORIZATION pg_database_owner;
 
 -- DROP SEQUENCE problem_id_seq;
 

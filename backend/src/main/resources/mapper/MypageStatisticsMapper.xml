@@ -5,53 +5,74 @@
 <mapper namespace="com.example.informationexam.mapper.MypageStatisticsMapper">
 
     <select id="selectUserAnswerOverall" resultType="map">
-        SELECT COUNT(*)::bigint                                   AS attempted,
-               COALESCE(SUM(CASE WHEN is_correct THEN 1 ELSE 0 END), 0)::bigint AS correct
+        SELECT COUNT(*) AS attempted,
+               COALESCE(SUM(CASE WHEN is_correct THEN 1 ELSE 0 END), 0) AS correct
         FROM user_answer
         WHERE user_id = #{userId}
     </select>
 
     <select id="selectBranchStats" resultType="com.example.informationexam.dto.statistics.MypageBranchStatRow">
-        SELECT ua.problem_type AS problemType,
-               COUNT(*)::bigint                                   AS attempted,
-               COALESCE(SUM(CASE WHEN ua.is_correct THEN 1 ELSE 0 END), 0)::bigint AS correct
+        SELECT ua.item_type AS problemType,
+               COUNT(*) AS attempted,
+               COALESCE(SUM(CASE WHEN ua.is_correct THEN 1 ELSE 0 END), 0) AS correct
         FROM user_answer ua
         WHERE ua.user_id = #{userId}
-        GROUP BY ua.problem_type
+        GROUP BY ua.item_type
     </select>
 
     <select id="selectObjectiveCategoryStats" resultType="com.example.informationexam.dto.statistics.ObjectiveCategoryStatRow">
         SELECT TRIM(s.name) AS category,
-               COUNT(*)::bigint                                   AS total,
-               COALESCE(SUM(CASE WHEN ua.is_correct THEN 1 ELSE 0 END), 0)::bigint AS correct
+               COUNT(*) AS total,
+               COALESCE(SUM(CASE WHEN ua.is_correct THEN 1 ELSE 0 END), 0) AS correct
         FROM user_answer ua
-                 JOIN problem p ON ua.problem_type = 'OBJECTIVE' AND ua.reference_id = p.id
-                 JOIN subject s ON p.subject_id = s.id
+        INNER JOIN problem p ON ua.item_type = 'OBJECTIVE' AND ua.reference_id = p.id
+        INNER JOIN subject s ON p.subject_id = s.id
         WHERE ua.user_id = #{userId}
         GROUP BY TRIM(s.name)
     </select>
 
     <select id="selectContentTotals" resultType="com.example.informationexam.dto.statistics.ContentTotalsRow">
-        SELECT (SELECT COUNT(*) FROM problem)                        AS objective_count,
-               (SELECT COUNT(*) FROM subjective_problems)           AS subjective_count,
+        SELECT (SELECT COUNT(*) FROM problem) AS objective_count,
+               (SELECT COUNT(*) FROM subjective_problems) AS subjective_count,
                (SELECT COUNT(*) FROM programming_language_problems) AS programming_count
     </select>
 
     <select id="selectWrongAnswers" resultType="com.example.informationexam.dto.statistics.WrongAnswerListRow">
-        SELECT ua.id                     AS id,
-               ua.problem_type           AS problemType,
-               ua.reference_id           AS referenceId,
-               COALESCE(p.question, sp.question, plp.question) AS question,
-               COALESCE(p.answer, sp.answer, plp.answer)       AS correctAnswer,
-               ua.submitted_answer       AS submittedAnswer,
-               ua.submitted_at           AS submittedAt
+        SELECT ua.id,
+               ua.item_type AS problemType,
+               ua.reference_id AS referenceId,
+               p.question,
+               p.answer AS correctAnswer,
+               ua.submitted_answer AS submittedAnswer,
+               ua.submitted_at AS submittedAt
         FROM user_answer ua
-                 LEFT JOIN problem p ON ua.problem_type = 'OBJECTIVE' AND ua.reference_id = p.id
-                 LEFT JOIN subjective_problems sp ON ua.problem_type = 'SUBJECTIVE' AND ua.reference_id = sp.id
-                 LEFT JOIN programming_language_problems plp
-                           ON ua.problem_type = 'PROGRAMMING_LANGUAGE' AND ua.reference_id = plp.id
+        INNER JOIN problem p ON ua.item_type = 'OBJECTIVE' AND ua.reference_id = p.id
         WHERE ua.user_id = #{userId}
           AND ua.is_correct = false
-        ORDER BY ua.submitted_at DESC
+        UNION ALL
+        SELECT ua.id,
+               ua.item_type AS problemType,
+               ua.reference_id AS referenceId,
+               sp.question,
+               sp.answer AS correctAnswer,
+               ua.submitted_answer AS submittedAnswer,
+               ua.submitted_at AS submittedAt
+        FROM user_answer ua
+        INNER JOIN subjective_problems sp ON ua.item_type = 'SUBJECTIVE' AND ua.reference_id = sp.id
+        WHERE ua.user_id = #{userId}
+          AND ua.is_correct = false
+        UNION ALL
+        SELECT ua.id,
+               ua.item_type AS problemType,
+               ua.reference_id AS referenceId,
+               plp.question,
+               plp.answer AS correctAnswer,
+               ua.submitted_answer AS submittedAnswer,
+               ua.submitted_at AS submittedAt
+        FROM user_answer ua
+        INNER JOIN programming_language_problems plp ON ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.reference_id = plp.id
+        WHERE ua.user_id = #{userId}
+          AND ua.is_correct = false
+        ORDER BY submitted_at DESC
     </select>
 </mapper>
