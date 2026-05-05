@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 콘솔: 기본 Spring Boot 패턴 + 쿼리/바인딩 로거만 상세화 -->
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- MyBatis: statement id, SQL, 파라미터 (Slf4jImpl 사용 시) -->
+    <logger name="com.example.informationexam.mapper" level="DEBUG"/>
+
+    <!-- JPA: 실행 SQL -->
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <!-- JPA: PreparedStatement 바인딩 값 -->
+    <logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
+
+    <!-- HikariCP: 커넥션 풀 디버그 로그 -->
+    <logger name="com.zaxxer.hikari" level="DEBUG"/>
+    <!-- PostgreSQL 드라이버 로그 -->
+    <logger name="org.postgresql" level="DEBUG"/>
+</configuration>

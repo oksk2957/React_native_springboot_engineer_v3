@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:10.5
+    container_name: information-exam-mariadb
+    ports:
+      - "3333:3306" # 호스트의 3333 포트를 컨테이너의 3306 포트로 연결
+    environment:
+      MARIADB_DATABASE: EmartDB
+      MARIADB_ROOT_PASSWORD: 1234
+      MARIADB_USER: EmartDB
+      MARIADB_PASSWORD: 1234
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mariadb_data:

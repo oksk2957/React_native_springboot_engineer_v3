@@ -1,0 +1,6 @@
+package com.example.informationexam.domain.problem;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProgrammingLanguageProblemRepository extends JpaRepository<ProgrammingLanguageProblem, Long> {
+}

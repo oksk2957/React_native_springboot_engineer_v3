@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "InformationExamApp",
+    "slug": "oksky44",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "scheme": "com.oksky.myapp",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "sky44"
+    },
+    "android": {
+      "package": "com.oksky.myapp",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "com.oksky.myapp"
+            }
+          ],
+          "category": ["BROWSER", "DEFAULT"]
+        },
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.supabase.co",
+              "path": "/auth/v1/callback"
+            }
+          ],
+          "category": ["BROWSER", "DEFAULT"]
+        }
+      ]
+    },
+    "plugins": [
+      [
+        "expo-web-browser"
+      ]
+    ]
+  }
+}

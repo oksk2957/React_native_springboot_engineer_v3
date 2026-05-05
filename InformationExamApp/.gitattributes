@@ -1,0 +1,59 @@
+# .gitattributes - GitHub 언어 통계 및 diff 표시 설정
+
+# ==========================================
+# linguist-generated: 생성된 파일로 표시 (diff에서 숨김)
+# ==========================================
+
+# Minified 파일은 생성된 것으로 표시
+*.min.js linguist-generated
+*.min.css linguist-generated
+
+# Lock 文件亦視為生成文件
+package-lock.json linguist-generated
+yarn.lock linguist-generated
+pnpm-lock.yaml linguist-generated
+
+# Build 산출물은 생성된 것으로 표시
+build/** linguist-generated
+dist/** linguist-generated
+*.ts build.ts linguist-generated=true
+
+# ==========================================
+# linguist-documentation: 문서 파일 제외
+# ==========================================
+
+# README 및 CHANGELOG는 언어로 계산되지 않음
+README.md linguist-documentation
+CHANGELOG.md linguist-documentation
+LICENSE linguist-documentation
+
+# ==========================================
+# linguist-vendored: 타사 코드 표시
+# ==========================================
+
+# node_modules는 벤더 코드로 간주
+node_modules/** linguist-vendored
+
+# ==========================================
+# [-linguist-generated] 표시: 생성된 파일도 diff에 표시
+# ==========================================
+
+# 특정 생성된 파일을 diff에 표시하려면 -linguist-generated 사용
+# 예: bootstrap.min.css -linguist-generated
+
+# ==========================================
+# 결함: diff에서 특정 파일 제외
+# ==========================================
+
+#_BINARY 파일은 diff에서 제외
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.mp3 binary
+*.mp4 binary
+*.zip binary
+*.apk binary
+*.aab binary

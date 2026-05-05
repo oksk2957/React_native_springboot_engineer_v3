@@ -1,0 +1,20 @@
+# Gradle
+backend/.gradle/
+InformationExamApp/android/.gradle/
+InformationExamApp/node_modules/@react-native/gradle-plugin/.gradle/
+InformationExamApp/node_modules/expo-modules-autolinking/android/expo-gradle-plugin/.gradle/
+InformationExamApp/node_modules/expo-modules-autolinking/android/expo-gradle-plugin/*/build/
+
+# Build outputs
+backend/build/
+backend/bin/
+InformationExamApp/android/build/
+InformationExamApp/node_modules/*/android/build/
+InformationExamApp/node_modules/*/android/.project
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.aider*
+node_modules

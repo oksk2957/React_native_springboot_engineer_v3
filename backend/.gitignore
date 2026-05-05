@@ -1,0 +1,40 @@
+# --- 공통 프로젝트 설정 ---
+   .vscode/
+   .idea/
+   *.log
+   .DS_Store
+
+   # --- 백엔드 (Java/Gradle/Spring/STS/IntelliJ) ---
+   .gradle/
+   build/
+   bin/
+   out/
+   .apt_generated
+   .classpath
+   .factorypath
+   .project
+   .settings
+   .springBeans
+   .sts4-cache
+   .metadata
+   /nbproject/private/
+   /nbbuild/
+   /dist/
+   /nbdist/
+   /.nb-gradle/
+   /src/main/generated/
+
+   # ! 기호가 붙은 예외 규칙은 그대로 유지 (필요한 경우)
+   !gradle/wrapper/gradle-wrapper.jar
+   !**/src/main/**/build/
+   !**/src/test/**/build/
+
+   # --- 안드로이드 / React Native ---
+   node_modules/
+   .cxx/
+   .gradle/
+   .tmp/
+   .dart_tool/
+   .expo/
+   *.iml
+   .local.properties

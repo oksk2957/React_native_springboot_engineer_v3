@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.informationexam.mapper.ProblemQueryMapper">
+
+    <!-- 공통 컬럼 정의 (alias로 DTO 필드와 매핑) -->
+    <sql id="problemColumns">
+        p.id AS id,
+        p.question AS question,
+        p.answer AS correct_answer,
+        p.explanation AS explanation,
+        COALESCE(s.name, '') AS category,
+        p.type AS type,
+        p.difficulty AS difficulty,
+        p.option1 AS option1,
+        p.option2 AS option2,
+        p.option3 AS option3,
+        p.option4 AS option4,
+        p.option5 AS option5,
+        p.is_ai_generated AS is_ai_generated,
+        CASE WHEN p.type = 'PROGRAMMING_LANGUAGE' THEN s.name ELSE NULL END AS programming_language
+    </sql>
+
+    <!-- 단건 조회 -->
+    <select id="selectById" resultType="map">
+        SELECT * FROM (
+            SELECT <include refid="problemColumns"/>
+            FROM problem p
+            INNER JOIN subject s ON p.subject_id = s.id
+            WHERE p.id = #{id}
+            UNION ALL
+            SELECT 
+                id,
+                question,
+                answer AS correct_answer,
+                explanation,
+                prog_language AS category,
+                'PROGRAMMING_LANGUAGE' AS type,
+                difficulty,
+                NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5,
+                is_ai_generated,
+                prog_language AS programming_language
+            FROM programming_language_problems
+            WHERE id = #{id}
+        ) t
+        LIMIT 1
+    </select>
+
+    <!-- 랜덤 문제 조회 -->
+    <select id="selectRandomProblems" resultType="map">
+        SELECT * FROM (
+            SELECT <include refid="problemColumns"/>
+            FROM problem p
+            INNER JOIN subject s ON p.subject_id = s.id
+            UNION ALL
+            SELECT 
+                id, question, answer AS correct_answer, explanation,
+                prog_language AS category, 'PROGRAMMING_LANGUAGE' AS type, difficulty,
+                NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5,
+                is_ai_generated, prog_language AS programming_language
+            FROM programming_language_problems
+        ) t
+        ORDER BY random()
+        LIMIT #{limit}
+    </select>
+
+    <!-- 유형별 랜덤 조회 -->
+    <select id="selectRandomProblemsByType" resultType="map">
+        <choose>
+            <when test="type == 'PROGRAMMING_LANGUAGE'">
+                SELECT 
+                    id, question, answer AS correct_answer, explanation,
+                    prog_language AS category, 'PROGRAMMING_LANGUAGE' AS type, difficulty,
+                    NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5,
+                    is_ai_generated, prog_language AS programming_language
+                FROM programming_language_problems
+                ORDER BY random()
+                LIMIT #{limit}
+            </when>
+            <otherwise>
+                SELECT <include refid="problemColumns"/>
+                FROM problem p
+                INNER JOIN subject s ON p.subject_id = s.id
+                WHERE p.type = #{type}
+                ORDER BY random()
+                LIMIT #{limit}
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 이론 문제 조회 -->
+    <select id="selectTheoryProblemsByCategory" resultType="map">
+        <choose>
+            <when test="category == 'C언어' or category == 'java' or category == 'python' or category == 'Java' or category == 'Python' or category == 'c언어' or category == 'C' or category == 'c'">
+                SELECT 
+                    id, question, answer AS correct_answer, explanation,
+                    prog_language AS category, 'PROGRAMMING_LANGUAGE' AS type, difficulty,
+                    NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5,
+                    is_ai_generated, prog_language AS programming_language
+                FROM programming_language_problems
+                WHERE LOWER(prog_language) = LOWER(#{category})
+                ORDER BY id ASC
+            </when>
+            <otherwise>
+                SELECT <include refid="problemColumns"/>
+                FROM problem p
+                INNER JOIN subject s ON p.subject_id = s.id
+                WHERE TRIM(COALESCE(s.name, '')) = TRIM(#{category})
+                ORDER BY p.id ASC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 과목별 1건 랜덤 조회 -->
+    <select id="selectOneRandomProblemPerSubject" resultType="map">
+        <choose>
+            <when test="type == 'PROGRAMMING_LANGUAGE'">
+                WITH subject_random AS (
+                    SELECT DISTINCT ON (prog_language) id, random() AS rnd
+                    FROM programming_language_problems
+                    ORDER BY prog_language, random()
+                )
+                SELECT 
+                    p.id, p.question, p.answer AS correct_answer, p.explanation,
+                    p.prog_language AS category, 'PROGRAMMING_LANGUAGE' AS type, p.difficulty,
+                    NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5,
+                    p.is_ai_generated, p.prog_language AS programming_language
+                FROM programming_language_problems p
+                INNER JOIN subject_random sr ON p.id = sr.id
+                ORDER BY sr.rnd, random()
+            </when>
+            <otherwise>
+                WITH subject_random AS (
+                    SELECT DISTINCT ON (p.subject_id) p.id AS id, random() AS rnd
+                    FROM problem p
+                    WHERE p.type = #{type}
+                    ORDER BY p.subject_id, random()
+                )
+                SELECT <include refid="problemColumns"/>
+                FROM problem p
+                INNER JOIN subject_random sr ON p.id = sr.id
+                INNER JOIN subject s ON p.subject_id = s.id
+                ORDER BY sr.rnd, random()
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 답변 검증 (ANSI SQL View 기반) -->
+    <select id="validateAnswerProc" resultType="map">
+        SELECT 
+            UPPER(TRIM(correct_answer)) = UPPER(TRIM(#{p_submitted_answer})) AS is_correct,
+            explanation,
+            correct_answer
+        FROM v_validate_answer
+        WHERE problem_id = #{p_problem_id} AND problem_type = #{p_problem_type}
+    </select>
+
+    <!-- 사용자 통계 -->
+    <select id="getUserStatisticsProc" resultType="map">
+        SELECT 
+            total_problems,
+            solved_problems,
+            correct_count,
+            incorrect_count AS wrong_count
+        FROM v_user_statistics
+        WHERE user_id = #{p_user_id}
+    </select>
+
+    <!-- 기존 ID 조회 쿼리 -->
+    <select id="selectTheoryProblemIdsByCategory" resultType="java.lang.Long">
+        <choose>
+            <when test="category == 'C언어' or category == 'java' or category == 'python' or category == 'Java' or category == 'Python' or category == 'c언어' or category == 'C' or category == 'c'">
+                SELECT id
+                FROM programming_language_problems
+                WHERE LOWER(prog_language) = LOWER(#{category})
+                ORDER BY id ASC
+            </when>
+            <otherwise>
+                SELECT p.id
+                FROM problem p
+                INNER JOIN subject s ON p.subject_id = s.id
+                WHERE TRIM(COALESCE(s.name, '')) = TRIM(#{category})
+                ORDER BY p.id ASC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectStudyIdsByDifficultyCategory" resultType="java.lang.Long">
+        <choose>
+            <when test="category == 'C언어' or category == 'java' or category == 'python' or category == 'Java' or category == 'Python' or category == 'c언어' or category == 'C' or category == 'c'">
+                SELECT id
+                FROM programming_language_problems
+                WHERE difficulty = #{difficulty} AND LOWER(prog_language) = LOWER(#{category})
+                ORDER BY id ASC
+                LIMIT #{limit}
+            </when>
+            <otherwise>
+                SELECT p.id
+                FROM problem p
+                INNER JOIN subject s ON p.subject_id = s.id
+                WHERE p.difficulty = #{difficulty}
+                  AND TRIM(COALESCE(s.name, '')) = TRIM(#{category})
+                ORDER BY p.id ASC
+                LIMIT #{limit}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectStudyIdsByType" resultType="java.lang.Long">
+        <choose>
+            <when test="type == 'PROGRAMMING_LANGUAGE'">
+                SELECT id
+                FROM programming_language_problems
+                ORDER BY random()
+                LIMIT #{limit}
+            </when>
+            <otherwise>
+                SELECT p.id
+                FROM problem p
+                WHERE p.type = #{type}
+                ORDER BY random()
+                LIMIT #{limit}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectRandomProblemIds" resultType="java.lang.Long">
+        SELECT id FROM (
+            SELECT p.id, TRIM(COALESCE(s.name, '')) AS cat
+            FROM problem p
+            INNER JOIN subject s ON p.subject_id = s.id
+            UNION ALL
+            SELECT id, prog_language AS cat
+            FROM programming_language_problems
+        ) t
+        <where>
+            <if test="excludeCategories != null and excludeCategories.size() > 0">
+                t.cat NOT IN
+                <foreach collection="excludeCategories" item="category" open="(" separator="," close=")">
+                    #{category}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY random()
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectRandomCategoryName" resultType="java.lang.String">
+        SELECT cat AS subject_name FROM (
+            SELECT TRIM(COALESCE(s.name, '')) AS cat
+            FROM problem p
+            INNER JOIN subject s ON p.subject_id = s.id
+            UNION ALL
+            SELECT prog_language AS cat
+            FROM programming_language_problems
+        ) t
+        <where>
+            cat IS NOT NULL AND cat != ''
+            <if test="excludeCategories != null and excludeCategories.size() > 0">
+                AND cat NOT IN
+                <foreach collection="excludeCategories" item="category" open="(" separator="," close=")">
+                    #{category}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY cat
+        ORDER BY random()
+        LIMIT 1
+    </select>
+
+    <select id="selectRandomProblemIdsByCategory" resultType="java.lang.Long">
+        <choose>
+            <when test="category == 'C언어' or category == 'java' or category == 'python' or category == 'Java' or category == 'Python' or category == 'c언어' or category == 'C' or category == 'c'">
+                SELECT id
+                FROM programming_language_problems
+                WHERE LOWER(prog_language) = LOWER(#{category})
+                ORDER BY random()
+                LIMIT #{limit}
+            </when>
+            <otherwise>
+                SELECT p.id
+                FROM problem p
+                INNER JOIN subject s ON p.subject_id = s.id
+                WHERE TRIM(COALESCE(s.name, '')) = TRIM(#{category})
+                ORDER BY random()
+                LIMIT #{limit}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT (SELECT COUNT(*) FROM problem) + (SELECT COUNT(*) FROM programming_language_problems)
+    </select>
+</mapper>
