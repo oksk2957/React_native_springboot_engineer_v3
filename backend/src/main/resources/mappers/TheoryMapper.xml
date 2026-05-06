@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.informationexam.mapper.TheoryMapper">
-    <select id="selectTheoryCardsByCategory" parameterType="string" resultType="map">
+    <select id="selectTheoryCardsByCategory" parameterType="string" resultType="TheoryCardDto">
         <!-- 주관식 카드 -->
         SELECT
-            'SUBJECTIVE' AS card_type,
             sp.id,
-            s.id AS subject_id,
-            sp.question AS front_text,
-            sp.answer AS back_text,
+            s.id AS subjectId,
+            'SUBJECTIVE' AS cardType,
+            sp.question AS frontText,
+            sp.answer AS backText,
             sp.explanation,
             sp.difficulty
         FROM subjective_problems sp
@@ -19,17 +19,17 @@
 
         <!-- 플래시 카드 -->
         SELECT
-            'FLASHCARD' AS card_type,
             lc.id,
-            s.id AS subject_id,
-            lc.front_text,
-            lc.back_text,
+            s.id AS subjectId,
+            'FLASHCARD' AS cardType,
+            lc.front_text AS frontText,
+            lc.back_text AS backText,
             lc.explanation,
             0 AS difficulty
         FROM learning_card lc
         INNER JOIN subject s ON lc.subject_id = s.id
         WHERE s.name = #{category}
 
-        ORDER BY card_type, id
+        ORDER BY cardType, id
     </select>
 </mapper>
