@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.informationexam.mapper.TheoryMapper">
+    <select id="selectTheoryCardsByCategory" parameterType="string" resultType="TheoryCardDto">
+        SELECT 
+            p.id,
+            s.id as subject_id,
+            'SUBJECTIVE' as card_type,
+            p.content as front_text,
+            p.answer as back_text,
+            p.explanation,
+            p.difficulty
+        FROM subjective_problems p
+        JOIN subject s ON p.subject_id = s.id
+        WHERE s.category = #{category}
+        UNION ALL
+        SELECT 
+            p.id,
+            s.id as subject_id,
+            'FLASHCARD' as card_type,
+            p.question as front_text,
+            p.answer as back_text,
+            p.explanation,
+            p.difficulty
+        FROM programming_language_problems p
+        JOIN subject s ON p.subject_id = s.id
+        WHERE s.category = #{category}
+    </select>
+</mapper>
