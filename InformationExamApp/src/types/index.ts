@@ -25,12 +25,10 @@ export interface TheoryCardDto {
   id: number;
   subjectId: number;
   cardType: 'SUBJECTIVE' | 'FLASHCARD';
-  question?: string;
-  answer?: string;
+  frontText: string;
+  backText: string;
   explanation?: string;
-  frontText?: string;
-  backText?: string;
-  answerText?: string;
+  difficulty?: number;
 }
 
 export interface SubjectiveProblem {
