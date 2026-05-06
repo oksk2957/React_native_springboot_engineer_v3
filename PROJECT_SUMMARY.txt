@@ -1,0 +1,49 @@
+﻿========================================
+Information Exam Project - Build Summary
+========================================
+
+Project Structure Created:
+-----------------------
+1. Backend (Spring Boot + MyBatis):
+   - Models: Subject, Users, Problem, ProgrammingLanguageProblems, 
+               LearningCard, StudySession, StudySessionItem, 
+               UserAnswer, WrongAnswerBookmark, UserStatistics
+   - DAOs: 10 DAO interfaces with MyBatis annotations
+   - Services: 10 Service classes
+   - Controllers: 10 MVC controllers + 5 REST controllers
+   - Mappers: 10 MyBatis XML mapper files (ANSI SQL, INNER JOIN only)
+   - Config: WebConfig (CORS enabled)
+
+2. Frontend (React):
+   - App.js: Main component with subject listing
+   - api.js: Axios service for backend communication
+   - index.js: React entry point
+   - index.html: HTML template
+
+3. Database:
+   - schema.sql: Complete DDL matching your requirements
+   - application.yml: PostgreSQL configuration
+
+4. Build Files:
+   - pom.xml: Maven configuration (Spring Boot 3.2.0)
+   - package.json: React dependencies
+   - start-project.bat: Startup script
+   - build.bat: Build script
+
+Key Features Implemented:
+----------------------
+✓ MVC2 pattern (Model-View-Controller)
+✓ All business logic in XML SQL (MyBatis)
+✓ Pure ANSI SQL queries (no LEFT/RIGHT JOIN, only INNER JOIN)
+✓ CORS enabled for React frontend
+✓ REST API endpoints for all entities
+✓ Complete DDL implementation
+
+Next Steps:
+------------
+1. Execute schema.sql in PostgreSQL
+2. Run start-project.bat
+3. Backend: http://localhost:8080
+4. Frontend: http://localhost:3000
+
+========================================

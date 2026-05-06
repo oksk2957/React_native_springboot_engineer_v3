@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.informationexam.dao.UserStatisticsDAO">
+
+    <select id="findAll" resultType="com.informationexam.model.UserStatistics">
+        SELECT id, user_id, subject_id, branch, total_attempted,
+               correct_count, incorrect_count, last_studied_at,
+               created_at, updated_at
+        FROM user_statistics
+        ORDER BY id
+    </select>
+
+    <select id="findById" resultType="com.informationexam.model.UserStatistics">
+        SELECT id, user_id, subject_id, branch, total_attempted,
+               correct_count, incorrect_count, last_studied_at,
+               created_at, updated_at
+        FROM user_statistics
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByUserAndSubjectAndBranch" resultType="com.informationexam.model.UserStatistics">
+        SELECT id, user_id, subject_id, branch, total_attempted,
+               correct_count, incorrect_count, last_studied_at,
+               created_at, updated_at
+        FROM user_statistics
+        WHERE user_id = #{userId}
+          AND subject_id = #{subjectId}
+          AND branch = #{branch}
+    </select>
+
+    <insert id="insert" parameterType="com.informationexam.model.UserStatistics">
+        INSERT INTO user_statistics (user_id, subject_id, branch, total_attempted,
+                                     correct_count, incorrect_count, last_studied_at,
+                                     created_at, updated_at)
+        VALUES (#{userId}, #{subjectId}, #{branch}, #{totalAttempted},
+                #{correctCount}, #{incorrectCount}, #{lastStudiedAt},
+                CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="update" parameterType="com.informationexam.model.UserStatistics">
+        UPDATE user_statistics
+        SET user_id = #{userId}, subject_id = #{subjectId},
+            branch = #{branch}, total_attempted = #{totalAttempted},
+            correct_count = #{correctCount}, incorrect_count = #{incorrectCount},
+            last_studied_at = #{lastStudiedAt}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM user_statistics WHERE id = #{id}
+    </delete>
+
+</mapper>

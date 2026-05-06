@@ -46,7 +46,7 @@
             NULL AS programming_language
         FROM problem p
         INNER JOIN subject s ON p.subject_id = s.id
-        ORDER BY RAND()
+        ORDER BY RANDOM()
         LIMIT #{limit}
     </select>
 
@@ -70,7 +70,7 @@
                     is_ai_generated,
                     prog_language AS programming_language
                 FROM programming_language_problems
-                ORDER BY RAND()
+                ORDER BY RANDOM()
                 LIMIT #{limit}
             </when>
             <otherwise>
@@ -92,7 +92,7 @@
                 FROM problem p
                 INNER JOIN subject s ON p.subject_id = s.id
                 WHERE p.type = #{type}
-                ORDER BY RAND()
+                ORDER BY RANDOM()
                 LIMIT #{limit}
             </otherwise>
         </choose>
@@ -167,7 +167,7 @@
                 FROM programming_language_problems p
                 WHERE p.id IN (
                     SELECT id FROM programming_language_problems
-                    ORDER BY RAND()
+                    ORDER BY RANDOM()
                     LIMIT 1
                 )
             </when>
@@ -193,7 +193,7 @@
                   AND p.subject_id IN (
                     SELECT DISTINCT subject_id FROM problem WHERE type = #{type}
                 )
-                ORDER BY RAND()
+                ORDER BY RANDOM()
                 LIMIT 1
             </otherwise>
         </choose>
@@ -269,14 +269,14 @@
             <when test="type == 'PROGRAMMING_LANGUAGE'">
                 SELECT id
                 FROM programming_language_problems
-                ORDER BY RAND()
+                ORDER BY RANDOM()
                 LIMIT #{limit}
             </when>
             <otherwise>
                 SELECT p.id
                 FROM problem p
                 WHERE p.type = #{type}
-                ORDER BY RAND()
+                ORDER BY RANDOM()
                 LIMIT #{limit}
             </otherwise>
         </choose>
@@ -299,7 +299,7 @@
                 </foreach>
             </if>
         </where>
-        ORDER BY RAND()
+        ORDER BY RANDOM()
         LIMIT #{limit}
     </select>
 
@@ -322,7 +322,7 @@
             </if>
         </where>
         GROUP BY cat
-        ORDER BY RAND()
+        ORDER BY RANDOM()
         LIMIT 1
     </select>
 
@@ -332,7 +332,7 @@
                 SELECT id
                 FROM programming_language_problems
                 WHERE LOWER(prog_language) = LOWER(#{category})
-                ORDER BY RAND()
+                ORDER BY RANDOM()
                 LIMIT #{limit}
             </when>
             <otherwise>
@@ -340,7 +340,7 @@
                 FROM problem p
                 INNER JOIN subject s ON p.subject_id = s.id
                 WHERE TRIM(s.name) = TRIM(#{category})
-                ORDER BY RAND()
+                ORDER BY RANDOM()
                 LIMIT #{limit}
             </otherwise>
         </choose>
@@ -348,5 +348,41 @@
 
     <select id="countAll" resultType="long">
         SELECT (SELECT COUNT(*) FROM problem) + (SELECT COUNT(*) FROM programming_language_problems) AS total_count
+    </select>
+
+    <!-- 객관식 랜덤학습: 과목별 문제 + 옵션 1~5 포함 -->
+    <select id="selectRandomObjectiveProblems" resultType="map">
+        SELECT 
+            p.id,
+            p.question,
+            p.answer AS correct_answer,
+            p.explanation,
+            s.name AS category,
+            p.type,
+            p.difficulty,
+            p.option1,
+            p.option2,
+            p.option3,
+            p.option4,
+            p.option5,
+            p.is_ai_generated,
+            NULL AS programming_language
+        FROM problem p
+        INNER JOIN subject s ON p.subject_id = s.id
+        WHERE p.type = 'OBJECTIVE'
+        ORDER BY RANDOM()
+        LIMIT #{limit}
+    </select>
+
+    <!-- 과목별 객관식 문제 개수 조회 -->
+    <select id="countProblemsBySubject" parameterType="map" resultType="map">
+        SELECT 
+            s.id AS subject_id,
+            s.name AS subject_name,
+            COUNT(p.id) AS problem_count
+        FROM subject s
+        LEFT JOIN problem p ON s.id = p.subject_id AND p.type = 'OBJECTIVE'
+        GROUP BY s.id, s.name
+        ORDER BY s.id
     </select>
 </mapper>

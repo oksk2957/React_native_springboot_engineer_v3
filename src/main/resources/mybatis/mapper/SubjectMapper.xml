@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.informationexam.dao.SubjectDAO">
+
+    <select id="findAll" resultType="com.informationexam.model.Subject">
+        SELECT id, name, description, created_at, updated_at
+        FROM subject
+        ORDER BY id
+    </select>
+
+    <select id="findById" resultType="com.informationexam.model.Subject">
+        SELECT id, name, description, created_at, updated_at
+        FROM subject
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.informationexam.model.Subject">
+        INSERT INTO subject (name, description, created_at, updated_at)
+        VALUES (#{name}, #{description}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="update" parameterType="com.informationexam.model.Subject">
+        UPDATE subject
+        SET name = #{name}, description = #{description}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM subject WHERE id = #{id}
+    </delete>
+
+</mapper>

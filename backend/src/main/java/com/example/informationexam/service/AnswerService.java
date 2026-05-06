@@ -3,14 +3,11 @@ package com.example.informationexam.service;
 import com.example.informationexam.controller.dto.AnswerRequest;
 import com.example.informationexam.domain.problem.Problem;
 import com.example.informationexam.domain.problem.ProblemRepository;
-import com.example.informationexam.domain.problem.ProgrammingLanguageProblem;
-import com.example.informationexam.domain.problem.ProgrammingLanguageProblemRepository;
-import com.example.informationexam.domain.problem.SubjectiveProblem;
-import com.example.informationexam.domain.problem.SubjectiveProblemRepository;
 import com.example.informationexam.domain.user.User;
 import com.example.informationexam.domain.user.UserRepository;
 import com.example.informationexam.domain.useranswer.UserAnswer;
 import com.example.informationexam.domain.useranswer.UserAnswerRepository;
+import com.example.informationexam.mapper.ProblemQueryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +21,7 @@ import java.util.Optional;
 public class AnswerService {
 
     private final ProblemRepository problemRepository;
-    private final SubjectiveProblemRepository subjectiveProblemRepository;
-    private final ProgrammingLanguageProblemRepository programmingLanguageProblemRepository;
+    private final ProblemQueryMapper problemQueryMapper;
     private final UserAnswerRepository userAnswerRepository;
     private final UserRepository userRepository;
 
@@ -47,16 +43,16 @@ public class AnswerService {
         
         // 정답 체크 (대소문자 무시, 공백 제거)
         boolean isCorrect = correctAnswer.trim().equalsIgnoreCase(request.getSubmittedAnswer().trim());
-
+        
         // 사용자가 명시된 경우 DB에 저장
         if (username != null) {
             Optional<User> userOptional = userRepository.findByUsername(username);
-
+            
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
                 UserAnswer userAnswer = UserAnswer.builder()
-                        .user(user)
-                        .problemType(problemType)
+                        .userId(user.getId())
+                        .itemType(problemType)
                         .referenceId(problemId)
                         .submittedAnswer(request.getSubmittedAnswer())
                         .isCorrect(isCorrect)
@@ -64,14 +60,14 @@ public class AnswerService {
                 userAnswerRepository.save(userAnswer);
             }
         }
-
+        
         // Map 기반 응답 생성
         Map<String, Object> response = new HashMap<>();
         response.put("isCorrect", isCorrect);
         response.put("explanation", explanation);
         response.put("correctAnswer", correctAnswer);
         response.put("question", question);
-
+        
         return response;
     }
 
@@ -93,22 +89,13 @@ public class AnswerService {
                 break;
                 
             case "SUBJECTIVE":
-                Optional<SubjectiveProblem> subjectiveOpt = subjectiveProblemRepository.findById(problemId);
-                if (subjectiveOpt.isPresent()) {
-                    SubjectiveProblem subjective = subjectiveOpt.get();
-                    info.put("answer", subjective.getAnswer());
-                    info.put("explanation", subjective.getExplanation());
-                    info.put("question", subjective.getQuestion());
-                }
-                break;
-                
             case "PROGRAMMING_LANGUAGE":
-                Optional<ProgrammingLanguageProblem> progOpt = programmingLanguageProblemRepository.findById(problemId);
-                if (progOpt.isPresent()) {
-                    ProgrammingLanguageProblem prog = progOpt.get();
-                    info.put("answer", prog.getAnswer());
-                    info.put("explanation", prog.getExplanation());
-                    info.put("question", prog.getQuestion());
+                // MyBatis mapper 사용
+                Map<String, Object> map = problemQueryMapper.selectById(problemId);
+                if (map != null && !map.isEmpty()) {
+                    info.put("answer", (String) map.get("correct_answer"));
+                    info.put("explanation", (String) map.get("explanation"));
+                    info.put("question", (String) map.get("question"));
                 }
                 break;
         }

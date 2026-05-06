@@ -3,6 +3,7 @@ package com.example.informationexam.controller;
 import com.example.informationexam.domain.problem.ProblemType;
 import com.example.informationexam.dto.problem.ProblemResponseDto;
 import com.example.informationexam.mapper.ProblemQueryMapper;
+import com.example.informationexam.service.ProblemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class ProblemController {
 
     private final ProblemQueryMapper problemQueryMapper;
+    private final ProblemService problemService;
 
     @GetMapping("/{id}")
     public String getProblem(@PathVariable Long id, Model model) {
@@ -42,5 +44,20 @@ public class ProblemController {
         
         model.addAttribute("problems", problems);
         return "problems";
+    }
+
+    /**
+     * 객관식 랜덤학습 탭: 과목별 문제 + 옵션 1~5
+     */
+    @GetMapping("/study/objective")
+    public String randomObjectiveStudy(@RequestParam(value = "limit", defaultValue = "10") int limit,
+                                     Model model) {
+        List<ProblemResponseDto> problems = problemService.getRandomObjectiveStudy(limit);
+        List<Map<String, Object>> subjects = problemService.getProblemCountsBySubject();
+        
+        model.addAttribute("problems", problems);
+        model.addAttribute("subjects", subjects);
+        model.addAttribute("totalProblems", problemService.getProblemCount());
+        return "study-objective";
     }
 }

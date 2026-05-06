@@ -74,7 +74,7 @@ public class UserAnswerApiController {
         String username = jwtTokenProvider.getUsername(token);
         User user = userService.getUserByUsername(username);
 
-        List<UserAnswer> wrongAnswers = userAnswerRepository.findByUserIdAndIsCorrectAndProblemType(
+        List<UserAnswer> wrongAnswers = userAnswerRepository.findByUserIdAndIsCorrectAndItemType(
                 user.getId(), false, problemType);
 
         List<Map<String, Object>> response = wrongAnswers.stream().map(ua -> {

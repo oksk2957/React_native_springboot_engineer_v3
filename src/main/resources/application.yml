@@ -1,0 +1,23 @@
+﻿server {
+    port: 8080
+    servlet:
+        context-path: /
+    tomcat:
+        uri-encoding: UTF-8
+        
+mybatis:
+    mapper-locations: classpath:mybatis/mapper/*.xml
+    type-aliases-package: com.informationexam.model
+    configuration:
+        map-underscore-to-camel-case: true
+        
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/information_exam
+        username: postgres
+        password: password
+        driver-class-name: org.postgresql.Driver
+        
+logging:
+    level:
+        com.informationexam: DEBUG

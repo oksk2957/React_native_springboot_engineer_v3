@@ -61,4 +61,19 @@ public class UserAnswer {
     protected void onUpdate() {
         this.submittedAt = LocalDateTime.now();
     }
+    
+    // Added methods for compatibility with existing code
+    public String getProblemType() {
+        return this.itemType;
+    }
+    
+    public String getProblemQuestion() {
+        // This would need to be looked up from the appropriate problem repository
+        return null;
+    }
+    
+    public String getCorrectAnswer() {
+        // This would need to be looked up from the appropriate problem repository
+        return null;
+    }
 }

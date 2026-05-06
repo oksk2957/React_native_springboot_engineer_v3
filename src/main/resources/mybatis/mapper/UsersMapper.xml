@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.informationexam.dao.UsersDAO">
+
+    <select id="findAll" resultType="com.informationexam.model.Users">
+        SELECT id, google_id, email, nickname, role, free_trial_started_at, 
+               free_trial_expires_at, subscription_started_at, subscription_expires_at,
+               created_at, updated_at, password, username
+        FROM users
+        ORDER BY id
+    </select>
+
+    <select id="findById" resultType="com.informationexam.model.Users">
+        SELECT id, google_id, email, nickname, role, free_trial_started_at,
+               free_trial_expires_at, subscription_started_at, subscription_expires_at,
+               created_at, updated_at, password, username
+        FROM users
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByEmail" resultType="com.informationexam.model.Users">
+        SELECT id, google_id, email, nickname, role, free_trial_started_at,
+               free_trial_expires_at, subscription_started_at, subscription_expires_at,
+               created_at, updated_at, password, username
+        FROM users
+        WHERE email = #{email}
+    </select>
+
+    <insert id="insert" parameterType="com.informationexam.model.Users">
+        INSERT INTO users (google_id, email, nickname, role, free_trial_started_at,
+                          free_trial_expires_at, subscription_started_at, subscription_expires_at,
+                          created_at, updated_at, password, username)
+        VALUES (#{googleId}, #{email}, #{nickname}, #{role}, 
+                CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + INTERVAL '7' DAY,
+                #{subscriptionStartedAt}, #{subscriptionExpiresAt},
+                CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, #{password}, #{username})
+    </insert>
+
+    <update id="update" parameterType="com.informationexam.model.Users">
+        UPDATE users
+        SET google_id = #{googleId}, email = #{email}, nickname = #{nickname},
+            role = #{role}, free_trial_started_at = #{freeTrialStartedAt},
+            free_trial_expires_at = #{freeTrialExpiresAt},
+            subscription_started_at = #{subscriptionStartedAt},
+            subscription_expires_at = #{subscriptionExpiresAt},
+            updated_at = CURRENT_TIMESTAMP, password = #{password}, username = #{username}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM users WHERE id = #{id}
+    </delete>
+
+</mapper>

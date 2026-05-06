@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.informationexam.dao.StudySessionDAO">
+
+    <select id="findAll" resultType="com.informationexam.model.StudySession">
+        SELECT id, user_id, subject_id, session_branch, session_type, status,
+               total_questions, correct_count, incorrect_count, started_at,
+               completed_at, created_at, updated_at
+        FROM study_session
+        ORDER BY id
+    </select>
+
+    <select id="findById" resultType="com.informationexam.model.StudySession">
+        SELECT id, user_id, subject_id, session_branch, session_type, status,
+               total_questions, correct_count, incorrect_count, started_at,
+               completed_at, created_at, updated_at
+        FROM study_session
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByUserId" resultType="com.informationexam.model.StudySession">
+        SELECT id, user_id, subject_id, session_branch, session_type, status,
+               total_questions, correct_count, incorrect_count, started_at,
+               completed_at, created_at, updated_at
+        FROM study_session
+        WHERE user_id = #{userId}
+        ORDER BY id
+    </select>
+
+    <insert id="insert" parameterType="com.informationexam.model.StudySession">
+        INSERT INTO study_session (user_id, subject_id, session_branch, session_type,
+                                  status, total_questions, correct_count, incorrect_count,
+                                  started_at, completed_at, created_at, updated_at)
+        VALUES (#{userId}, #{subjectId}, #{sessionBranch}, #{sessionType},
+                #{status}, #{totalQuestions}, #{correctCount}, #{incorrectCount},
+                CURRENT_TIMESTAMP, #{completedAt}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="update" parameterType="com.informationexam.model.StudySession">
+        UPDATE study_session
+        SET user_id = #{userId}, subject_id = #{subjectId},
+            session_branch = #{sessionBranch}, session_type = #{sessionType},
+            status = #{status}, total_questions = #{totalQuestions},
+            correct_count = #{correctCount}, incorrect_count = #{incorrectCount},
+            completed_at = #{completedAt}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM study_session WHERE id = #{id}
+    </delete>
+
+</mapper>

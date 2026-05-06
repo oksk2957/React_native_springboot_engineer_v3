@@ -19,9 +19,17 @@ public interface ProblemQueryMapper {
     String selectRandomCategoryName(@Param("excludeCategories") List<String> excludeCategories);
     List<Long> selectRandomProblemIdsByCategory(@Param("category") String category, @Param("limit") int limit);
     List<Map<String, Object>> selectOneRandomProblemPerSubject(@Param("type") String type);
+    List<Map<String, Object>> selectByDifficultyAndCategory(@Param("difficulty") int difficulty, @Param("category") String category, @Param("limit") int limit);
     long countAll();
-    
-    // ★ Stored Procedure 호출용
-    Map<String, Object> validateAnswerProc(@Param("p_problem_id") Long problemId, @Param("p_submitted_answer") String submittedAnswer, @Param("p_problem_type") String problemType);
-    Map<String, Object> getUserStatisticsProc(@Param("p_user_id") Long userId);
+
+    Map<String, Object> validateAnswerProc(
+        @Param("p_problem_id") Long pProblemId,
+        @Param("p_submitted_answer") String pSubmittedAnswer
+    );
+
+    // 객관식 랜덤학습용 메서드
+    List<Map<String, Object>> selectRandomObjectiveProblems(@Param("limit") int limit);
+
+    // 과목별 문제 개수 조회
+    List<Map<String, Object>> countProblemsBySubject();
 }

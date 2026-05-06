@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.informationexam.dao.StudySessionItemDAO">
+
+    <select id="findAll" resultType="com.informationexam.model.StudySessionItem">
+        SELECT id, session_id, item_type, reference_id, subject_id, item_order,
+               presented_at, answered_at, is_answered, is_correct,
+               user_submitted_answer, bookmarked_wrong
+        FROM study_session_item
+        ORDER BY id
+    </select>
+
+    <select id="findById" resultType="com.informationexam.model.StudySessionItem">
+        SELECT id, session_id, item_type, reference_id, subject_id, item_order,
+               presented_at, answered_at, is_answered, is_correct,
+               user_submitted_answer, bookmarked_wrong
+        FROM study_session_item
+        WHERE id = #{id}
+    </select>
+
+    <select id="findBySessionId" resultType="com.informationexam.model.StudySessionItem">
+        SELECT id, session_id, item_type, reference_id, subject_id, item_order,
+               presented_at, answered_at, is_answered, is_correct,
+               user_submitted_answer, bookmarked_wrong
+        FROM study_session_item
+        WHERE session_id = #{sessionId}
+        ORDER BY item_order
+    </select>
+
+    <insert id="insert" parameterType="com.informationexam.model.StudySessionItem">
+        INSERT INTO study_session_item (session_id, item_type, reference_id, subject_id,
+                                        item_order, presented_at, answered_at, is_answered,
+                                        is_correct, user_submitted_answer, bookmarked_wrong)
+        VALUES (#{sessionId}, #{itemType}, #{referenceId}, #{subjectId},
+                #{itemOrder}, CURRENT_TIMESTAMP, #{answeredAt}, #{isAnswered},
+                #{isCorrect}, #{userSubmittedAnswer}, #{bookmarkedWrong})
+    </insert>
+
+    <update id="update" parameterType="com.informationexam.model.StudySessionItem">
+        UPDATE study_session_item
+        SET session_id = #{sessionId}, item_type = #{itemType},
+            reference_id = #{referenceId}, subject_id = #{subjectId},
+            item_order = #{itemOrder}, presented_at = #{presentedAt},
+            answered_at = #{answeredAt}, is_answered = #{isAnswered},
+            is_correct = #{isCorrect}, user_submitted_answer = #{userSubmittedAnswer},
+            bookmarked_wrong = #{bookmarkedWrong}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM study_session_item WHERE id = #{id}
+    </delete>
+
+</mapper>

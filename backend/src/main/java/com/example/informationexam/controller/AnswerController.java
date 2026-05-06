@@ -22,9 +22,8 @@ public class AnswerController {
     public AnswerResponse submitAnswer(@RequestBody AnswerRequest answerRequest) {
         Long problemId = answerRequest.getProblemId();
         String submittedAnswer = answerRequest.getSubmittedAnswer();
-        String problemType = answerRequest.getProblemType() != null ? answerRequest.getProblemType() : "OBJECTIVE";
 
-        Map<String, Object> result = problemQueryMapper.validateAnswerProc(problemId, submittedAnswer, problemType);
+        Map<String, Object> result = problemQueryMapper.validateAnswerProc(problemId, submittedAnswer);
         
         Boolean isCorrect = false;
         String explanation = null;

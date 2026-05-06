@@ -132,6 +132,24 @@ public class ProblemService {
         return problemQueryMapper.countAll();
     }
 
+    /**
+     * 객관식 랜덤학습: 과목별 문제 + 옵션 1~5 포함
+     */
+    public List<ProblemResponseDto> getRandomObjectiveStudy(int limit) {
+        if (limit <= 0) {
+            limit = 10;
+        }
+        List<Map<String, Object>> problems = problemQueryMapper.selectRandomObjectiveProblems(limit);
+        return problemResponseAssembler.toDtoList(problems);
+    }
+
+    /**
+     * 과목별 객관식 문제 개수 조회
+     */
+    public List<Map<String, Object>> getProblemCountsBySubject() {
+        return problemQueryMapper.countProblemsBySubject();
+    }
+
     /** 제출 채점: 엔티티 연관이 필요하므로 JPA 유지 */
     public boolean checkAnswer(Long problemId, String submittedAnswer) {
         Problem problem = problemRepository.findById(problemId)

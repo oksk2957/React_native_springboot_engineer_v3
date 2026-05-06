@@ -1,19 +1,18 @@
 package com.example.informationexam.domain.statistics;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface StatisticsRepository extends JpaRepository<Statistics, Long> {
+@Mapper
+public interface StatisticsRepository {
+    List<Statistics> findByUserIdOrderBySubmittedAtDesc(@Param("userId") Long userId);
 
-    long countByUserIdAndProblemType(Long userId, String problemType);
+    long countByUserIdAndProblemType(@Param("userId") Long userId, @Param("problemType") String problemType);
 
-    long countByUserIdAndProblemTypeAndIsCorrectTrue(Long userId, String problemType);
+    long countByUserIdAndProblemTypeAndIsCorrectTrue(@Param("userId") Long userId, @Param("problemType") String problemType);
 
-    List<Statistics> findByUserIdOrderBySubmittedAtDesc(Long userId);
-
-    @Query("SELECT COUNT(DISTINCT s.referenceId) FROM Statistics s WHERE s.user.id = :userId AND s.problemType = :problemType")
+    // XML Mapper로 이관됨 (StatisticsRepositoryMapper.xml)
     long countDistinctReferenceIdsByUserIdAndProblemType(@Param("userId") Long userId, @Param("problemType") String problemType);
 }

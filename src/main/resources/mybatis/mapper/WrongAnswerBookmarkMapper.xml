@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.informationexam.dao.WrongAnswerBookmarkDAO">
+
+    <select id="findAll" resultType="com.informationexam.model.WrongAnswerBookmark">
+        SELECT id, user_id, item_type, reference_id, bookmarked_at,
+               review_count, last_reviewed_at
+        FROM wrong_answer_bookmark
+        ORDER BY id
+    </select>
+
+    <select id="findById" resultType="com.informationexam.model.WrongAnswerBookmark">
+        SELECT id, user_id, item_type, reference_id, bookmarked_at,
+               review_count, last_reviewed_at
+        FROM wrong_answer_bookmark
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByUserId" resultType="com.informationexam.model.WrongAnswerBookmark">
+        SELECT id, user_id, item_type, reference_id, bookmarked_at,
+               review_count, last_reviewed_at
+        FROM wrong_answer_bookmark
+        WHERE user_id = #{userId}
+        ORDER BY id
+    </select>
+
+    <insert id="insert" parameterType="com.informationexam.model.WrongAnswerBookmark">
+        INSERT INTO wrong_answer_bookmark (user_id, item_type, reference_id,
+                                           bookmarked_at, review_count, last_reviewed_at)
+        VALUES (#{userId}, #{itemType}, #{referenceId},
+                CURRENT_TIMESTAMP, #{reviewCount}, #{lastReviewedAt})
+    </insert>
+
+    <update id="update" parameterType="com.informationexam.model.WrongAnswerBookmark">
+        UPDATE wrong_answer_bookmark
+        SET user_id = #{userId}, item_type = #{itemType},
+            reference_id = #{referenceId}, bookmarked_at = #{bookmarkedAt},
+            review_count = #{reviewCount}, last_reviewed_at = #{lastReviewedAt}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM wrong_answer_bookmark WHERE id = #{id}
+    </delete>
+
+</mapper>

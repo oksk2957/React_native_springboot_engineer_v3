@@ -99,7 +99,7 @@ public class StatisticsService {
         
         for (Subject subject : subjects) {
             Map<String, Object> categoryStat = new HashMap<>();
-            long categoryTotal = userAnswerRepository.countTotalByCategory(userId, subject.getName());
+            long categoryTotal = userAnswerRepository.countTotalByCategory(userId);
             long categoryCorrect = userAnswerRepository.countCorrectByCategory(userId, subject.getName());
             
             categoryStat.put("category", subject.getName());
