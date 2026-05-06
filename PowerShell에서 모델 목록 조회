@@ -1,0 +1,4 @@
+$env:OPENAI_API_BASE="https://api.kilo.ai/api/gateway"
+
+curl https://api.kilo.ai/api/gateway/v1/models `
+  -H "Authorization: Bearer $env:KILO_API_KEY"
