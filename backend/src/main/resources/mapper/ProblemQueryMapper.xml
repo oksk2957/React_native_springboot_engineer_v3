@@ -99,27 +99,59 @@
     </select>
 
     <!-- 이론 문제 조회 -->
-    <select id="selectTheoryProblemsByCategory" resultType="map">
+      <select id="selectTheoryCardsByCategory" resultType="map">
+       <!-- 주관식 카드 -->
+       SELECT
+           'SUBJECTIVE' AS card_type,
+           sp.id,
+           sp.question AS front_text,
+           sp.answer AS back_text,
+           sp.explanation,
+           sp.difficulty
+       FROM subjective_problems sp
+       INNER JOIN subject s ON sp.subject_id = s.id
+       WHERE s.name = #{category}
+
+       UNION ALL
+
+       <!-- 플래시 카드 -->
+       SELECT
+           'FLASHCARD' AS card_type,
+           lc.id,
+           lc.front_text,
+           lc.back_text,
+           lc.explanation,
+           0 AS difficulty
+       FROM learning_card lc
+       INNER JOIN subject s ON lc.subject_id = s.id
+       WHERE s.name = #{category}
+
+       ORDER BY card_type, id
+   </select>
+
+
+
+    <select id="selectRandomObjectiveProblems" resultType="map" parameterType="map">
         <choose>
-            <when test="isProgrammingLanguage(category)">
-                SELECT 
-                    id,
-                    question,
-                    answer AS correct_answer,
-                    explanation,
-                    prog_language AS category,
-                    &apos;PROGRAMMING_LANGUAGE&apos; AS type,
-                    difficulty,
-                    NULL AS option1,
-                    NULL AS option2,
-                    NULL AS option3,
-                    NULL AS option4,
-                    NULL AS option5,
-                    is_ai_generated,
-                    prog_language AS programming_language
-                FROM programming_language_problems
-                WHERE LOWER(prog_language) = LOWER(#{category})
-                ORDER BY id ASC
+            <when test="isRandom == true">
+                SELECT
+                    s.name AS category,
+                    p.id AS objective_id,
+                    p.question AS objective_question,
+                    p.answer AS objective_answer,
+                    p.explanation,
+                    p.difficulty,
+                    p.is_ai_generated,
+                    p.option1,
+                    p.option2,
+                    p.option3,
+                    p.option4,
+                    p.option5,
+                    'OBJECTIVE' AS type
+                FROM subject s
+                INNER JOIN problem p ON s.id = p.subject_id
+                WHERE p.type = 'OBJECTIVE'
+                ORDER BY RANDOM()
             </when>
             <otherwise>
                 SELECT 
@@ -139,42 +171,10 @@
                     NULL AS programming_language
                 FROM problem p
                 INNER JOIN subject s ON p.subject_id = s.id
-                WHERE TRIM(s.name) = TRIM(#{category})
-                ORDER BY p.id ASC
+                WHERE p.type = 'OBJECTIVE'
             </otherwise>
         </choose>
     </select>
-
-    <!-- 과목별 1건 랜덤 조회: 서브쿼리 사용 (DISTINCT ON 대체) -->
- <select id="selectObjectiveProblems" resultType="map" parameterType="map">
-       <choose>
-           <!-- 무작위 5개 학습 모드 -->
-           <when test="isRandom == true">
-               SELECT
-                   s.name AS category,
-                   p.id AS objective_id,
-                   p.question AS objective_question,
-                   p.answer AS objective_answer,
-                   p.option1,
-                   p.option2,
-                   p.option3,
-                   p.option4,
-                   p.option5,
-                   'OBJECTIVE' AS type
-               FROM subject s
-               INNER JOIN problem p ON s.id = p.subject_id
-               WHERE p.type = 'OBJECTIVE'
-               ORDER BY RANDOM()
-               LIMIT 5
-           </when>
-           <!-- 전체 목록 모드 -->
-           <otherwise>
-               SELECT *
-               FROM problem
-               WHERE type = 'OBJECTIVE'
-           </otherwise>
-       </choose>
-   </select>
 
     <!-- 답변 검증 (ANSI SQL 순수 쿼리) -->
     <select id="validateAnswerProc" resultType="map">
@@ -197,7 +197,7 @@
     <!-- 기존 ID 조회 쿼리 -->
     <select id="selectTheoryProblemIdsByCategory" resultType="java.lang.Long">
         <choose>
-            <when test="isProgrammingLanguage(category)">
+            <when test="isProgramming">
                 SELECT id
                 FROM programming_language_problems
                 WHERE LOWER(prog_language) = LOWER(#{category})
@@ -215,7 +215,7 @@
 
     <select id="selectStudyIdsByDifficultyCategory" resultType="java.lang.Long">
         <choose>
-            <when test="isProgrammingLanguage(category)">
+            <when test="isProgramming">
                 SELECT id
                 FROM programming_language_problems
                 WHERE difficulty = #{difficulty} AND LOWER(prog_language) = LOWER(#{category})
@@ -236,7 +236,7 @@
 
     <select id="selectStudyIdsByType" resultType="java.lang.Long">
         <choose>
-            <when test="type == &quot;PROGRAMMING_LANGUAGE&quot;">
+            <when test="type == &apos;PROGRAMMING_LANGUAGE&apos;">
                 SELECT id
                 FROM programming_language_problems
                 ORDER BY RANDOM()
@@ -262,7 +262,7 @@
             FROM programming_language_problems
         ) t
         <where>
-            <if test="excludeCategories != null and excludeCategories.size() > 0">
+            <if test="excludeCategories != null and excludeCategories.size() &gt; 0">
                 t.cat NOT IN
                 <foreach collection="excludeCategories" item="category" open="(" separator="," close=")">
                     #{category}
@@ -284,7 +284,7 @@
         ) t
         <where>
             cat IS NOT NULL AND cat != &apos;&apos;
-            <if test="excludeCategories != null and excludeCategories.size() > 0">
+            <if test="excludeCategories != null and excludeCategories.size() &gt; 0">
                 AND cat NOT IN
                 <foreach collection="excludeCategories" item="category" open="(" separator="," close=")">
                     #{category}
@@ -298,7 +298,7 @@
 
     <select id="selectRandomProblemIdsByCategory" resultType="java.lang.Long">
         <choose>
-            <when test="isProgrammingLanguage(category)">
+            <when test="isProgramming">
                 SELECT id
                 FROM programming_language_problems
                 WHERE LOWER(prog_language) = LOWER(#{category})
@@ -316,40 +316,8 @@
         </choose>
     </select>
 
-    <select id="countAll" resultType="long">
+<select id="countAll" resultType="long">
         SELECT (SELECT COUNT(*) FROM problem) + (SELECT COUNT(*) FROM programming_language_problems) AS total_count
-    </select>
-
-    <!-- 객관식 랜덤학습: 과목별 문제 + 옵션 1~5 포함 -->
-    <select id="selectRandomObjectiveProblems" resultType="map">
-<choose>
-           <!-- 무작위 5개 학습 모드 -->
-           <when test="isRandom == true">
-               SELECT
-                   s.name AS category,
-                   p.id AS objective_id,
-                   p.question AS objective_question,
-                   p.answer AS objective_answer,
-                   p.option1,
-                   p.option2,
-                   p.option3,
-                   p.option4,
-                   p.option5,
-                   'OBJECTIVE' AS type
-               FROM subject s
-               INNER JOIN problem p ON s.id = p.subject_id
-               WHERE p.type = 'OBJECTIVE'
-               ORDER BY RANDOM()
-               LIMIT 5
-           </when>
-           <!-- 전체 목록 모드 -->
-           <otherwise>
-               SELECT *
-               FROM problem
-               WHERE type = 'OBJECTIVE'
-           </otherwise>
-       </choose>
-
     </select>
 
     <!-- 과목별 객관식 문제 개수 조회 -->
@@ -364,3 +332,4 @@
         ORDER BY s.id
     </select>
 </mapper>
+

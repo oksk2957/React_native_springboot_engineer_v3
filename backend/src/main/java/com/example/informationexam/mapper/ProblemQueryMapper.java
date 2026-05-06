@@ -18,9 +18,8 @@ public interface ProblemQueryMapper {
     List<Long> selectRandomProblemIds(@Param("limit") int limit, @Param("excludeCategories") List<String> excludeCategories);
     String selectRandomCategoryName(@Param("excludeCategories") List<String> excludeCategories);
     List<Long> selectRandomProblemIdsByCategory(@Param("category") String category, @Param("limit") int limit, @Param("isProgramming") boolean isProgramming);
-    List<Map<String, Object>> selectOneRandomProblemPerSubject(@Param("type") String type);
+    List<Map<String, Object>> selectTheoryCardsByCategory(@Param("category") String category);
     List<Map<String, Object>> selectByDifficultyAndCategory(@Param("difficulty") int difficulty, @Param("category") String category, @Param("limit") int limit);
-    long countAll();
 
     Map<String, Object> validateAnswerProc(
         @Param("p_problem_id") Long pProblemId,
@@ -28,8 +27,11 @@ public interface ProblemQueryMapper {
     );
 
     // 객관식 랜덤학습용 메서드
-    List<Map<String, Object>> selectRandomObjectiveProblems(@Param("limit") int limit);
+    List<Map<String, Object>> selectRandomObjectiveProblems(@Param("isRandom") boolean isRandom);
 
     // 과목별 문제 개수 조회
     List<Map<String, Object>> countProblemsBySubject();
+    
+    // 전체 문제 개수 조회
+    Long countAll();
 }

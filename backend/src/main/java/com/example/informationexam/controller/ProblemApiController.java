@@ -39,7 +39,7 @@ public class ProblemApiController {
     @GetMapping("/random/objective")
     public ResponseEntity<List<ProblemResponseDto>> getOneRandomProblemPerSubject() {
         log.info("[MVC2] 객관식 랜덤 문제 조회");
-        List<Map<String, Object>> maps = problemQueryMapper.selectOneRandomProblemPerSubject("OBJECTIVE");
+        List<Map<String, Object>> maps = problemQueryMapper.selectRandomObjectiveProblems(true);
         return ResponseEntity.ok(ProblemResponseDto.fromList(maps));
     }
 
@@ -57,7 +57,7 @@ public class ProblemApiController {
     public ResponseEntity<TheoryProblemMetaDto> getTheoryProblemMeta(@RequestParam String category) {
         log.info("[MVC2] 이론 메타 조회: category={}", category);
         List<Long> ids = problemQueryMapper.selectTheoryProblemIdsByCategory(category, PROGRAMMING_LANGUAGES.contains(category));
-        return ResponseEntity.ok(new TheoryProblemMetaDto(ids.size(), ids));
+        return ResponseEntity.ok(new TheoryProblemMetaDto((long) ids.size(), ids));
     }
 
     @GetMapping("/study/meta")
@@ -90,7 +90,7 @@ public class ProblemApiController {
         } else {
             throw new IllegalArgumentException("randomSample 또는 category 또는 type 중 하나는 필수입니다.");
         }
-        return ResponseEntity.ok(new TheoryProblemMetaDto(ids.size(), ids));
+        return ResponseEntity.ok(new TheoryProblemMetaDto((long) ids.size(), ids));
     }
 
     @GetMapping("/test")
