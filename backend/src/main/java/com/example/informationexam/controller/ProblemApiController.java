@@ -2,23 +2,21 @@ package com.example.informationexam.controller;
 
 import com.example.informationexam.dto.problem.ProblemResponseDto;
 import com.example.informationexam.dto.problem.TheoryProblemMetaDto;
+import com.example.informationexam.dto.theory.TheoryCardDto;
 import com.example.informationexam.mapper.ProblemQueryMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/problems")
 @RequiredArgsConstructor
 @Slf4j
 public class ProblemApiController {
-    // ★ Service 대신 Mapper 직접 주입 (MVC2 핵심)
     private final ProblemQueryMapper problemQueryMapper;
 
     private static final java.util.Set<String> PROGRAMMING_LANGUAGES = java.util.Set.of(
@@ -44,13 +42,15 @@ public class ProblemApiController {
     }
 
     @GetMapping("/theory")
-    public ResponseEntity<List<ProblemResponseDto>> getTheoryProblems(@RequestParam String category) {
-        log.info("[MVC2] 이론 문제 조회: category={}", category);
-        
-// 프로그래밍 언어 카테고리인 경우 별도 처리
-        boolean isProgramming = PROGRAMMING_LANGUAGES.contains(category);
-        List<Map<String, Object>> maps = problemQueryMapper.selectTheoryProblemsByCategory(category, isProgramming);
-        return ResponseEntity.ok(ProblemResponseDto.fromList(maps));
+    public ResponseEntity<List<TheoryCardDto>> getTheoryCards(@RequestParam String category) {
+        log.info("[MVC2] 이론 카드 조회: category={}", category);
+        List<Map<String, Object>> maps = problemQueryMapper.selectTheoryCardsByCategory(category);
+
+        List<TheoryCardDto> cardDtos = maps.stream()
+            .map(TheoryCardDto::fromMap)
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(cardDtos);
     }
 
     @GetMapping("/theory/meta")

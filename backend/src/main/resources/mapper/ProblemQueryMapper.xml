@@ -98,39 +98,38 @@
         </choose>
     </select>
 
-    <!-- 이론 문제 조회 -->
-      <select id="selectTheoryCardsByCategory" resultType="map">
-       <!-- 주관식 카드 -->
-       SELECT
-           'SUBJECTIVE' AS card_type,
-           sp.id,
-           sp.question AS front_text,
-           sp.answer AS back_text,
-           sp.explanation,
-           sp.difficulty
-       FROM subjective_problems sp
-       INNER JOIN subject s ON sp.subject_id = s.id
-       WHERE s.name = #{category}
+    <!-- 이론 카드 조회 (주관식 + 플래시카드 통합) -->
+    <select id="selectTheoryCardsByCategory" resultType="map">
+        SELECT
+            'SUBJECTIVE' AS card_type,
+            sp.id,
+            sp.subject_id,
+            sp.question AS front_text,
+            sp.answer AS back_text,
+            sp.explanation,
+            sp.difficulty
+        FROM subjective_problems sp
+        INNER JOIN subject s ON sp.subject_id = s.id
+        WHERE s.name = #{category}
 
-       UNION ALL
+        UNION ALL
 
-       <!-- 플래시 카드 -->
-       SELECT
-           'FLASHCARD' AS card_type,
-           lc.id,
-           lc.front_text,
-           lc.back_text,
-           lc.explanation,
-           0 AS difficulty
-       FROM learning_card lc
-       INNER JOIN subject s ON lc.subject_id = s.id
-       WHERE s.name = #{category}
+        SELECT
+            'FLASHCARD' AS card_type,
+            lc.id,
+            lc.subject_id,
+            lc.front_text,
+            lc.back_text,
+            lc.explanation,
+            0 AS difficulty
+        FROM learning_card lc
+        INNER JOIN subject s ON lc.subject_id = s.id
+        WHERE s.name = #{category}
 
-       ORDER BY card_type, id
-   </select>
+        ORDER BY card_type, id
+    </select>
 
-
-
+    <!-- 객관식 랜덤 -->
     <select id="selectRandomObjectiveProblems" resultType="map" parameterType="map">
         <choose>
             <when test="isRandom == true">
@@ -176,7 +175,7 @@
         </choose>
     </select>
 
-    <!-- 답변 검증 (ANSI SQL 순수 쿼리) -->
+    <!-- 답변 검증 -->
     <select id="validateAnswerProc" resultType="map">
         SELECT 
             UPPER(TRIM(p.answer)) = UPPER(TRIM(#{p_submitted_answer})) AS is_correct,
@@ -316,7 +315,25 @@
         </choose>
     </select>
 
-<select id="countAll" resultType="long">
+    <select id="selectByDifficultyAndCategory" resultType="map">
+        <choose>
+            <when test="isProgramming">
+                SELECT *
+                FROM programming_language_problems
+                WHERE difficulty = #{difficulty} AND LOWER(prog_language) = LOWER(#{category})
+                LIMIT #{limit}
+            </when>
+            <otherwise>
+                SELECT p.*, s.name AS category
+                FROM problem p
+                INNER JOIN subject s ON p.subject_id = s.id
+                WHERE p.difficulty = #{difficulty} AND TRIM(s.name) = TRIM(#{category})
+                LIMIT #{limit}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="countAll" resultType="long">
         SELECT (SELECT COUNT(*) FROM problem) + (SELECT COUNT(*) FROM programming_language_problems) AS total_count
     </select>
 
@@ -331,5 +348,5 @@
         GROUP BY s.id, s.name
         ORDER BY s.id
     </select>
-</mapper>
 
+</mapper>
