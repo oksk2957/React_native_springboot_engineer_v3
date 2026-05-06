@@ -103,7 +103,6 @@
         SELECT
             'SUBJECTIVE' AS card_type,
             sp.id,
-            sp.subject_id,
             sp.question AS front_text,
             sp.answer AS back_text,
             sp.explanation,
@@ -117,7 +116,6 @@
         SELECT
             'FLASHCARD' AS card_type,
             lc.id,
-            lc.subject_id,
             lc.front_text,
             lc.back_text,
             lc.explanation,
