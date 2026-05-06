@@ -33,11 +33,6 @@ public class ProblemService {
         "C언어", "java", "python", "Java", "Python", "c언어", "C", "c"
     );
 
-    public List<ProblemResponseDto> getOneRandomProblemPerSubject(ProblemType type) {
-        return problemResponseAssembler.toDtoList(
-                problemQueryMapper.selectOneRandomProblemPerSubject(type.name()));
-    }
-
     public List<ProblemResponseDto> getProblemsByType(ProblemType type, int limit) {
         if (limit <= 0) {
             limit = Integer.MAX_VALUE;
@@ -121,10 +116,8 @@ public class ProblemService {
      * 객관식 랜덤학습: 과목별 문제 + 옵션 1~5 포함
      */
     public List<ProblemResponseDto> getRandomObjectiveStudy(int limit) {
-        if (limit <= 0) {
-            limit = 10;
-        }
-        List<Map<String, Object>> problems = problemQueryMapper.selectRandomObjectiveProblems(limit);
+        // XML에서 isRandom 파라미터를 사용하여 랜덤 조회를 수행하므로 true 전달
+        List<Map<String, Object>> problems = problemQueryMapper.selectRandomObjectiveProblems(true);
         return problemResponseAssembler.toDtoList(problems);
     }
 
