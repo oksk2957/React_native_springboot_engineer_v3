@@ -11,13 +11,13 @@ public interface ProblemQueryMapper {
     Map<String, Object> selectById(@Param("id") Long id);
     List<Map<String, Object>> selectRandomProblems(@Param("limit") int limit);
     List<Map<String, Object>> selectRandomProblemsByType(@Param("type") String type, @Param("limit") int limit);
-    List<Map<String, Object>> selectTheoryProblemsByCategory(@Param("category") String category);
-    List<Long> selectTheoryProblemIdsByCategory(@Param("category") String category);
-    List<Long> selectStudyIdsByDifficultyCategory(@Param("difficulty") int difficulty, @Param("category") String category, @Param("limit") int limit);
+    List<Map<String, Object>> selectTheoryProblemsByCategory(@Param("category") String category, @Param("isProgramming") boolean isProgramming);
+    List<Long> selectTheoryProblemIdsByCategory(@Param("category") String category, @Param("isProgramming") boolean isProgramming);
+    List<Long> selectStudyIdsByDifficultyCategory(@Param("difficulty") int difficulty, @Param("category") String category, @Param("limit") int limit, @Param("isProgramming") boolean isProgramming);
     List<Long> selectStudyIdsByType(@Param("type") String type, @Param("limit") int limit);
     List<Long> selectRandomProblemIds(@Param("limit") int limit, @Param("excludeCategories") List<String> excludeCategories);
     String selectRandomCategoryName(@Param("excludeCategories") List<String> excludeCategories);
-    List<Long> selectRandomProblemIdsByCategory(@Param("category") String category, @Param("limit") int limit);
+    List<Long> selectRandomProblemIdsByCategory(@Param("category") String category, @Param("limit") int limit, @Param("isProgramming") boolean isProgramming);
     List<Map<String, Object>> selectOneRandomProblemPerSubject(@Param("type") String type);
     List<Map<String, Object>> selectByDifficultyAndCategory(@Param("difficulty") int difficulty, @Param("category") String category, @Param("limit") int limit);
     long countAll();

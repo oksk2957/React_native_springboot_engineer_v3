@@ -14,7 +14,13 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
     @Query("SELECT p.id FROM Problem p JOIN p.subject s WHERE TRIM(s.name) = TRIM(:category) ORDER BY p.id")
     List<Long> findTheoryProblemIdsByCategory(@Param("category") String category);
 
-    long countByType(ProblemType type);
+    long countByType(String type);
+
+    @Query("SELECT COUNT(p) FROM Problem p WHERE p.type = :type")
+    long countByTypeString(@Param("type") String type);
+
+    @Query("SELECT p FROM Problem p WHERE p.type = :type")
+    List<Problem> findByTypeString(@Param("type") String type);
 
     @Query("SELECT COUNT(p) FROM Problem p JOIN p.subject s WHERE s.name = :categoryName")
     long countBySubjectName(@Param("categoryName") String categoryName);
@@ -29,5 +35,5 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
     List<Problem> findRandomProblems(int limit);
 
     @Query(value = "SELECT * FROM problem WHERE type = ?1 ORDER BY RANDOM() LIMIT ?2", nativeQuery = true)
-    List<Problem> findRandomProblemsByType(ProblemType type, int limit);
+    List<Problem> findRandomProblemsByType(String type, int limit);
 }

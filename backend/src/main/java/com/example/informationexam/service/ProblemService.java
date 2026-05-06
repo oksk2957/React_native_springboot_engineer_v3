@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -30,21 +29,9 @@ public class ProblemService {
     /** 답변 제출 등 JPA 영속 계층 필요 시 사용하는 저장소(AnswerService 등에서 참조 가능하도록 레거시 제공) */
     private final ProblemRepository problemRepository;
 
-    private static final Map<String, String> CATEGORY_MAPPING = new HashMap<>();
-
-    static {
-        CATEGORY_MAPPING.put("Java", "프로그래밍언어");
-        CATEGORY_MAPPING.put("C", "프로그래밍언어");
-        CATEGORY_MAPPING.put("Python", "프로그래밍언어");
-        CATEGORY_MAPPING.put("C언어", "프로그래밍언어");
-    }
-
-    private String mapCategory(String category) {
-        if (category == null) {
-            return null;
-        }
-        return CATEGORY_MAPPING.getOrDefault(category, category);
-    }
+    private static final java.util.Set<String> PROGRAMMING_LANGUAGES = java.util.Set.of(
+        "C언어", "java", "python", "Java", "Python", "c언어", "C", "c"
+    );
 
     public List<ProblemResponseDto> getOneRandomProblemPerSubject(ProblemType type) {
         return problemResponseAssembler.toDtoList(
@@ -69,14 +56,12 @@ public class ProblemService {
     }
 
     public List<ProblemResponseDto> getTheoryProblems(String category) {
-        String mappedCategory = mapCategory(category);
         return problemResponseAssembler.toDtoList(
-                problemQueryMapper.selectTheoryProblemsByCategory(mappedCategory));
+                problemQueryMapper.selectTheoryProblemsByCategory(category, PROGRAMMING_LANGUAGES.contains(category)));
     }
 
     public TheoryProblemMetaDto getTheoryProblemMeta(String category) {
-        String mappedCategory = mapCategory(category);
-        List<Long> ids = problemQueryMapper.selectTheoryProblemIdsByCategory(mappedCategory);
+        List<Long> ids = problemQueryMapper.selectTheoryProblemIdsByCategory(category, PROGRAMMING_LANGUAGES.contains(category));
         return new TheoryProblemMetaDto(ids.size(), ids);
     }
 
@@ -107,10 +92,10 @@ public class ProblemService {
             if (nextCategory == null || nextCategory.isBlank()) {
                 return new TheoryProblemMetaDto(0, List.of());
             }
-            ids = problemQueryMapper.selectRandomProblemIdsByCategory(nextCategory, limit);
+            ids = problemQueryMapper.selectRandomProblemIdsByCategory(nextCategory, limit, PROGRAMMING_LANGUAGES.contains(nextCategory));
         } else if (category != null && !category.isBlank()) {
-            String mapped = mapCategory(category.trim());
-            ids = problemQueryMapper.selectStudyIdsByDifficultyCategory(difficulty, mapped, limit);
+            String mapped = category.trim();
+            ids = problemQueryMapper.selectStudyIdsByDifficultyCategory(difficulty, mapped, limit, PROGRAMMING_LANGUAGES.contains(mapped));
         } else if (type != null) {
             ids = problemQueryMapper.selectStudyIdsByType(type.name(), limit);
         } else {

@@ -21,6 +21,10 @@ public class ProblemApiController {
     // ★ Service 대신 Mapper 직접 주입 (MVC2 핵심)
     private final ProblemQueryMapper problemQueryMapper;
 
+    private static final java.util.Set<String> PROGRAMMING_LANGUAGES = java.util.Set.of(
+        "C언어", "java", "python", "Java", "Python", "c언어", "C", "c"
+    );
+
     @GetMapping("/{id}")
     public ResponseEntity<ProblemResponseDto> getProblem(@PathVariable Long id) {
         log.info("[MVC2] 단건 문제 조회: id={}", id);
@@ -42,14 +46,17 @@ public class ProblemApiController {
     @GetMapping("/theory")
     public ResponseEntity<List<ProblemResponseDto>> getTheoryProblems(@RequestParam String category) {
         log.info("[MVC2] 이론 문제 조회: category={}", category);
-        List<Map<String, Object>> maps = problemQueryMapper.selectTheoryProblemsByCategory(category);
+        
+// 프로그래밍 언어 카테고리인 경우 별도 처리
+        boolean isProgramming = PROGRAMMING_LANGUAGES.contains(category);
+        List<Map<String, Object>> maps = problemQueryMapper.selectTheoryProblemsByCategory(category, isProgramming);
         return ResponseEntity.ok(ProblemResponseDto.fromList(maps));
     }
 
     @GetMapping("/theory/meta")
     public ResponseEntity<TheoryProblemMetaDto> getTheoryProblemMeta(@RequestParam String category) {
         log.info("[MVC2] 이론 메타 조회: category={}", category);
-        List<Long> ids = problemQueryMapper.selectTheoryProblemIdsByCategory(category);
+        List<Long> ids = problemQueryMapper.selectTheoryProblemIdsByCategory(category, PROGRAMMING_LANGUAGES.contains(category));
         return ResponseEntity.ok(new TheoryProblemMetaDto(ids.size(), ids));
     }
 
@@ -75,9 +82,9 @@ public class ProblemApiController {
             if (nextCategory == null || nextCategory.isBlank()) {
                 return ResponseEntity.ok(new TheoryProblemMetaDto(0, List.of()));
             }
-            ids = problemQueryMapper.selectRandomProblemIdsByCategory(nextCategory, limit);
+            ids = problemQueryMapper.selectRandomProblemIdsByCategory(nextCategory, limit, PROGRAMMING_LANGUAGES.contains(nextCategory));
         } else if (category != null && !category.isBlank()) {
-            ids = problemQueryMapper.selectStudyIdsByDifficultyCategory(difficulty, category, limit);
+            ids = problemQueryMapper.selectStudyIdsByDifficultyCategory(difficulty, category, limit, PROGRAMMING_LANGUAGES.contains(category));
         } else if (type != null) {
             ids = problemQueryMapper.selectStudyIdsByType(type.name(), limit);
         } else {

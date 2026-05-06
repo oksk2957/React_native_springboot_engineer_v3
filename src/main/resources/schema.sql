@@ -43,8 +43,24 @@ CREATE TABLE problem (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT problem_type_check CHECK (type IN ('SUBJECTIVE', 'OBJECTIVE')),
   CONSTRAINT problem_difficulty_check CHECK (difficulty IS NULL OR (difficulty >= 1 AND difficulty <= 5)),
-  CONSTRAINT problem_subject_fk FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE CASCADE
+CONSTRAINT problem_subject_fk FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE CASCADE
 );
+
+CREATE TABLE subjective_problems (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  subject_id BIGINT NOT NULL,
+  question VARCHAR(2000) NOT NULL,
+  answer VARCHAR(2000) NOT NULL,
+  explanation VARCHAR(4000),
+  difficulty INTEGER,
+  is_ai_generated BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT subjective_problems_subject_fk FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE CASCADE,
+  CONSTRAINT subjective_problems_difficulty_check CHECK (difficulty IS NULL OR (difficulty >= 1 AND difficulty <= 5))
+);
+
+CREATE INDEX idx_subjective_problems_subject_id ON subjective_problems(subject_id);
 
 CREATE TABLE programming_language_problems (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

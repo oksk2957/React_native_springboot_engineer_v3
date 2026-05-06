@@ -1,504 +1,397 @@
-﻿# InformationExamProject 포괄적 수정 및 변경 계획서 (PostgreSQL 전환)
+﻿# 2026-05-04_PM_03-45-00_COMPREHENSIVE_PLAN.md
 
-> **분석일시**: 2026-05-04 PM_03-45-00  
-> **대상 프로젝트**: C:\Users\SEOL\InformationExamProject  
-> **사용 모델**: opencode/big-pickle  
-> **데이터베이스**: PostgreSQL 전환 (기존 SQLite → PostgreSQL)  
-> **SQL 표준**: ANSI SQL (순수 SQL)
+## 종합 버그 수정 및 시스템 안정화 실행 계획서
 
----
-
-## 1. 프로젝트 현황 분석
-
-### 1.1 현재 데이터베이스 설정
-- **상태**: PostgreSQL 이미 구성됨
-- **설정 파일**: `src/main/resources/application.yml`
-- **연결 정보**:
-  ```yaml
-  spring:
-    datasource:
-      url: jdbc:postgresql://localhost:5432/information_exam
-      username: postgres
-      password: password
-      driver-class-name: org.postgresql.Driver
-  ```
-- **의존성**: `pom.xml`에 PostgreSQL 드라이버 포함 (lines 36-40)
-
-### 1.2 MyBatis XML 매퍼 현황
-기존 XML 매퍼 파일 존재 (이미 MyBatis 사용 중):
-- `src/main/resources/mybatis/mapper/ProblemMapper.xml`
-- `src/main/resources/mybatis/mapper/UserStatisticsMapper.xml`
-- `src/main/resources/mybatis/mapper/WrongAnswerBookmarkMapper.xml`
-- `src/main/resources/mybatis/mapper/UserAnswerMapper.xml`
-- `src/main/resources/mybatis/mapper/StudySessionItemMapper.xml`
-- `src/main/resources/mybatis/mapper/StudySessionMapper.xml`
-- `src/main/resources/mybatis/mapper/LearningCardMapper.xml`
-- `src/main/resources/mybatis/mapper/ProgrammingLanguageProblemsMapper.xml`
-- `src/main/resources/mybatis/mapper/UsersMapper.xml`
-- `src/main/resources/mybatis/mapper/SubjectMapper.xml`
-- `backend/src/main/resources/mapper/ProblemQueryMapper.xml`
-- `backend/src/main/resources/mapper/MypageStatisticsMapper.xml`
-
-### 1.3 @Query 어노테이션 사용 현황 (Java 리포지토리)
-
-#### UserAnswerRepository.java (4개 @Query)
-```java
-@Query("SELECT COUNT(ua) FROM UserAnswer ua WHERE ua.userId = :userId AND ua.itemType = :problemType")
-@Query("SELECT COUNT(ua) FROM UserAnswer ua WHERE ua.userId = :userId AND ua.itemType = :problemType AND ua.isCorrect = true")
-@Query("SELECT COUNT(ua) FROM UserAnswer ua WHERE ua.userId = :userId AND (ua.itemType = 'OBJECTIVE' OR ua.itemType = 'SUBJECTIVE' OR ua.itemType = 'PROGRAMMING_LANGUAGE')")
-@Query("SELECT COUNT(ua) FROM UserAnswer ua WHERE ua.userId = :userId AND ua.itemType = :category")
-```
-
-#### ProblemRepository.java (7개 @Query)
-```java
-@Query("SELECT p FROM Problem p JOIN p.subject s WHERE TRIM(s.name) = TRIM(:category)")
-@Query("SELECT p.id FROM Problem p JOIN p.subject s WHERE TRIM(s.name) = TRIM(:category) ORDER BY p.id")
-@Query("SELECT COUNT(p) FROM Problem p JOIN p.subject s WHERE s.name = :categoryName")
-@Query(value = "SELECT * FROM problem p JOIN subject s ON p.subject_id = s.id WHERE p.difficulty = ?1 AND TRIM(s.name) = TRIM(?2) ORDER BY RAND() LIMIT ?3", nativeQuery = true)
-@Query("SELECT p FROM Problem p WHERE (:difficulty = 0 OR p.difficulty = :difficulty) AND (:category IS NULL OR TRIM(p.subject.name) = TRIM(:category))")
-@Query(value = "SELECT * FROM problem ORDER BY RAND() LIMIT ?1", nativeQuery = true)
-@Query(value = "SELECT * FROM problem WHERE type = ?1 ORDER BY RAND() LIMIT ?2", nativeQuery = true)
-```
-
-#### SubjectiveProblemRepository.java (1개 @Query)
-```java
-@Query(value = "SELECT COUNT(DISTINCT ua.reference_id) FROM user_answer ua WHERE ua.user_id = :userId AND ua.problem_type = 'SUBJECTIVE'", nativeQuery = true)
-```
-
-#### StatisticsRepository.java (1개 @Query)
-```java
-@Query("SELECT COUNT(DISTINCT s.referenceId) FROM Statistics s WHERE s.user.id = :userId AND s.problemType = :problemType")
-```
-
-### 1.4 프론트엔드 API 호출 현황
-- **API Base URL**: `http://localhost:8088/api` (포트 불일치: 백엔드는 8080)
-- **사용 라이브러리**: fetch, axios
-- **주요 파일**:
-  - `InformationExamApp/src/screens/StatisticsScreen.tsx`
-  - `InformationExamApp/src/screens/TheoryScreen.tsx`
-  - `InformationExamApp/src/screens/HomeScreen.tsx`
-  - `InformationExamApp/src/hooks/useGoogleAuth.tsx`
+### 📋 작성 정보
+- **작성일시**: 2026-05-06
+- **대상 프로젝트**: InformationExamProject
+- **분석 대상**: 애플리케이션 로그 (2026-05-06 11:58:05 ~ 11:58:29)
+- **우선순위**: Critical (P0) → High (P1) → Medium (P2)
 
 ---
 
-## 2. PostgreSQL 전환 및 구조 개선 계획
+## 🔴 P0 - Critical Issues
 
-### 2.1 데이터베이스 포트 일치화 (P0)
-**문제**: 프론트엔드 API URL 포트(8088) ≠ 백엔드 포트(8080)
+### 1. MyBatis OGNL NumberFormatException (2건)
 
-**해결 방안**:
-1. `useGoogleAuth.tsx` line 14 수정:
-   ```typescript
-   const API_BASE_URL = 'http://localhost:8080/api';
-   ```
-
-2. 또는 백엔드 `application.yml` 포트 변경:
-   ```yaml
-   server:
-     port: 8088
-   ```
-
-### 2.2 @Query → XML 매퍼 이관 (P1)
-
-#### 2.2.1 이관 대상 쿼리 분류
-
-**JPQL 쿼리 (JPA 전용, XML 변환 필요)**:
-1. `UserAnswerRepository`: 4개 JPQL 쿼리
-2. `ProblemRepository`: 3개 JPQL 쿼리 (lines 11, 14, 19, 25)
-3. `StatisticsRepository`: 1개 JPQL 쿼리
-
-**Native SQL 쿼리 (이미 순수 SQL, XML 이관 필요)**:
-1. `ProblemRepository`: 3개 native 쿼리 (lines 22, 28, 31)
-2. `SubjectiveProblemRepository`: 1개 native 쿼리
-
-#### 2.2.2 XML 매퍼 파일 생성/수정 계획
-
-**신규 XML 매퍼 생성**:
-1. `backend/src/main/resources/mapper/UserAnswerMapperCustom.xml`
-2. `backend/src/main/resources/mapper/ProblemRepositoryMapper.xml`
-3. `backend/src/main/resources/mapper/StatisticsRepositoryMapper.xml`
-4. `backend/src/main/resources/mapper/SubjectiveProblemRepositoryMapper.xml`
-
-#### 2.2.3 ANSI SQL 표준 쿼리 작성 가이드
-
-**변환 예시**:
-
-**JPQL → ANSI SQL**:
-```xml
-<!-- JPQL: SELECT COUNT(ua) FROM UserAnswer ua WHERE ua.userId = :userId AND ua.itemType = :problemType -->
-<!-- ANSI SQL -->
-<select id="countByUserIdAndProblemType" parameterType="map" resultType="long">
-    SELECT COUNT(*) 
-    FROM user_answer ua 
-    WHERE ua.user_id = #{userId} 
-      AND ua.item_type = #{problemType}
-</select>
+#### 오류 로그
+```
+Caused by: java.lang.NumberFormatException: For input string: "프로그래밍언어"
+at org.apache.ibatis.ognl.OgnlOps.doubleValue(OgnlOps.java:253)
 ```
 
-**RAND() → PostgreSQL 호환性**:
+#### 발생 위치
+- `ProblemQueryMapper.xml` 라인 104, 230, 248, 331
+- `ProblemApiController.getTheoryProblems()` (라인 45)
+- `ProblemApiController.getTheoryProblemMeta()` (라인 52)
+
+#### 근본 원인
+MyBatis OGNL 표현식에서 문자열 비교 시 `'프로그래밍언어' == category` 형태의 비교에서 OGNL이 문자열을 숫자로 변환 시도함.
+복잡한 `or` 조건식에서 OGNL 타입 강제 변환이 발생.
+
+#### 해결 방안
+**A. Controller에서 카테고리 타입 판별 로직 구현 (권장)**
+- `ProblemApiController`에서 프로그래밍 언어 카테고리 여부를 미리 판별
+- Mapper에 `isProgrammingLanguage` boolean 파라미터 추가 전달
+- XML의 복잡한 `choose/when` 조건식을 단순화
+
+**B. OGNL 표현식 수정**
 ```xml
-<!-- 기존: ORDER BY RAND() LIMIT ? -->
-<!-- PostgreSQL: ORDER BY RANDOM() LIMIT ? -->
-<select id="findRandomProblems" parameterType="map" resultType="map">
-    SELECT * 
-    FROM problem 
-    ORDER BY RANDOM() 
-    LIMIT #{limit}
-</select>
+<!-- 기존 (문제 발생) -->
+<when test="category == 'C언어' or category == 'java' or ...">
+
+<!-- 수정안 -->
+<when test="category.toString() == 'C언어' or category.toString() == 'java' or ...">
 ```
 
-**TRIM 함수 (ANSI SQL 표준)**:
+또는
+
 ```xml
-<!-- TRIM()은 ANSI SQL 표준이므로 유지 -->
-<select id="findTheoryProblemsByCategory" parameterType="map" resultType="map">
-    SELECT p.*, s.name AS category_name
-    FROM problem p
-    INNER JOIN subject s ON p.subject_id = s.id
-    WHERE TRIM(s.name) = TRIM(#{category})
-    ORDER BY p.id
-</select>
+<bind name="cat" value="category.toString()" />
+<when test="cat == 'C언어' or cat == 'java' or ...">
 ```
 
-### 2.3 Java 리포지토리 인터페이스 수정 (P1)
+#### 예상 작업량
+- `ProblemApiController.java` 수정: 30분
+- `ProblemQueryMapper.xml` 수정: 30분
+- 테스트: 30분
 
-#### 수정 패턴: @Query 제거 + Map 파라미터
+---
 
-**수정 전**:
+### 2. JWT ES256 알고리즘 불일치 (2건)
+
+#### 오류 로그
+```
+io.jsonwebtoken.UnsupportedJwtException: The parsed JWT indicates it was signed with the 'ES256' 
+signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify ES256 signatures.
+Caused by: io.jsonwebtoken.security.InvalidKeyException: ES256 verification keys must be PublicKeys
+```
+
+#### 발생 위치
+- `JwtTokenProvider.getUsername()` (라인 47)
+- `StatisticsController.getStatistics()` (라인 25)
+- `UserAnswerApiController.getWrongAnswers()` (라인 41)
+
+#### 근본 원인
+1. 애플리케이션의 JWT 설정(`jwt.secret`)은 HMAC(HS256)용 SecretKey 사용
+2. 들어오는 토큰이 ES256(Elliptic Curve) 알고리즘으로 서명됨
+3. Supabase Key가 HS256으로 서명된 JWT이나, 인증 흐름에서 다른 JWT가 전달되고 있음
+
+#### 확인 필요 사항
+- 프론트엔드(InformationExamApp)에서 어떤 토큰을 `Authorization` 헤더에 실어 보내는지 확인
+- Supabase 인증과 자체 JWT 인증의 구분 필요
+
+#### 해결 방안
+
+**A. 자체 JWT 발급/검증 사용 (권장)**
 ```java
-@Query("SELECT COUNT(ua) FROM UserAnswer ua WHERE ua.userId = :userId AND ua.itemType = :problemType")
-long countByUserIdAndProblemType(@Param("userId") Long userId, @Param("problemType") String problemType);
+// JwtTokenProvider.java - 현재는 HS256 사용 중 (올바름)
+// 프론트엔드에서 로그인 성공 시 자체 JWT 토큰을 받아 사용해야 함
 ```
 
-**수정 후**:
-```java
-import org.apache.ibatis.annotations.*;
-import java.util.Map;
+**B. Supabase 토큰 검증 로직 분리**
+- Supabase JWT는 Supabase 라이브러리로 검증
+- 자체 JWT는 JwtTokenProvider로 검증
+- 두 토큰 타입을 구분하는 로직 필요
 
-public interface UserAnswerRepository {
-    @Select("countByUserIdAndProblemType")
-    long countByUserIdAndProblemType(@Param("params") Map<String, Object> params);
-    // XML에서: #{params.userId}, #{params.problemType}
+**C. 임시 방안: 토큰 검증 우회 (개발 환경만)**
+```java
+// StatisticsController.java
+try {
+    String username = jwtTokenProvider.getUsername(token);
+    // ...
+} catch (UnsupportedJwtException e) {
+    // 개발 환경: 토큰 검증 우회
+    log.warn("JWT verification skipped: {}", e.getMessage());
+    // 임시 사용자 처리
 }
 ```
 
-**또는 더 간단한 방식**:
+#### 예상 작업량
+- 프론트엔드 토큰 전달 로직 확인: 1시간
+- JwtTokenProvider 수정: 1시간
+- Controller 토큰 처리 수정: 1시간
+
+---
+
+## 🟠 P1 - High Priority Issues
+
+### 3. subjective_problems 테이블 없음 (1건)
+
+#### 오류 로그
+```
+Caused by: org.postgresql.util.PSQLException: ERROR: relation "subjective_problems" does not exist
+Position: 22
+```
+
+#### 발생 위치
+- `StatisticsService.getSubjectiveRemainingCount()` (라인 118)
+- `StatisticsController.getSubjectiveCount()` (라인 47)
+- `SubjectiveProblemRepository.count()` 호출 시
+
+#### 근본 원인
+1. `SubjectiveProblem.java` 엔티티가 `@Table(name = "subjective_problems")`로 매핑됨
+2. `schema.sql`에는 `subjective_problems` 테이블 정의가 없음
+3. `spring.jpa.hibernate.ddl-auto=none`으로 설정되어 Hibernate가 테이블을 자동 생성하지 않음
+
+#### 스키마 분석 결과
+`schema.sql`에 정의된 테이블:
+- `subject` ✓
+- `users` ✓
+- `problem` ✓ (type 컬럼에 'SUBJECTIVE' 값 허용)
+- `programming_language_problems` ✓
+- `learning_card` ✓
+- `study_session` ✓
+- `study_session_item` ✓
+- `user_answer` ✓
+- `wrong_answer_bookmark` ✓
+- `user_statistics` ✓
+- **`subjective_problems` ❌ (누락)**
+
+#### 해결 방안
+
+**A. subjective_problems 테이블 생성 (권장)**
+```sql
+CREATE TABLE subjective_problems (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  subject_id BIGINT NOT NULL,
+  question VARCHAR(2000) NOT NULL,
+  answer VARCHAR(2000) NOT NULL,
+  explanation VARCHAR(4000),
+  difficulty INTEGER,
+  is_ai_generated BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT subjective_problems_subject_fk FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE CASCADE,
+  CONSTRAINT subjective_problems_difficulty_check CHECK (difficulty IS NULL OR (difficulty >= 1 AND difficulty <= 5))
+);
+```
+
+**B. problem 테이블 활용 방안**
+- `SubjectiveProblem` 엔티티를 `problem` 테이블로 리매핑
+- `@Where(clause = "type = 'SUBJECTIVE'")` 사용
+- 기존 `problem` 테이블의 `type` 컬럼 활용
+
+**C. JPA DDL 자동 생성 활성화 (임시)**
+```properties
+spring.jpa.hibernate.ddl-auto=update
+```
+⚠️ 운영 환경에서는 권장하지 않음
+
+#### 예상 작업량
+- 스키마 SQL 작성: 30분
+- 데이터베이스 적용: 30분
+- 검증: 30분
+
+---
+
+## 📊 작업 우선순위 및 일정
+
+| 순위 | 이슈 | 우선순위 | 예상 소요 시간 | 비고 |
+|------|------|----------|---------------|------|
+| 1 | subjective_problems 테이블 생성 | P1 | 1.5시간 | 스키마 누락 |
+| 2 | MyBatis OGNL 수정 | P0 | 1.5시간 | 즉시 수정 필요 |
+| 3 | JWT 알고리즘 불일치 | P0 | 3시간 | 프론트엔드 확인 필요 |
+
+---
+
+## 🛠️ step-by-step 실행 계획
+
+### Step 1: 데이터베이스 스키마 수정 (30분)
+```bash
+# 1. Supabase SQL Editor 또는 psql 접속
+# 2. 아래 SQL 실행
+
+CREATE TABLE IF NOT EXISTS subjective_problems (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  subject_id BIGINT NOT NULL,
+  question VARCHAR(2000) NOT NULL,
+  answer VARCHAR(2000) NOT NULL,
+  explanation VARCHAR(4000),
+  difficulty INTEGER,
+  is_ai_generated BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT subjective_problems_subject_fk FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE CASCADE,
+  CONSTRAINT subjective_problems_difficulty_check CHECK (difficulty IS NULL OR (difficulty >= 1 AND difficulty <= 5))
+);
+
+-- 인덱스 추가 (선택)
+CREATE INDEX IF NOT EXISTS idx_subjective_problems_subject_id ON subjective_problems(subject_id);
+```
+
+### Step 2: MyBatis OGNL 수정 (1시간)
+
+**2.1 ProblemApiController.java 수정**
 ```java
-public interface UserAnswerRepository {
-    // MyBatis Mapper XML 참조
-    long countByUserIdAndProblemType(Map<String, Object> params);
+// category 파라미터를 받을 때 프로그래밍 언어 여부 판별
+private static final Set<String> PROGRAMMING_LANGUAGES = 
+    Set.of("C언어", "java", "python", "Java", "Python", "c언어", "C", "c");
+
+@GetMapping("/theory")
+public ResponseEntity<List<ProblemResponseDto>> getTheoryProblems(@RequestParam String category) {
+    log.info("[MVC2] 이론 문제 조회: category={}", category);
+    boolean isProgramming = PROGRAMMING_LANGUAGES.contains(category);
+    List<Map<String, Object>> maps = problemQueryMapper.selectTheoryProblemsByCategory(category, isProgramming);
+    return ResponseEntity.ok(ProblemResponseDto.fromList(maps));
 }
 ```
 
-### 2.4 프론트엔드 파라미터 Map 형태 전송 (P2)
-
-**수정 예시** (`TheoryScreen.tsx`):
-```typescript
-// 기존
-const meta = await problemService.getTheoryProblemMeta(currentCategory);
-
-// 수정 후 (Map 형태로 전송)
-const params = {
-  category: currentCategory,
-  type: 'THEORY'
-};
-const meta = await problemService.getTheoryProblemMeta(params);
-```
-
-**API 서비스 수정** (`services/api.ts`):
-```typescript
-// Map 형태로 파라미터 전송
-getTheoryProblemMeta: (params: Map<string, any>) => 
-  axios.get('/api/problems/theory/meta', { params }),
-```
-
----
-
-## 3. 수정 우선순위 및 실행 단계
-
-### P0 (즉시 수정 필요)
-1. **포트 불일치 해결**
-   - `InformationExamApp/src/hooks/useGoogleAuth.tsx` line 14: `8088` → `8080`
-   - 또는 `application.yml` server.port: `8080` → `8088`
-
-2. **PostgreSQL 연결 테스트**
-   - MySQL MCP로 테스트했으나 PostgreSQL 전용 테스트 필요
-   - 연결 실패 시: PostgreSQL 서비스 시작, 데이터베이스 생성 확인
-
-### P1 (주요 구조 변경)
-1. **@Query → XML 이관**
-   - 13개 @Query 메서드 XML 매퍼로 이관
-   - 모든 쿼리 ANSI SQL 표준으로 재작성
-   - `RAND()` → `RANDOM()` (PostgreSQL)
-   - 테이블/컬럼명 소문자 표준화 (snake_case)
-
-2. **Java 리포지토리 인터페이스 수정**
-   - `@Query` 어노테이션 제거
-   - 메서드 파라미터를 `Map<String, Object>` 형태로 변경
-   - MyBatis `@Select`, `@Insert` 등 어노테이션 또는 XML 매퍼 참조
-
-3. **ANSI SQL 표준화**
-   - 모든 SQL을 순수 SQL + ANSI 표준 준수
-   - 데이터베이스 고유 함수 최소화
-   - PostgreSQL 전용 문법: `RANDOM()`, `SERIAL`, `GENERATED ALWAYS AS IDENTITY` 등만 사용
-
-### P2 (프론트엔드 구조 개선)
-1. **API 호출 파라미터 Map 형태로 통일**
-   - 모든 API 호출 시 Map/Object 형태로 파라미터 전송
-   - 일관된 데이터 구조 유지
-
-2. **에러 처리 표준화**
-   - API 호출 실패 시 일관된 에러 핸들링
-   - 토큰 만료 처리
-
----
-
-## 4. XML 매퍼 파일 상세 설계
-
-### 4.1 UserAnswerMapperCustom.xml
+**2.2 ProblemQueryMapper.xml 수정**
 ```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.informationexam.repository.UserAnswerRepository">
-    
-    <!-- COUNT by userId and problemType -->
-    <select id="countByUserIdAndProblemType" parameterType="map" resultType="long">
-        SELECT COUNT(*) 
-        FROM user_answer 
-        WHERE user_id = #{userId} 
-          AND item_type = #{problemType}
-    </select>
-    
-    <!-- COUNT correct by userId and problemType -->
-    <select id="countCorrectByUserIdAndProblemType" parameterType="map" resultType="long">
-        SELECT COUNT(*) 
-        FROM user_answer 
-        WHERE user_id = #{userId} 
-          AND item_type = #{problemType}
-          AND is_correct = TRUE
-    </select>
-    
-    <!-- COUNT total by category -->
-    <select id="countTotalByCategory" parameterType="map" resultType="long">
-        SELECT COUNT(*) 
-        FROM user_answer 
-        WHERE user_id = #{userId} 
-          AND item_type IN ('OBJECTIVE', 'SUBJECTIVE', 'PROGRAMMING_LANGUAGE')
-    </select>
-    
-    <!-- COUNT correct by category -->
-    <select id="countCorrectByCategory" parameterType="map" resultType="long">
-        SELECT COUNT(*) 
-        FROM user_answer 
-        WHERE user_id = #{userId} 
-          AND item_type = #{category}
-          AND is_correct = TRUE
-    </select>
-</mapper>
+<select id="selectTheoryProblemsByCategory" resultType="map">
+    <choose>
+        <when test="isProgramming == true">
+            SELECT 
+                id, question, answer AS correct_answer, explanation,
+                prog_language AS category, 'PROGRAMMING_LANGUAGE' AS type,
+                difficulty, NULL AS option1, NULL AS option2, NULL AS option3,
+                NULL AS option4, NULL AS option5, is_ai_generated, prog_language AS programming_language
+            FROM programming_language_problems
+            WHERE LOWER(prog_language) = LOWER(#{category})
+            ORDER BY id ASC
+        </when>
+        <otherwise>
+            SELECT 
+                p.id, p.question, p.answer AS correct_answer, p.explanation,
+                s.name AS category, p.type, p.difficulty,
+                p.option1, p.option2, p.option3, p.option4, p.option5,
+                p.is_ai_generated, NULL AS programming_language
+            FROM problem p
+            INNER JOIN subject s ON p.subject_id = s.id
+            WHERE TRIM(s.name) = TRIM(#{category})
+            ORDER BY p.id ASC
+        </otherwise>
+    </choose>
+</select>
 ```
 
-### 4.2 ProblemRepositoryMapper.xml
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.informationexam.repository.ProblemRepository">
-    
-    <!-- Find theory problems by category -->
-    <select id="findTheoryProblemsByCategory" parameterType="map" resultType="map">
-        SELECT p.*, s.name AS category_name
-        FROM problem p
-        INNER JOIN subject s ON p.subject_id = s.id
-        WHERE TRIM(s.name) = TRIM(#{category})
-        ORDER BY p.id
-    </select>
-    
-    <!-- Find theory problem IDs by category -->
-    <select id="findTheoryProblemIdsByCategory" parameterType="map" resultType="Long">
-        SELECT p.id
-        FROM problem p
-        INNER JOIN subject s ON p.subject_id = s.id
-        WHERE TRIM(s.name) = TRIM(#{category})
-        ORDER BY p.id
-    </select>
-    
-    <!-- COUNT by subject name -->
-    <select id="countBySubjectName" parameterType="map" resultType="long">
-        SELECT COUNT(*)
-        FROM problem p
-        INNER JOIN subject s ON p.subject_id = s.id
-        WHERE s.name = #{categoryName}
-    </select>
-    
-    <!-- Find problems by difficulty and category (ANSI SQL) -->
-    <select id="findProblemsByDifficultyAndCategory" parameterType="map" resultType="map">
-        SELECT p.*, s.name AS category_name
-        FROM problem p
-        INNER JOIN subject s ON p.subject_id = s.id
-        WHERE p.difficulty = #{difficulty}
-          AND TRIM(s.name) = TRIM(#{category})
-        ORDER BY RANDOM()
-        LIMIT #{limit}
-    </select>
-    
-    <!-- Find problems by difficulty and category (JPQL to SQL) -->
-    <select id="findProblemsByDifficultyAndCategoryJPQL" parameterType="map" resultType="map">
-        SELECT p.*
-        FROM problem p
-        WHERE (#{difficulty} = 0 OR p.difficulty = #{difficulty})
-          AND (#{category} IS NULL OR TRIM(p.subject.name) = TRIM(#{category}))
-    </select>
-    
-    <!-- Find random problems -->
-    <select id="findRandomProblems" parameterType="map" resultType="map">
-        SELECT * 
-        FROM problem 
-        ORDER BY RANDOM()
-        LIMIT #{limit}
-    </select>
-    
-    <!-- Find random problems by type -->
-    <select id="findRandomProblemsByType" parameterType="map" resultType="map">
-        SELECT * 
-        FROM problem 
-        WHERE type = #{type}
-        ORDER BY RANDOM()
-        LIMIT #{limit}
-    </select>
-</mapper>
+**2.3 Mapper 인터페이스 수정**
+```java
+@Mapper
+public interface ProblemQueryMapper {
+    List<Map<String, Object>> selectTheoryProblemsByCategory(
+        @Param("category") String category, 
+        @Param("isProgramming") boolean isProgramming
+    );
+    // 다른 메서드들도 동일하게 수정...
+}
 ```
 
-### 4.3 SubjectiveProblemRepositoryMapper.xml
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.informationexam.repository.SubjectiveProblemRepository">
-    
-    <!-- COUNT distinct solved by userId -->
-    <select id="countDistinctSolvedByUserId" parameterType="map" resultType="long">
-        SELECT COUNT(DISTINCT ua.reference_id) 
-        FROM user_answer ua 
-        WHERE ua.user_id = #{userId} 
-          AND ua.problem_type = 'SUBJECTIVE'
-    </select>
-</mapper>
+### Step 3: JWT 문제 해결 (2시간)
+
+**3.1 프론트엔드 확인**
+- InformationExamApp에서 로그인 후 저장되는 토큰 확인
+- Supabase 세션 토큰 vs 자체 JWT 토큰 구분
+
+**3.2 JwtTokenProvider 수정 (임시 우회)**
+```java
+public String getUsername(String token) {
+    try {
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    } catch (UnsupportedJwtException e) {
+        // ES256 토큰인 경우 처리 (Supabase 토큰 등)
+        log.warn("Unsupported JWT algorithm: {}", e.getMessage());
+        throw e; // 또는 적절한 예외 처리
+    }
+}
 ```
 
-### 4.4 StatisticsRepositoryMapper.xml
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.informationexam.repository.StatisticsRepository">
+**3.3 StatisticsController 수정**
+```java
+@GetMapping("/subjective-count")
+public ResponseEntity<Map<String, Long>> getSubjectiveCount(
+        @RequestHeader(value = "Authorization", required = false) String authHeader) {
+    Map<String, Long> response = new HashMap<>();
+    Long userId = null;
     
-    <!-- COUNT distinct reference IDs by userId and problemType -->
-    <select id="countDistinctReferenceIdsByUserIdAndProblemType" parameterType="map" resultType="long">
-        SELECT COUNT(DISTINCT s.reference_id) 
-        FROM statistics s
-        WHERE s.user_id = #{userId} 
-          AND s.problem_type = #{problemType}
-    </select>
-</mapper>
+    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            String username = jwtTokenProvider.getUsername(token);
+            User user = userService.getUserByUsername(username);
+            userId = user.getId();
+        } catch (Exception e) {
+            log.warn("JWT validation failed: {}", e.getMessage());
+            // 토큰이 유효하지 않아도 전체 개수는 반환
+        }
+    }
+    
+    response.put("count", statisticsService.getSubjectiveRemainingCount(userId));
+    return ResponseEntity.ok(response);
+}
 ```
 
 ---
 
-## 5. ANSI SQL 표준 준수 체크리스트
+## ✅ 검증 체크리스트
 
-### 5.1 사용 가능 (ANSI SQL 표준)
-- `SELECT`, `INSERT`, `UPDATE`, `DELETE`
-- `WHERE`, `FROM`, `INNER JOIN`, `LEFT JOIN`, `RIGHT JOIN`
-- `COUNT()`, `SUM()`, `AVG()`, `MAX()`, `MIN()`
-- `TRIM()`, `UPPER()`, `LOWER()`
-- `ORDER BY`, `GROUP BY`, `HAVING`
-- `DISTINCT`, `AS` (alias)
-- `AND`, `OR`, `NOT`, `IN`, `BETWEEN`, `LIKE`
-- `IS NULL`, `IS NOT NULL`
-- `LIMIT` (일부 DB 지원, PostgreSQL은 지원)
+### 데이터베이스
+- [ ] `subjective_problems` 테이블 생성 확인
+- [ ] 외래키 제약조건 정상 작동 확인
+- [ ] `problem` 테이블과 데이터 중복 없음 확인
 
-### 5.2 PostgreSQL 전용 (필요 시만 사용)
-- `RANDOM()` (대신 `ORDER BY RANDOM()`)
-- `SERIAL`, `BIGSERIAL` (자동 증가)
-- `GENERATED ALWAYS AS IDENTITY` (ANSI 표준 권장)
-- `ILIKE` (대소문자 무시 검색, 필요 시 `LOWER()` 사용)
-- `UUID` 데이터 타입
+### MyBatis
+- [ ] `category=프로그래밍언어` 파라미터로 이론 문제 조회 정상 작동
+- [ ] `category=운영체제` 파라미터로 이론 문제 조회 정상 작동
+- [ ] NumberFormatException 재발생하지 않음
 
-### 5.3 금지 (데이터베이스 고유 문법)
-- MySQL: `RAND()`, `NOW()`, `CURDATE()`
-- SQLite: `datetime('now')`, `last_insert_rowid()`
-- PostgreSQL: `::` 캐스팅 (대신 `CAST()` 사용)
-- Oracle: `ROWNUM`, `SYSDATE`
+### JWT
+- [ ] Statistics API 호출 시 401 오류 없음
+- [ ] Wrong Answers API 호출 시 401 오류 없음
+- [ ] 올바른 사용자 ID로 조회됨
+
+### 통합 테스트
+- [ ] `/api/problems/theory?category=프로그래밍언어` 200 OK
+- [ ] `/api/problems/theory/meta?category=운영체제` 200 OK
+- [ ] `/api/statistics` 200 OK (토큰 유효 시)
+- [ ] `/api/statistics/subjective-count` 200 OK
+- [ ] `/api/wrong-answers` 200 OK (토큰 유효 시)
 
 ---
 
-## 6. 실행 단계 요약
+## 📝 참고 사항
 
-### Step 1: 환경 설정 수정 (1시간)
-1. 프론트엔드 API 포트 수정 (8088 → 8080)
-2. PostgreSQL 서비스 상태 확인
-3. 데이터베이스 `information_exam` 생성 확인
+1. **MyBatis OGNL 주의사항**
+   - OGNL은 `'문자열' == 변수` 비교 시 타입 강제 변환 시도
+   - 복잡한 `or` 조건보다는 Java 코드에서 판별 후 boolean 전달 권장
 
-### Step 2: XML 매퍼 생성 (2시간)
-1. `UserAnswerMapperCustom.xml` 생성
-2. `ProblemRepositoryMapper.xml` 생성
-3. `SubjectiveProblemRepositoryMapper.xml` 생성
-4. `StatisticsRepositoryMapper.xml` 생성
-5. `mybatis.mapper-locations` 설정에 경로 추가
+2. **JWT 알고리즘**
+   - ES256: Elliptic Curve (비대칭키, PublicKey/ PrivateKey)
+   - HS256: HMAC (대칭키, SecretKey)
+   - 두 알고리즘은 호환되지 않음
 
-### Step 3: Java 리포지토리 수정 (2시간)
-1. `@Query` 어노테이션 제거
-2. 메서드 시그니처를 Map 파라미터로 변경
-3. MyBatis 어노테이션 또는 XML 매퍼 참조 추가
-
-### Step 4: 프론트엔드 파라미터 수정 (1시간)
-1. API 호출 시 Map 형태로 파라미터 전송
-2. 타입 정의 및 인터페이스 수정
-
-### Step 5: 테스트 및 검증 (1시간)
-1. PostgreSQL 연결 테스트
-2. 각 API 엔드포인트 테스트
-3. XML 매퍼 쿼리 실행 확인
+3. **JPA DDL 설정**
+   - `none`: 스키마 검증만 수행 (운영 권장)
+   - `validate`: 스키마 검증 (운영 권장)
+   - `update`: 스키마 자동 갱신 (개발 환경)
+   - `create`: 세션 종료 시 삭제 후 생성 (테스트만)
 
 ---
 
-## 7. 참고 사항
+## 🚀 실행 명령어
 
-### 7.1 기존 ProblemQueryMapper.xml 분석
-- 이미 복잡한 쿼리들이 XML로 구현됨
-- `RAND()` 사용 → `RANDOM()`으로 수정 필요
-- `LIMIT`은 PostgreSQL에서 지원되므로 유지 가능
-- `LOWER()` 함수는 ANSI SQL 표준이므로 유지
+```bash
+# 1. 백엔드 빌드
+cd C:\Users\SEOL\InformationExamProject\backend
+./mvnw clean package -DskipTests
 
-### 7.2 MyBatis 설정
-```yaml
-mybatis:
-  mapper-locations: classpath:mybatis/mapper/*.xml,classpath:mapper/*.xml
-  type-aliases-package: com.example.informationexam.model
-  configuration:
-    map-underscore-to-camel-case: true
+# 2. 애플리케이션 재시작
+# IDE에서 Spring Boot 재시작 또는
+java -jar target/information-exam-backend-*.jar
+
+# 3. API 테스트
+curl "http://localhost:8088/api/problems/theory?category=운영체제"
+curl "http://localhost:8088/api/problems/theory/meta?category=프로그래밍언어"
 ```
 
-### 7.3 PostgreSQL 데이터베이스 스키마 검증
-- 기존 SQLite 스키마와 호환성 확인
-- 테이블 생성 SQL이 ANSI SQL 표준 준수하는지 확인
-- 자동 증가 컬럼: `SERIAL` → `GENERATED ALWAYS AS IDENTITY` (권장)
-
 ---
 
-## 8. 결론
-
-본 프로젝트는 **이미 PostgreSQL으로 전환 준비가 완료**된 상태입니다. 주요 작업은:
-1. **포트 불일치 수정** (P0)
-2. **@Query → XML 이관** (P1, 13개 메서드)
-3. **ANSI SQL 표준화** (RAND() → RANDOM())
-4. **Map 파라미터 통일**
-
-예상 소요 시간: **7시간**  
-우선순위: **P0 → P1 → P2**
-
----
-
-**작성자**: opencode/big-pickle  
-**생성일시**: 2026-05-04 PM_03-45-00  
-**버전**: v1.0
+**작성자**: AI Assistant (Kilo)
+**버전**: 1.0
+**최종 수정**: 2026-05-06

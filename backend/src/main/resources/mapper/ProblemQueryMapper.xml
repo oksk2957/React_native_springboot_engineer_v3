@@ -53,14 +53,14 @@
     <!-- 유형별 랜덤 조회 -->
     <select id="selectRandomProblemsByType" resultType="map">
         <choose>
-            <when test="type == 'PROGRAMMING_LANGUAGE'">
+            <when test="type == &quot;PROGRAMMING_LANGUAGE&quot;">
                 SELECT 
                     id,
                     question,
                     answer AS correct_answer,
                     explanation,
                     prog_language AS category,
-                    'PROGRAMMING_LANGUAGE' AS type,
+                    &apos;PROGRAMMING_LANGUAGE&apos; AS type,
                     difficulty,
                     NULL AS option1,
                     NULL AS option2,
@@ -101,14 +101,14 @@
     <!-- 이론 문제 조회 -->
     <select id="selectTheoryProblemsByCategory" resultType="map">
         <choose>
-            <when test="category == 'C언어' or category == 'java' or category == 'python' or category == 'Java' or category == 'Python' or category == 'c언어' or category == 'C' or category == 'c'">
+            <when test="isProgrammingLanguage(category)">
                 SELECT 
                     id,
                     question,
                     answer AS correct_answer,
                     explanation,
                     prog_language AS category,
-                    'PROGRAMMING_LANGUAGE' AS type,
+                    &apos;PROGRAMMING_LANGUAGE&apos; AS type,
                     difficulty,
                     NULL AS option1,
                     NULL AS option2,
@@ -146,58 +146,35 @@
     </select>
 
     <!-- 과목별 1건 랜덤 조회: 서브쿼리 사용 (DISTINCT ON 대체) -->
-    <select id="selectOneRandomProblemPerSubject" resultType="map">
-        <choose>
-            <when test="type == 'PROGRAMMING_LANGUAGE'">
-                SELECT 
-                    p.id,
-                    p.question,
-                    p.answer AS correct_answer,
-                    p.explanation,
-                    p.prog_language AS category,
-                    'PROGRAMMING_LANGUAGE' AS type,
-                    p.difficulty,
-                    NULL AS option1,
-                    NULL AS option2,
-                    NULL AS option3,
-                    NULL AS option4,
-                    NULL AS option5,
-                    p.is_ai_generated,
-                    p.prog_language AS programming_language
-                FROM programming_language_problems p
-                WHERE p.id IN (
-                    SELECT id FROM programming_language_problems
-                    ORDER BY RANDOM()
-                    LIMIT 1
-                )
-            </when>
-            <otherwise>
-                SELECT 
-                    p.id,
-                    p.question,
-                    p.answer AS correct_answer,
-                    p.explanation,
-                    s.name AS category,
-                    p.type,
-                    p.difficulty,
-                    p.option1,
-                    p.option2,
-                    p.option3,
-                    p.option4,
-                    p.option5,
-                    p.is_ai_generated,
-                    NULL AS programming_language
-                FROM problem p
-                INNER JOIN subject s ON p.subject_id = s.id
-                WHERE p.type = #{type}
-                  AND p.subject_id IN (
-                    SELECT DISTINCT subject_id FROM problem WHERE type = #{type}
-                )
-                ORDER BY RANDOM()
-                LIMIT 1
-            </otherwise>
-        </choose>
-    </select>
+ <select id="selectObjectiveProblems" resultType="map" parameterType="map">
+       <choose>
+           <!-- 무작위 5개 학습 모드 -->
+           <when test="isRandom == true">
+               SELECT
+                   s.name AS category,
+                   p.id AS objective_id,
+                   p.question AS objective_question,
+                   p.answer AS objective_answer,
+                   p.option1,
+                   p.option2,
+                   p.option3,
+                   p.option4,
+                   p.option5,
+                   'OBJECTIVE' AS type
+               FROM subject s
+               INNER JOIN problem p ON s.id = p.subject_id
+               WHERE p.type = 'OBJECTIVE'
+               ORDER BY RANDOM()
+               LIMIT 5
+           </when>
+           <!-- 전체 목록 모드 -->
+           <otherwise>
+               SELECT *
+               FROM problem
+               WHERE type = 'OBJECTIVE'
+           </otherwise>
+       </choose>
+   </select>
 
     <!-- 답변 검증 (ANSI SQL 순수 쿼리) -->
     <select id="validateAnswerProc" resultType="map">
@@ -206,14 +183,7 @@
             p.explanation,
             p.answer AS correct_answer
         FROM problem p
-        WHERE p.id = #{p_problem_id} AND p.type = 'OBJECTIVE'
-        UNION ALL
-        SELECT 
-            UPPER(TRIM(sp.answer)) = UPPER(TRIM(#{p_submitted_answer})) AS is_correct,
-            sp.explanation,
-            sp.answer AS correct_answer
-        FROM subjective_problems sp
-        WHERE sp.id = #{p_problem_id}
+        WHERE p.id = #{p_problem_id} AND p.type = &apos;OBJECTIVE&apos;
         UNION ALL
         SELECT 
             UPPER(TRIM(plp.answer)) = UPPER(TRIM(#{p_submitted_answer})) AS is_correct,
@@ -227,7 +197,7 @@
     <!-- 기존 ID 조회 쿼리 -->
     <select id="selectTheoryProblemIdsByCategory" resultType="java.lang.Long">
         <choose>
-            <when test="category == 'C언어' or category == 'java' or category == 'python' or category == 'Java' or category == 'Python' or category == 'c언어' or category == 'C' or category == 'c'">
+            <when test="isProgrammingLanguage(category)">
                 SELECT id
                 FROM programming_language_problems
                 WHERE LOWER(prog_language) = LOWER(#{category})
@@ -245,7 +215,7 @@
 
     <select id="selectStudyIdsByDifficultyCategory" resultType="java.lang.Long">
         <choose>
-            <when test="category == 'C언어' or category == 'java' or category == 'python' or category == 'Java' or category == 'Python' or category == 'c언어' or category == 'C' or category == 'c'">
+            <when test="isProgrammingLanguage(category)">
                 SELECT id
                 FROM programming_language_problems
                 WHERE difficulty = #{difficulty} AND LOWER(prog_language) = LOWER(#{category})
@@ -266,7 +236,7 @@
 
     <select id="selectStudyIdsByType" resultType="java.lang.Long">
         <choose>
-            <when test="type == 'PROGRAMMING_LANGUAGE'">
+            <when test="type == &quot;PROGRAMMING_LANGUAGE&quot;">
                 SELECT id
                 FROM programming_language_problems
                 ORDER BY RANDOM()
@@ -313,7 +283,7 @@
             FROM programming_language_problems
         ) t
         <where>
-            cat IS NOT NULL AND cat != ''
+            cat IS NOT NULL AND cat != &apos;&apos;
             <if test="excludeCategories != null and excludeCategories.size() > 0">
                 AND cat NOT IN
                 <foreach collection="excludeCategories" item="category" open="(" separator="," close=")">
@@ -328,7 +298,7 @@
 
     <select id="selectRandomProblemIdsByCategory" resultType="java.lang.Long">
         <choose>
-            <when test="category == 'C언어' or category == 'java' or category == 'python' or category == 'Java' or category == 'Python' or category == 'c언어' or category == 'C' or category == 'c'">
+            <when test="isProgrammingLanguage(category)">
                 SELECT id
                 FROM programming_language_problems
                 WHERE LOWER(prog_language) = LOWER(#{category})
@@ -352,26 +322,34 @@
 
     <!-- 객관식 랜덤학습: 과목별 문제 + 옵션 1~5 포함 -->
     <select id="selectRandomObjectiveProblems" resultType="map">
-        SELECT 
-            p.id,
-            p.question,
-            p.answer AS correct_answer,
-            p.explanation,
-            s.name AS category,
-            p.type,
-            p.difficulty,
-            p.option1,
-            p.option2,
-            p.option3,
-            p.option4,
-            p.option5,
-            p.is_ai_generated,
-            NULL AS programming_language
-        FROM problem p
-        INNER JOIN subject s ON p.subject_id = s.id
-        WHERE p.type = 'OBJECTIVE'
-        ORDER BY RANDOM()
-        LIMIT #{limit}
+<choose>
+           <!-- 무작위 5개 학습 모드 -->
+           <when test="isRandom == true">
+               SELECT
+                   s.name AS category,
+                   p.id AS objective_id,
+                   p.question AS objective_question,
+                   p.answer AS objective_answer,
+                   p.option1,
+                   p.option2,
+                   p.option3,
+                   p.option4,
+                   p.option5,
+                   'OBJECTIVE' AS type
+               FROM subject s
+               INNER JOIN problem p ON s.id = p.subject_id
+               WHERE p.type = 'OBJECTIVE'
+               ORDER BY RANDOM()
+               LIMIT 5
+           </when>
+           <!-- 전체 목록 모드 -->
+           <otherwise>
+               SELECT *
+               FROM problem
+               WHERE type = 'OBJECTIVE'
+           </otherwise>
+       </choose>
+
     </select>
 
     <!-- 과목별 객관식 문제 개수 조회 -->
@@ -381,7 +359,7 @@
             s.name AS subject_name,
             COUNT(p.id) AS problem_count
         FROM subject s
-        LEFT JOIN problem p ON s.id = p.subject_id AND p.type = 'OBJECTIVE'
+        LEFT JOIN problem p ON s.id = p.subject_id AND p.type = &apos;OBJECTIVE&apos;
         GROUP BY s.id, s.name
         ORDER BY s.id
     </select>
