@@ -50,11 +50,6 @@ public class ProblemService {
                 problemQueryMapper.selectByDifficultyAndCategory(0, category, limit));
     }
 
-    public List<ProblemResponseDto> getTheoryProblems(String category) {
-        return problemResponseAssembler.toDtoList(
-                problemQueryMapper.selectTheoryProblemsByCategory(category, PROGRAMMING_LANGUAGES.contains(category)));
-    }
-
     public TheoryProblemMetaDto getTheoryProblemMeta(String category) {
         List<Long> ids = problemQueryMapper.selectTheoryProblemIdsByCategory(category, PROGRAMMING_LANGUAGES.contains(category));
         return new TheoryProblemMetaDto(ids.size(), ids);
