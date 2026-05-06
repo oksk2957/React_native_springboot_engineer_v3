@@ -14,7 +14,8 @@ import {
 } from 'react-native';
 import { useAuthStore } from '../stores/authStore';
 import { useRoute } from '@react-navigation/native';
-import { problemService } from '../services/api';
+import { fetchTheoryCards } from '../api/theoryApi';
+import { TheoryCard } from '../types/theory';
 
 const categoryIcons: Record<string, string> = {
   '운영체제': '💻',
@@ -41,15 +42,14 @@ export default function TheoryScreen() {
   const { darkMode } = useAuthStore();
   const [activeTab, setActiveTab] = useState<'flash' | 'subjective'>('flash');
   const [currentCategory, setCurrentCategory] = useState(route?.params?.category || '운영체제');
-  
-  // 통합된 카드 데이터 관리
-  const [cards, setCards] = useState<any[]>([]);
+
+  // 통합된 카드 데이터 관리 (TheoryCard 타입 사용)
+  const [cards, setCards] = useState<TheoryCard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [answer, setAnswer] = useState('');
   const [showAnswer, setShowAnswer] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isNavLoading, setIsNavLoading] = useState(false);
 
   // Toast 애니메이션 상태
   const [toastVisible, setToastVisible] = useState(false);
@@ -58,12 +58,12 @@ export default function TheoryScreen() {
 
   const isDark = darkMode;
   const themeColor = categoryColors[currentCategory] || '#4a90e2';
-  
-  // 현재 탭에 맞는 카드 필터링
-  const filteredCards = cards.filter(card => 
-    activeTab === 'flash' ? card.card_type === 'FLASHCARD' : card.card_type === 'SUBJECTIVE'
+
+  // 현재 탭에 맞는 카드 필터링 (cardType 카멜케이스 사용)
+  const filteredCards = cards.filter(card =>
+    activeTab === 'flash' ? card.cardType === 'FLASHCARD' : card.cardType === 'SUBJECTIVE'
   );
-  
+
   const currentCard = filteredCards[currentIndex] || null;
   const totalInTab = filteredCards.length;
 
@@ -82,7 +82,8 @@ export default function TheoryScreen() {
   const loadTheoryCards = async () => {
     setIsLoading(true);
     try {
-      const data = await problemService.getTheoryCards(currentCategory);
+      // fetchTheoryCards API 사용 (TheoryCard[] 반환)
+      const data = await fetchTheoryCards(currentCategory);
       setCards(data || []);
       setCurrentIndex(0);
       setIsFlipped(false);
@@ -126,8 +127,9 @@ export default function TheoryScreen() {
   const handleCheckAnswer = () => {
     if (!currentCard) return;
     const userAnswer = answer.trim().toLowerCase();
-    const correctAnswer = (currentCard.back_text || '').toLowerCase();
-    
+    // backText 카멜케이스 사용
+    const correctAnswer = (currentCard.backText || '').toLowerCase();
+
     const possibleAnswers = [
       correctAnswer,
       ...correctAnswer.split(/[()/,]/).map(s => s.trim()).filter(s => s.length > 0)
@@ -137,7 +139,7 @@ export default function TheoryScreen() {
       showToast('정답입니다! 🎉', 'success');
       setShowAnswer(true);
     } else {
-      showToast(`오답입니다. ✍️`, 'error');
+      showToast('오답입니다. ✍️', 'error');
     }
   };
 
@@ -154,7 +156,7 @@ export default function TheoryScreen() {
     <View style={styles.containerWrapper}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <ScrollView style={[styles.container, isDark && styles.containerDark]} contentContainerStyle={{ flexGrow: 1 }}>
-          
+
           <View style={[styles.header, { backgroundColor: themeColor }]}>
             <Text style={styles.categoryIcon}>{categoryIcons[currentCategory]}</Text>
             <View>
@@ -164,14 +166,14 @@ export default function TheoryScreen() {
           </View>
 
           <View style={[styles.tabBar, isDark && styles.tabBarDark]}>
-            <TouchableOpacity 
-              style={[styles.tabButton, activeTab === 'flash' && styles.activeTab]} 
+            <TouchableOpacity
+              style={[styles.tabButton, activeTab === 'flash' && styles.activeTab]}
               onPress={() => setActiveTab('flash')}
             >
               <Text style={[styles.tabText, activeTab === 'flash' && { color: themeColor, fontWeight: 'bold' }]}>플래시 카드</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.tabButton, activeTab === 'subjective' && styles.activeTab]} 
+            <TouchableOpacity
+              style={[styles.tabButton, activeTab === 'subjective' && styles.activeTab]}
               onPress={() => setActiveTab('subjective')}
             >
               <Text style={[styles.tabText, activeTab === 'subjective' && { color: themeColor, fontWeight: 'bold' }]}>주관식 퀴즈</Text>
@@ -187,20 +189,21 @@ export default function TheoryScreen() {
 
                 <View style={styles.cardWrapper}>
                   <TouchableOpacity style={[styles.sideNavButton, styles.sideNavLeft]} onPress={handlePrev}>
-                    <Text style={styles.sideNavText}>{"<"}</Text>
+                    <Text style={styles.sideNavText}>{'<'}</Text>
                   </TouchableOpacity>
 
                   <View style={styles.cardStage}>
                     {activeTab === 'flash' ? (
-                      <TouchableOpacity 
-                        activeOpacity={0.9} 
-                        style={[styles.flashCard, isDark && styles.flashCardDark, { borderColor: themeColor }]} 
+                      <TouchableOpacity
+                        activeOpacity={0.9}
+                        style={[styles.flashCard, isDark && styles.flashCardDark, { borderColor: themeColor }]}
                         onPress={() => setIsFlipped(!isFlipped)}
                       >
                         {isFlipped ? (
                           <View style={styles.cardContent}>
                             <Text style={[styles.termTitle, { color: themeColor }]}>정답</Text>
-                            <Text style={[styles.termText, isDark && styles.textWhite]}>{currentCard.back_text}</Text>
+                            {/* backText 카멜케이스 사용 */}
+                            <Text style={[styles.termText, isDark && styles.textWhite]}>{currentCard.backText}</Text>
                             {currentCard.explanation && (
                               <View style={styles.explanationBox}>
                                 <Text style={[styles.explanationText, isDark && styles.textWhite]}>{currentCard.explanation}</Text>
@@ -210,7 +213,8 @@ export default function TheoryScreen() {
                         ) : (
                           <View style={styles.cardContent}>
                             <Text style={styles.hintTitle}>문제</Text>
-                            <Text style={[styles.definitionText, isDark && styles.textWhite]}>{currentCard.front_text}</Text>
+                            {/* frontText 카멜케이스 사용 */}
+                            <Text style={[styles.definitionText, isDark && styles.textWhite]}>{currentCard.frontText}</Text>
                           </View>
                         )}
                         <Text style={styles.flipGuide}>탭하여 뒤집기 🔄</Text>
@@ -219,7 +223,8 @@ export default function TheoryScreen() {
                       <View style={[styles.subjectiveCard, isDark && styles.flashCardDark]}>
                         <Text style={styles.hintTitle}>문제</Text>
                         <View style={styles.definitionBox}>
-                          <Text style={[styles.definitionText, isDark && styles.textWhite]}>{currentCard.front_text}</Text>
+                          {/* frontText 카멜케이스 사용 */}
+                          <Text style={[styles.definitionText, isDark && styles.textWhite]}>{currentCard.frontText}</Text>
                         </View>
                         <TextInput
                           style={[styles.answerInput, isDark && styles.inputDark]}
@@ -233,7 +238,8 @@ export default function TheoryScreen() {
                         </TouchableOpacity>
                         {showAnswer && (
                           <View style={styles.answerResult}>
-                            <Text style={[styles.answerLabel, { color: themeColor }]}>정답: {currentCard.back_text}</Text>
+                            {/* backText 카멜케이스 사용 */}
+                            <Text style={[styles.answerLabel, { color: themeColor }]}>정답: {currentCard.backText}</Text>
                             {currentCard.explanation && (
                               <Text style={[styles.resultExplanationText, isDark && styles.textWhite]}>{currentCard.explanation}</Text>
                             )}
@@ -244,7 +250,7 @@ export default function TheoryScreen() {
                   </View>
 
                   <TouchableOpacity style={[styles.sideNavButton, styles.sideNavRight]} onPress={handleNext}>
-                    <Text style={styles.sideNavText}>{">"}</Text>
+                    <Text style={styles.sideNavText}>{'>'}</Text>
                   </TouchableOpacity>
                 </View>
               </>
