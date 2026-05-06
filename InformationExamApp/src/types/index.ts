@@ -21,6 +21,18 @@ export interface Problem {
   year?: number;
 }
 
+export interface TheoryCardDto {
+  id: number;
+  subjectId: number;
+  cardType: 'SUBJECTIVE' | 'FLASHCARD';
+  question?: string;
+  answer?: string;
+  explanation?: string;
+  frontText?: string;
+  backText?: string;
+  answerText?: string;
+}
+
 export interface SubjectiveProblem {
   id: number;
   question: string;
