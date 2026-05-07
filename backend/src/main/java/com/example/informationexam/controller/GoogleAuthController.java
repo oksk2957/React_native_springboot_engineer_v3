@@ -1,16 +1,14 @@
 package com.example.informationexam.controller;
 
+import com.example.informationexam.service.GoogleTokenVerifierService;
 import com.example.informationexam.service.UserService;
 import com.example.informationexam.config.JwtTokenProvider;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,9 +20,7 @@ public class GoogleAuthController {
 
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String googleClientId;
+    private final GoogleTokenVerifierService googleTokenVerifierService;
 
     /**
      * Google ID Token 검증 후 사용자 로그인/회원가입
@@ -38,31 +34,13 @@ public class GoogleAuthController {
         }
 
         try {
-            // Google ID Token 검증 (JWT 파싱)
-            Claims claims = Jwts.parser()
-                    .verifyWith(jwtTokenProvider.getSigningKeyForGoogle())
-                    .build()
-                    .parseSignedClaims(idToken)
-                    .getPayload();
+            // Google 공식 라이브러리를 사용한 ID Token 검증
+            GoogleIdToken.Payload payload = googleTokenVerifierService.verifyGoogleIdToken(idToken);
 
-            // audience 검증
-            String audience = claims.getAudience().toString();
-            if (!audience.contains(googleClientId)) {
-                log.warn("Invalid audience in Google ID token");
-                return ResponseEntity.badRequest().body(Map.of("error", "Invalid ID token audience"));
-            }
-            
-            // issuer 검증
-            String issuer = claims.getIssuer();
-            if (issuer == null || !issuer.contains("accounts.google.com")) {
-                log.warn("Invalid issuer in Google ID token: {}", issuer);
-                return ResponseEntity.badRequest().body(Map.of("error", "Invalid ID token issuer"));
-            }
-
-            String googleId = claims.getSubject();
-            String email = claims.get("email", String.class);
-            String name = claims.get("name", String.class);
-            String pictureUrl = claims.get("picture", String.class);
+            String googleId = payload.getSubject();
+            String email = payload.getEmail();
+            String name = (String) payload.get("name");
+            String pictureUrl = (String) payload.get("picture");
 
             log.info("Google login attempt - email: {}, name: {}", email, name);
 
@@ -85,6 +63,9 @@ public class GoogleAuthController {
 
             return ResponseEntity.ok(response);
 
+        } catch (IllegalArgumentException e) {
+            log.warn("Invalid Google ID token: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid ID token: " + e.getMessage()));
         } catch (Exception e) {
             log.error("Google token verification failed", e);
             return ResponseEntity.status(500).body(Map.of("error", "Token verification failed: " + e.getMessage()));
@@ -92,7 +73,7 @@ public class GoogleAuthController {
     }
 
     /**
-     * 토큰 유효성 검증
+     * 토큰 유효성 검증 (애플리케이션 자체 JWT 토큰용)
      */
     @GetMapping("/verify")
     public ResponseEntity<Map<String, Object>> verifyToken(@RequestHeader("Authorization") String authHeader) {

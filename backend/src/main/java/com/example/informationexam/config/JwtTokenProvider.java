@@ -23,13 +23,6 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // Google ID Token 검증용 SigningKey 제공 (public)
-    // 주의: Google ID Token은 ES256 알고리즘으로 서명되므로, 애플리케이션 자체의 SecretKey를 사용해서는 안 됩니다.
-    // 이 메서드는 현재 잘못 구현되어 있으며, Google 공개키를 사용하도록 수정이 필요합니다.
-    public SecretKey getSigningKeyForGoogle() {
-        return getSigningKey();
-    }
-
     public String createToken(String username) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + tokenValidityInSeconds * 1000);
