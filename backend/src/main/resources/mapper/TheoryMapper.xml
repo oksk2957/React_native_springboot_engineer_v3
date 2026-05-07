@@ -26,6 +26,9 @@
     FROM theory t
     LEFT JOIN category c ON c.id = t.category_id
     WHERE t.deleted_at IS NULL
+      <if test="categoryName != null and categoryName != ''">
+        AND c.name = #{categoryName}
+      </if>
     ORDER BY t.created_at DESC
   </select>
 
