@@ -1,41 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.informationexam.mapper.TheoryMapper">
-    <select id="selectTheoryCardsByCategory" parameterType="string" resultType="TheoryCardDto">
-        <!-- 주관식 카드 -->
-        SELECT
-            sp.id,
-            s.id AS subjectId,
-            'SUBJECTIVE' AS cardType,
-            sp.question AS frontText,
-            sp.answer AS backText,
-            sp.explanation,
-            sp.difficulty,
-            sp.is_ai_generated AS isAiGenerated,
-            sp.created_at AS createdAt,
-            sp.updated_at AS updatedAt
-        FROM subjective_problems sp
-        INNER JOIN subject s ON sp.subject_id = s.id
-        WHERE s.name = #{category}
 
-        UNION ALL
+  <resultMap id="TheoryCardDtoMap" type="com.example.informationexam.dto.theory.TheoryCardDto">
+    <id     property="id"               column="id"/>
+    <result property="title"            column="title"/>
+    <result property="summary"          column="summary"/>
+    <result property="categoryId"       column="category_id"/>
+    <result property="categoryName"     column="category_name"/>
+    <result property="difficulty"       column="difficulty"/>
+    <result property="createdAt"        column="created_at"/>
+    <result property="updatedAt"        column="updated_at"/>
+  </resultMap>
 
-        <!-- 플래시 카드 -->
-        SELECT
-            lc.id,
-            s.id AS subjectId,
-            lc.card_type AS cardType,
-            lc.front_text AS frontText,
-            lc.back_text AS backText,
-            lc.explanation,
-            0 AS difficulty,
-            lc.is_ai_generated AS isAiGenerated,
-            lc.created_at AS createdAt,
-            lc.updated_at AS updatedAt
-        FROM learning_card lc
-        INNER JOIN subject s ON lc.subject_id = s.id
-        WHERE s.name = #{category}
+  <select id="findTheoryCards" resultMap="TheoryCardDtoMap">
+    SELECT
+      t.id,
+      t.title,
+      t.summary,
+      t.category_id,
+      c.name AS category_name,
+      t.difficulty,
+      t.created_at,
+      t.updated_at
+    FROM theory t
+    LEFT JOIN category c ON c.id = t.category_id
+    WHERE t.deleted_at IS NULL
+    ORDER BY t.created_at DESC
+  </select>
 
-        ORDER BY cardType, id
-    </select>
+  <select id="findTheoryCardById" resultMap="TheoryCardDtoMap">
+    SELECT
+      t.id,
+      t.title,
+      t.summary,
+      t.category_id,
+      c.name AS category_name,
+      t.difficulty,
+      t.created_at,
+      t.updated_at
+    FROM theory t
+    LEFT JOIN category c ON c.id = t.category_id
+    WHERE t.id = #{id}
+      AND t.deleted_at IS NULL
+  </select>
+
 </mapper>
