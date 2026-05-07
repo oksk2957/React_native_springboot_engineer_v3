@@ -32,6 +32,25 @@
     ORDER BY t.created_at DESC
   </select>
 
+  <select id="selectTheoryCardsByCategory" resultMap="TheoryCardDtoMap">
+    SELECT
+      t.id,
+      t.title,
+      t.summary,
+      t.category_id,
+      c.name AS category_name,
+      t.difficulty,
+      t.created_at,
+      t.updated_at
+    FROM theory t
+    LEFT JOIN category c ON c.id = t.category_id
+    WHERE t.deleted_at IS NULL
+      <if test="category != null and category != ''">
+        AND c.name = #{category}
+      </if>
+    ORDER BY t.created_at DESC
+  </select>
+
   <select id="findTheoryCardById" resultMap="TheoryCardDtoMap">
     SELECT
       t.id,

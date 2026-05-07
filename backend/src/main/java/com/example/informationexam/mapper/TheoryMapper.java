@@ -11,6 +11,8 @@ public interface TheoryMapper {
 
     List<TheoryCardDto> findTheoryCards(@Param("categoryName") String categoryName);
 
+    List<TheoryCardDto> selectTheoryCardsByCategory(@Param("category") String category);
+
     TheoryCardDto findTheoryCardById(Long id);
 
 }
