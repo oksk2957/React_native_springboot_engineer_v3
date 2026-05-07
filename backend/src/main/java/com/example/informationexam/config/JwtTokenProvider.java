@@ -2,7 +2,7 @@ package com.example.informationexam.config;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotationValue;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -46,7 +46,6 @@ public class JwtTokenProvider {
         try {
             return Jwts.parser()
                     .verifyWith(getSigningKey())
-                    .requireSignatureAlgorithm(SignatureAlgorithm.HS256) // HS256 알고리즘 명시적 요구
                     .build()
                     .parseSignedClaims(token)
                     .getPayload()
@@ -60,7 +59,6 @@ public class JwtTokenProvider {
         try {
             Jwts.parser()
                     .verifyWith(getSigningKey())
-                    .requireSignatureAlgorithm(SignatureAlgorithm.HS256) // HS256 알고리즘 명시적 요구
                     .build()
                     .parseSignedClaims(token);
             return true;
