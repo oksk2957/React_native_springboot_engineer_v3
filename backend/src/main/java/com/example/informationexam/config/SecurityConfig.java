@@ -25,17 +25,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults()) // CORS 설정 추가
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Preflight 요청 허용
-                        .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/view/**").permitAll()
-                        .requestMatchers("/problems/**").permitAll() // 추가: 문제 관련 경로 허용
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll()) // [방안 C] 모든 요청 무조건 허용
                 .formLogin(AbstractHttpConfigurer::disable);
 
         return http.build();
@@ -44,11 +39,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // 웹(Expo Web)에서 접근할 수 있도록 모든 출처 허용
-        configuration.setAllowedOriginPatterns(List.of("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(List.of("*"));
-        // configuration.setAllowCredentials(true); // credentials removed - conflicts with wildcard origins
+        configuration.setAllowedOriginPatterns(List.of("*")); // 모든 도메인 허용
+        configuration.setAllowedMethods(List.of("*")); // 모든 메소드 허용
+        configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
+        configuration.setExposedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
