@@ -1,4 +1,4 @@
-﻿package com.informationexam.service;
+package com.informationexam.service;
 
 import com.informationexam.dao.StudySessionDAO;
 import com.informationexam.model.StudySession;

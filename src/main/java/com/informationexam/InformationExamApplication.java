@@ -1,4 +1,4 @@
-﻿package com.informationexam;
+package com.informationexam;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

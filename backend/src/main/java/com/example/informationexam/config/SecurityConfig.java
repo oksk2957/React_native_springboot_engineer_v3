@@ -26,19 +26,20 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
+                .addFilterBefore((request, response, chain) -> {
+                    var req = (jakarta.servlet.http.HttpServletRequest) request;
+                    System.out.println("[Backend Request] " + req.getMethod() + " " + req.getRequestURI() + 
+                                     " | Origin: " + req.getHeader("Origin") + 
+                                     " | Host: " + req.getHeader("Host"));
+                    chain.doFilter(request, response);
+                }, org.springframework.security.web.context.SecurityContextHolderFilter.class)
+                .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(auth -> auth
-                        // Supabase Auth 콜백 URL 허용
-                        .requestMatchers("/auth/v1/callback/**").permitAll()
-                        // OAuth2 로그인 엔드포인트 비활성화 (Supabase가 처리)
-                        .requestMatchers("/login/oauth2/**").permitAll()
-                        .requestMatchers("/oauth2/**").permitAll()
-                        // API 요청 허용
-                        .requestMatchers("/api/**").permitAll()
-                        .anyRequest().permitAll())
+                        .anyRequest().permitAll()) 
                 .formLogin(AbstractHttpConfigurer::disable)
-                .oauth2Login(AbstractHttpConfigurer::disable); // Supabase가 OAuth 처리
+                .httpBasic(AbstractHttpConfigurer::disable);
 
         return http.build();
     }

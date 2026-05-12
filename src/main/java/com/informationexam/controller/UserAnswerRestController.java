@@ -1,4 +1,4 @@
-﻿package com.informationexam.controller;
+package com.informationexam.controller;
 
 import com.informationexam.model.UserAnswer;
 import com.informationexam.service.UserAnswerService;

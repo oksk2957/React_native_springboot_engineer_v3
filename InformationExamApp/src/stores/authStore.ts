@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
+import { supabase } from '../lib/supabase';
 import type { User } from '../types';
 import { authService } from '../services/api';
 
@@ -13,7 +15,7 @@ interface AuthState {
   setLoading: (loading: boolean) => void;
   setDarkMode: (enabled: boolean) => Promise<void>;
   setLastProblemId: (id: number) => void;
-  loginWithGoogle: (idToken: string) => Promise<{ requiresNickname: boolean }>;
+  loginWithGoogle: () => Promise<{ requiresNickname: boolean }>;
   loginAsGuest: () => void;
   setLoggedIn: (isLoggedIn: boolean, user?: User) => void;
   setNickname: (nickname: string) => Promise<void>;
@@ -33,16 +35,43 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ darkMode: enabled });
   },
   setLastProblemId: (id: number) => set({ lastProblemId: id }),
-  loginWithGoogle: async (idToken: string) => {
+  loginWithGoogle: async () => {
+    console.log('[AuthStore] Google 로그인 시작');
     set({ isLoading: true });
     try {
-      const response = await authService.loginWithGoogle(idToken);
-      const userData = response.user;
-      // 저장된 다크 모드 설정 로드
-      const savedDarkMode = await AsyncStorage.getItem('darkMode');
-      set({ user: userData, isAuthenticated: true, isLoading: false, darkMode: savedDarkMode === 'true' });
-      return { requiresNickname: !userData.nickname };
-    } catch (error) {
+      // ✅ 현재 실행 포트를 정확히 감지하여 redirectTo 설정
+      // Supabase가 Google 인증 완료 후 이 URL로 돌아와 ?code= 파라미터를 전달함
+      const redirectTo = (Platform.OS === 'web' && typeof window !== 'undefined')
+        ? window.location.origin   // 현재 포트 자동 감지 (9000, 8081 어느 포트든 OK)
+        : 'com.oksky.myapp://auth'; // 모바일 딥링크
+
+      console.log('[AuthStore] redirectTo URL:', redirectTo);
+
+      if (typeof supabase === 'undefined') {
+        throw new Error('Supabase 클라이언트가 초기화되지 않았습니다.');
+      }
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'select_account',
+          },
+          redirectTo,
+          // ✅ skipBrowserRedirect: false (기본값) — 브라우저가 자동으로 Google로 이동
+        },
+      });
+
+      if (error) {
+        console.error('[AuthStore] Supabase OAuth 오류:', error);
+        throw error;
+      }
+
+      console.log('[AuthStore] OAuth 리다이렉트 시작 - URL:', data?.url);
+      return { requiresNickname: false };
+    } catch (error: any) {
+      console.error('[AuthStore] 로그인 오류:', error.message || error);
       set({ isLoading: false });
       throw error;
     }

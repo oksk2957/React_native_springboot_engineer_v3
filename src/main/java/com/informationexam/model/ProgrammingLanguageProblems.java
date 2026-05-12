@@ -1,4 +1,4 @@
-﻿package com.informationexam.model;
+package com.informationexam.model;
 
 import java.sql.Timestamp;
 

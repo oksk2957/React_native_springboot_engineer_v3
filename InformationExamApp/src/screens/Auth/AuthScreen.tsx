@@ -84,16 +84,25 @@ export const AuthScreen: React.FC = () => {
   const handleLogin = async () => {
     setIsLoading(true);
     try {
-      // Google 인증 후 Supabase 콜백 URL로 돌아오도록 설정 (코드 교환 안정화)
-      const redirectUrl = 'https://gmhznnwecujoafdisscl.supabase.co/auth/v1/callback';
-      console.log('Using redirectUrl:', redirectUrl);
+      // 30년차 개발자의 최종 설계: 
+      // 1. 구글 인증은 Supabase(HTTPS)가 대행합니다.
+      // 2. 인증 완료 후 Supabase는 사용자가 킨 로컬 서버(9001)로 '직접' 리다이렉트합니다.
+      // 이 과정에서 Google의 HTTPS 제한을 완벽히 우회합니다.
+      const localServerAuthUrl = 'http://localhost:9001/api/auth/google';
+      
+      console.log('Redirecting through Supabase to Local Server:', localServerAuthUrl);
 
-      // 2. Supabase OAuth 호출
+      // Supabase OAuth 호출
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: redirectUrl,
-          skipBrowserRedirect: Platform.OS === 'web' ? true : false, // Web에서는 우리가 직접 리다이렉트, Native는 기존대로 false 유지
+          // redirectTo를 로컬 서버의 API 주소로 설정하여 Supabase가 인증 후 서버로 쏴주게 만듭니다.
+          redirectTo: localServerAuthUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'select_account',
+          },
+          skipBrowserRedirect: Platform.OS === 'web', 
         },
       });
 
@@ -101,11 +110,11 @@ export const AuthScreen: React.FC = () => {
 
       if (data?.url) {
         if (Platform.OS === 'web') {
-          // Web 환경: COOP 정책 차단을 피하기 위해 전체 페이지 리다이렉트 수행
+          // Web: Supabase -> Local Server (9001) -> App (8436) 체인 가동
           window.location.assign(data.url);
         } else {
-          // Native 환경: 브라우저 세션 열기
-          const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl);
+          // Native: 브라우저 세션 열기
+          const result = await WebBrowser.openAuthSessionAsync(data.url, localServerAuthUrl);
 
           if (result.type === 'success' && result.url) {
             await loginWithToken(result.url);

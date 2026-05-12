@@ -1,11 +1,14 @@
+/**
+ * [주의] 이 훅은 직접적인 Google API 호출 방식을 사용하며, 
+ * 현재 프로젝트의 Supabase 기반 인증 흐름과 충돌할 수 있습니다.
+ * 가급적 src/stores/authStore.ts의 loginWithGoogle을 사용하세요.
+ * 
+ * Google Cloud Console 설정 필요:
+ * - 승인된 자바스크립트 출처: http://localhost:8081
+ * - 승인된 리다이렉션 URI: https://gmhznnwecujoafdisscl.supabase.co/auth/v1/callback
+ */
 import { useState, useEffect, useCallback } from 'react';
-import * as Google from 'expo-auth-session/providers/google';
-import * as WebBrowser from 'expo-web-browser';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
-
-// Google Cloud Console에서 발급받은 Client ID
-const GOOGLE_CLIENT_ID = '1033672402385-hdhb1unve0rebnh3sor0c6b8cljfkla8.apps.googleusercontent.com';
+// ... (이하 코드 유지)
 // Android/iOS Client ID가 있다면 각각 설정하세요
 const GOOGLE_ANDROID_CLIENT_ID = ''; // Android Client ID
 const GOOGLE_IOS_CLIENT_ID = ''; // iOS Client ID

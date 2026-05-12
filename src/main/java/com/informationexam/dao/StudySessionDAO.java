@@ -1,4 +1,4 @@
-﻿package com.informationexam.dao;
+package com.informationexam.dao;
 
 import com.informationexam.model.StudySession;
 import java.util.List;

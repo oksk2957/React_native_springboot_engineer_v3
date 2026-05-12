@@ -6,16 +6,16 @@ import type { Problem, Answer, Statistics, WrongAnswer, ProblemType } from '../t
 // 개발 환경에서 PC 서버에 연결하기 위한 URL 설정
 const getApiBaseUrl = () => {
   if (__DEV__) {
-    // 1. 웹 브라우저(Web)에서 테스트하는 경우
+    // 1. 웹 브라우저(Web)에서 테스트하는 경우 (백엔드가 9001번)
     if (Platform.OS === 'web') {
-      return 'http://localhost:9000/api';
+      return 'http://localhost:9001/api';
     }
 
     // 2. 모바일(Android/iOS) 실제 기기 또는 에뮬레이터에서 테스트하는 경우
     // PC의 실제 로컬 IP 주소를 입력하세요 (Windows cmd에서 'ipconfig'로 확인 가능)
     const PC_IP = '172.30.1.6';
 
-    return `http://${PC_IP}:9000/api`;
+    return `http://${PC_IP}:9001/api`;
   }
   // 프로덕션 URL
   return 'https://your-production-api.com/api';
@@ -28,23 +28,67 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // CORS 인증 정보 포함 (백엔드 설정과 일치)
 });
 
+// 요청 인터셉터: 모든 요청 상세 로깅
 api.interceptors.request.use(async (config) => {
   const token = await AsyncStorage.getItem('authToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  
+  console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, {
+    headers: config.headers,
+    params: config.params,
+    data: config.data,
+  });
+  
   return config;
+}, (error) => {
+  console.error('[API Request Error]', error);
+  return Promise.reject(error);
+});
+
+// 응답 인터셉터: 성공 및 실패 상세 로깅
+api.interceptors.response.use((response) => {
+  console.log(`[API Response] ${response.status} ${response.config.url}`, response.data);
+  return response;
+}, (error) => {
+  if (error.response) {
+    // 서버가 응답을 보냈으나 2xx 범위를 벗어남
+    console.error('[API Response Error] Data:', error.response.data);
+    console.error('[API Response Error] Status:', error.response.status);
+    console.error('[API Response Error] Headers:', error.response.headers);
+  } else if (error.request) {
+    // 요청이 전송되었으나 응답을 받지 못함 (CORS, 서버 다운 등)
+    console.error('[API Network Error] No response received. Possible CORS or connection refused.', error.request);
+  } else {
+    // 요청 설정 중 오류 발생
+    console.error('[API Config Error]', error.message);
+  }
+  return Promise.reject(error);
 });
 
 export const authService = {
   loginWithGoogle: async (idToken: string) => {
-    const response = await api.post('/auth/google', { idToken });
-    if (response.data.token) {
-      await AsyncStorage.setItem('authToken', response.data.token);
+    try {
+      console.log('Attempting Google login with API:', `${API_BASE_URL}/auth/google`);
+      const response = await api.post('/auth/google', { idToken });
+      if (response.data.token) {
+        await AsyncStorage.setItem('authToken', response.data.token);
+      }
+      return response.data;
+    } catch (error: any) {
+      console.error('Google Login API Error:', error.message);
+      if (error.response) {
+        console.error('Error Status:', error.response.status);
+        console.error('Error Data:', error.response.data);
+      } else if (error.request) {
+        console.error('No response received from server. Check CORS or Server status.');
+      }
+      throw error;
     }
-    return response.data;
   },
   setNickname: async (nickname: string) => {
     const response = await api.post('/users/nickname', { nickname });

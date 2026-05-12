@@ -23,12 +23,26 @@ public class GoogleAuthController {
     private final GoogleTokenVerifierService googleTokenVerifierService;
 
     /**
-     * Google ID Token 검증 후 사용자 로그인/회원가입
+     * Google ID Token 검증 후 사용자 로그인/회원가입 (POST 방식)
      */
     @PostMapping("/google")
     public ResponseEntity<Map<String, Object>> googleAuth(@RequestBody Map<String, String> request) {
-        String idToken = request.get("idToken");
-        
+        return processGoogleLogin(request.get("idToken"));
+    }
+
+    /**
+     * Supabase 리다이렉트를 통한 로그인 처리 (GET 방식)
+     * Supabase가 인증 후 서버 주소로 직접 리다이렉트할 때 호출됩니다.
+     */
+    @GetMapping("/google")
+    public ResponseEntity<Map<String, Object>> googleAuthRedirect(@RequestParam(required = false) String access_token) {
+        if (access_token != null) {
+            return processGoogleLogin(access_token);
+        }
+        return ResponseEntity.badRequest().body(Map.of("error", "Access token is missing in redirect"));
+    }
+
+    private ResponseEntity<Map<String, Object>> processGoogleLogin(String idToken) {
         if (idToken == null || idToken.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "ID token is required"));
         }
@@ -36,6 +50,7 @@ public class GoogleAuthController {
         try {
             // Google 공식 라이브러리를 사용한 ID Token 검증
             GoogleIdToken.Payload payload = googleTokenVerifierService.verifyGoogleIdToken(idToken);
+            // ... (기존 로직 유지)
 
             String googleId = payload.getSubject();
             String email = payload.getEmail();
