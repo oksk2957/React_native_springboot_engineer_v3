@@ -13,7 +13,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.security.config.Customizer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,8 +29,16 @@ public class SecurityConfig {
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()) // [방안 C] 모든 요청 무조건 허용
-                .formLogin(AbstractHttpConfigurer::disable);
+                        // Supabase Auth 콜백 URL 허용
+                        .requestMatchers("/auth/v1/callback/**").permitAll()
+                        // OAuth2 로그인 엔드포인트 비활성화 (Supabase가 처리)
+                        .requestMatchers("/login/oauth2/**").permitAll()
+                        .requestMatchers("/oauth2/**").permitAll()
+                        // API 요청 허용
+                        .requestMatchers("/api/**").permitAll()
+                        .anyRequest().permitAll())
+                .formLogin(AbstractHttpConfigurer::disable)
+                .oauth2Login(AbstractHttpConfigurer::disable); // Supabase가 OAuth 처리
 
         return http.build();
     }
