@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 처리 중...</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    h1 {
+      margin: 0 0 10px 0;
+      font-size: 24px;
+    }
+    p {
+      margin: 0;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="spinner"></div>
+    <h1>로그인 처리 중...</h1>
+    <p>잠시만 기다려주세요</p>
+  </div>
+
+  <script>
+    // Supabase OAuth 콜백 처리를 위한 스크립트
+    // 메인 앱으로 리다이렉트하기 전에 Supabase가 세션을 처리하도록 함
+    window.addEventListener('load', () => {
+      // 현재 URL의 hash fragment를 확인하고, Supabase가 처리할 수 있도록 함
+      // 실제 세션 처리는 메인 앱(React)에서 AuthContext의 onAuthStateChange로 처리됨
+      setTimeout(() => {
+        // 메인 앱으로 리다이렉트
+        window.location.href = '/';
+      }, 1500)
+    })
+  </script>
+</body>
+</html>

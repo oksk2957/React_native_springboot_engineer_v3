@@ -73,7 +73,7 @@ Database (Supabase PostgreSQL)
 1. **API 응답 확인**
    ```bash
    # 백엔드 실행 후 테스트
-   curl -X GET "http://localhost:8088/api/statistics" \
+   curl -X GET "http://localhost:9000/api/statistics" \
      -H "Authorization: Bearer <토큰>"
    ```
    - **성공 시**: `{"totalProblems": X, "solvedProblems": Y, ...}` 반환

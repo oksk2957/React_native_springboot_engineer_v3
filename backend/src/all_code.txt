@@ -1215,7 +1215,7 @@ public class UserService {
 spring.application.name=information-exam-backend
 
 # ?쒕쾭 ?ы듃 ?ㅼ젙
-server.port=8088
+server.port=9000
 
 # ?몄뀡 ?뺣낫 ?좎? 諛⑸쾿 ?ㅼ젙
 server.servlet.session.tracking-modes=cookie

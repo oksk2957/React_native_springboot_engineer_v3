@@ -575,10 +575,10 @@ cd C:\Users\SEOL\InformationExamProject\backend
 sleep 10
 
 # API 테스트
-curl -s http://localhost:8088/api/problems/test | jq .
-curl -s http://localhost:8088/api/problems/1 | jq '.correctAnswer, .isAiGenerated, .options'
-curl -s http://localhost:8088/api/problems/random/objective | jq '.[0] | keys'
-curl -s "http://localhost:8088/api/problems/theory?category=운영체제" | jq '.'
+curl -s http://localhost:9000/api/problems/test | jq .
+curl -s http://localhost:9000/api/problems/1 | jq '.correctAnswer, .isAiGenerated, .options'
+curl -s http://localhost:9000/api/problems/random/objective | jq '.[0] | keys'
+curl -s "http://localhost:9000/api/problems/theory?category=운영체제" | jq '.'
 ```
 
 #### Step 6.2: 프론트엔드 호환성 확인

@@ -11,7 +11,7 @@ const GOOGLE_ANDROID_CLIENT_ID = ''; // Android Client ID
 const GOOGLE_IOS_CLIENT_ID = ''; // iOS Client ID
 
 // Supabase 또는 자체 백엔드 API URL
-const API_BASE_URL = 'http://localhost:8088/api';
+const API_BASE_URL = 'http://localhost:9000/api';
 
 // WebBrowser 리디렉션 완료를 위해 필요
 WebBrowser.maybeCompleteAuthSession();

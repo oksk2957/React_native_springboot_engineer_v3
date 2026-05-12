@@ -5,7 +5,7 @@
 
 ## 2. 근본 원인 분석
 
-### 2.1. 현재 아키텍처 (Port 8088 Backend)
+### 2.1. 현재 아키텍처 (Port 9000 Backend)
 - **Frontend**: React Native (Expo) → `fetchTheoryCards()` → `GET /api/problems/theory`
 - **Controller**: `ProblemApiController.getTheoryCards()` 
 - **Mapper Interface**: `ProblemQueryMapper` (MyBatis)
@@ -105,7 +105,7 @@ public ResponseEntity<List<TheoryCardDto>> getTheoryCards(@RequestParam String c
 ### Phase 4: 테스트 및 검증 (1-2시간)
 **목표**: API 정상 동작 확인 및 에러 핸들링 검증
 
-4-1. 백엔드 로컬 구동 (포트 8088)
+4-1. 백엔드 로컬 구동 (포트 9000)
 ```bash
 cd backend
 ./mvnw spring-boot:run
@@ -113,7 +113,7 @@ cd backend
 
 4-2. API 직접 호출 테스트
 ```bash
-curl "http://localhost:8088/api/problems/theory?category=운영체제"
+curl "http://localhost:9000/api/problems/theory?category=운영체제"
 ```
 
 4-3. Frontend (Expo)에서 데이터 로드 확인

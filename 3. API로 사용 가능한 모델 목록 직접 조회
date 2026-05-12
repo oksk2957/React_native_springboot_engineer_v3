@@ -1,2 +1,0 @@
-curl https://api.kilocode.ai/v1/models \
-  -H "Authorization: Bearer $KILO_API_KEY"

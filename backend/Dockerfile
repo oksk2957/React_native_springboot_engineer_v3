@@ -11,4 +11,4 @@ COPY build/libs/*.jar app.jar
 ENTRYPOINT ["java","-jar","/app/app.jar"]
 
 # 애플리케이션이 사용할 포트를 노출합니다.
-EXPOSE 8088
+EXPOSE 9000

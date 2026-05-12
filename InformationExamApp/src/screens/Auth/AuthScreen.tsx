@@ -84,8 +84,8 @@ export const AuthScreen: React.FC = () => {
   const handleLogin = async () => {
     setIsLoading(true);
     try {
-      // 1. 명시적인 스키마 설정 (app.json의 scheme과 정확히 일치해야 함)
-      const redirectUrl = 'com.oksky.myapp://auth-callback';
+      // Google 인증 후 Supabase 콜백 URL로 돌아오도록 설정 (코드 교환 안정화)
+      const redirectUrl = 'https://gmhznnwecujoafdisscl.supabase.co/auth/v1/callback';
       console.log('Using redirectUrl:', redirectUrl);
 
       // 2. Supabase OAuth 호출
@@ -93,18 +93,23 @@ export const AuthScreen: React.FC = () => {
         provider: 'google',
         options: {
           redirectTo: redirectUrl,
-          skipBrowserRedirect: false, // 앱으로 복귀를 보장함
+          skipBrowserRedirect: Platform.OS === 'web' ? true : false, // Web에서는 우리가 직접 리다이렉트, Native는 기존대로 false 유지
         },
       });
 
       if (error) throw error;
 
       if (data?.url) {
-        // 3. 브라우저 세션 열기
-        const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl);
+        if (Platform.OS === 'web') {
+          // Web 환경: COOP 정책 차단을 피하기 위해 전체 페이지 리다이렉트 수행
+          window.location.assign(data.url);
+        } else {
+          // Native 환경: 브라우저 세션 열기
+          const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl);
 
-        if (result.type === 'success' && result.url) {
-          await loginWithToken(result.url);
+          if (result.type === 'success' && result.url) {
+            await loginWithToken(result.url);
+          }
         }
       }
     } catch (err: any) {

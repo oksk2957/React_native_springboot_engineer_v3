@@ -498,16 +498,16 @@ COMMIT;
 ### 9.1 API 테스트 케이스
 ```bash
 # 문제 조회 테스트
-curl http://localhost:8088/api/problems/1
+curl http://localhost:9000/api/problems/1
 
 # 랜덤 문제 테스트
-curl http://localhost:8088/api/problems/random/objective
+curl http://localhost:9000/api/problems/random/objective
 
 # theory 문제 테스트
-curl "http://localhost:8088/api/problems/theory?category=운영체제"
+curl "http://localhost:9000/api/problems/theory?category=운영체제"
 
 # 연결 테스트
-curl http://localhost:8088/api/problems/test
+curl http://localhost:9000/api/problems/test
 ```
 
 ### 9.2 검증 체크리스트

@@ -386,8 +386,8 @@ cd C:\Users\SEOL\InformationExamProject\backend
 java -jar target/information-exam-backend-*.jar
 
 # 3. API 테스트
-curl "http://localhost:8088/api/problems/theory?category=운영체제"
-curl "http://localhost:8088/api/problems/theory/meta?category=프로그래밍언어"
+curl "http://localhost:9000/api/problems/theory?category=운영체제"
+curl "http://localhost:9000/api/problems/theory/meta?category=프로그래밍언어"
 ```
 
 ---

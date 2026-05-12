@@ -8,14 +8,14 @@ const getApiBaseUrl = () => {
   if (__DEV__) {
     // 1. 웹 브라우저(Web)에서 테스트하는 경우
     if (Platform.OS === 'web') {
-      return 'http://localhost:8088/api';
+      return 'http://localhost:9000/api';
     }
 
     // 2. 모바일(Android/iOS) 실제 기기 또는 에뮬레이터에서 테스트하는 경우
     // PC의 실제 로컬 IP 주소를 입력하세요 (Windows cmd에서 'ipconfig'로 확인 가능)
     const PC_IP = '172.30.1.6';
 
-    return `http://${PC_IP}:8088/api`;
+    return `http://${PC_IP}:9000/api`;
   }
   // 프로덕션 URL
   return 'https://your-production-api.com/api';

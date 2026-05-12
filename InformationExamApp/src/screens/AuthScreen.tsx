@@ -18,7 +18,7 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function AuthScreen() {
   const [isLoading, setIsLoading] = useState(false);
-  const { setUser } = useAuthStore();
+  const { setUser, loginWithGoogle } = useAuthStore(); // loginWithGoogle is now destructured here
 
   // 토큰 추출
   const extractParams = (url: string) => {
@@ -105,47 +105,9 @@ export default function AuthScreen() {
   }, []);
 
   const handleLogin = async () => {
-    setIsLoading(true);
-    try {
-      // Linking.createURL을 사용하여 환경(Expo Go 또는 개발 빌드)에 맞는 URL 생성
-      const redirectUrl = Linking.createURL('auth-callback');
-      console.log('Using redirectUrl:', redirectUrl);
-      
-      // 웹 환경에서 IP 주소로 접속 시 crypto 에러 방지
-      if (Platform.OS === 'web' && 
-          window.location.hostname !== 'localhost' && 
-          window.location.protocol !== 'https:') {
-        Alert.alert('보안 알림', '웹 브라우저에서는 localhost 주소로 접속해야 구글 로그인이 가능합니다.');
-        setIsLoading(false);
-        return;
-      }
-
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { 
-          redirectTo: redirectUrl, 
-          scopes: 'email profile',
-          skipBrowserRedirect: true,
-        },
-      });
-
-      if (error) throw error;
-
-      if (data?.url) {
-        const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl);
-        
-        if (result.type === 'success' && result.url) {
-          await loginWithToken(result.url);
-        } else if (result.type === 'cancel') {
-          Alert.alert('취소됨', '로그인이 취소되었습니다.');
-        }
-      }
-    } catch (err: any) {
-      console.log('Auth handleLogin error:', err);
-      Alert.alert('오류', err?.message || '로그인 실패');
-    } finally {
-      setIsLoading(false);
-    }
+    // AuthContext의 loginWithGoogle 함수가 전체 OAuth 플로우를 담당하도록 위임
+    // 직접적인 supabase.auth.signInWithOAuth 호출 및 window.location.assign은 제거
+    await loginWithGoogle();
   };
 
   return (
