@@ -19,18 +19,18 @@
 [ERROR] COMPILATION ERROR : 
 [INFO] -------------------------------------------------------------
 [ERROR] /C:/Users/SEOL/InformationExamProject/src/main/java/com/example/informationexam/service/SupabaseTokenVerifierService.java:[39,45] unreported exception java.text.ParseException; must be caught or declared to be thrown
-[ERROR] /C:/Users/SEOL/InformationExamProject/src/main/java/com/example/informationexam/service/SupabaseTokenVerifierService.java:[110,45] unreported exception java.text.ParseException; must be caught or declared to be thrown
+[ERROR] /C:/Users/SEOL/InformationExamProject/src/main/java/com/example/informationexam/service/SupabaseTokenVerifierService.java:[111,45] unreported exception java.text.ParseException; must be caught or declared to be thrown
 [INFO] 2 errors 
 [INFO] -------------------------------------------------------------
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD FAILURE
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  7.661 s
-[INFO] Finished at: 2026-05-13T20:36:21+09:00
+[INFO] Total time:  10.752 s
+[INFO] Finished at: 2026-05-13T20:43:46+09:00
 [INFO] ------------------------------------------------------------------------
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project information-exam: Compilation failure: Compilation failure: 
 [ERROR] /C:/Users/SEOL/InformationExamProject/src/main/java/com/example/informationexam/service/SupabaseTokenVerifierService.java:[39,45] unreported exception java.text.ParseException; must be caught or declared to be thrown
-[ERROR] /C:/Users/SEOL/InformationExamProject/src/main/java/com/example/informationexam/service/SupabaseTokenVerifierService.java:[110,45] unreported exception java.text.ParseException; must be caught or declared to be thrown
+[ERROR] /C:/Users/SEOL/InformationExamProject/src/main/java/com/example/informationexam/service/SupabaseTokenVerifierService.java:[111,45] unreported exception java.text.ParseException; must be caught or declared to be thrown
 [ERROR] -> [Help 1]
 [ERROR] 
 [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
