@@ -1,7 +1,5 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
-import { supabase } from '../lib/supabase';
 import type { User } from '../types';
 import { authService } from '../services/api';
 
@@ -15,11 +13,11 @@ interface AuthState {
   setLoading: (loading: boolean) => void;
   setDarkMode: (enabled: boolean) => Promise<void>;
   setLastProblemId: (id: number) => void;
-  loginWithGoogle: () => Promise<{ requiresNickname: boolean }>;
+  loginWithGoogle: (googleIdToken: string) => Promise<{ requiresNickname: boolean; isNewUser: boolean }>;
   loginAsGuest: () => void;
   setLoggedIn: (isLoggedIn: boolean, user?: User) => void;
   setNickname: (nickname: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -34,48 +32,54 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     await AsyncStorage.setItem('darkMode', JSON.stringify(enabled));
     set({ darkMode: enabled });
   },
-  setLastProblemId: (id: number) => set({ lastProblemId: id }),
-  loginWithGoogle: async () => {
-    console.log('[AuthStore] Google 로그인 시작');
+  setLastProblemId: (id) => set({ lastProblemId: id }),
+  
+  /**
+   * Google 로그인 - 백엔드 JWT 방식
+   * @param googleIdToken - Google에서 받은 ID Token
+   */
+  loginWithGoogle: async (googleIdToken: string) => {
+    console.log('[AuthStore] Google 로그인 시작 (백엔드 JWT 방식)');
     set({ isLoading: true });
+    
     try {
-      // ✅ 현재 실행 포트를 정확히 감지하여 redirectTo 설정
-      // Supabase가 Google 인증 완료 후 이 URL로 돌아와 ?code= 파라미터를 전달함
-      const redirectTo = (Platform.OS === 'web' && typeof window !== 'undefined')
-        ? window.location.origin   // 현재 포트 자동 감지 (9000, 8081 어느 포트든 OK)
-        : 'com.oksky.myapp://auth'; // 모바일 딥링크
+      // 1. Google ID Token을 백엔드로 전송
+      const response = await authService.loginWithGoogle(googleIdToken);
+      console.log('[AuthStore] 백엔드 응답:', response);
 
-      console.log('[AuthStore] redirectTo URL:', redirectTo);
-
-      if (typeof supabase === 'undefined') {
-        throw new Error('Supabase 클라이언트가 초기화되지 않았습니다.');
+      // 2. 백엔드 JWT 저장
+      if (response.token) {
+        await AsyncStorage.setItem('authToken', response.token);
+        console.log('[AuthStore] JWT 저장 완료');
       }
 
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'select_account',
-          },
-          redirectTo,
-          // ✅ skipBrowserRedirect: false (기본값) — 브라우저가 자동으로 Google로 이동
-        },
+      // 3. 사용자 정보로 상태 업데이트
+      const user: User = {
+        id: response.userId || 0,
+        email: response.email || '',
+        nickname: response.nickname || '',
+        username: response.username || '',
+      };
+      
+      set({ 
+        user, 
+        isAuthenticated: true,
+        isLoading: false 
       });
 
-      if (error) {
-        console.error('[AuthStore] Supabase OAuth 오류:', error);
-        throw error;
-      }
-
-      console.log('[AuthStore] OAuth 리다이렉트 시작 - URL:', data?.url);
-      return { requiresNickname: false };
+      console.log('[AuthStore] 로그인 완료 - user:', user);
+      
+      return {
+        requiresNickname: response.requiresNickname || false,
+        isNewUser: response.isNewUser || false,
+      };
     } catch (error: any) {
       console.error('[AuthStore] 로그인 오류:', error.message || error);
       set({ isLoading: false });
       throw error;
     }
   },
+  
   loginAsGuest: () => {
     const guestUser: User = {
       id: 0,
@@ -84,6 +88,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     };
     set({ user: guestUser, isAuthenticated: true });
   },
+  
   setLoggedIn: (isLoggedIn: boolean, user?: User) => {
     if (isLoggedIn && user) {
       set({ user, isAuthenticated: true });
@@ -91,6 +96,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ user: null, isAuthenticated: false });
     }
   },
+  
   setNickname: async (nickname: string) => {
     set({ isLoading: true });
     try {
@@ -104,6 +110,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       throw error;
     }
   },
+  
   logout: async () => {
     await authService.logout();
     await AsyncStorage.removeItem('darkMode');

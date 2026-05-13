@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 콘솔 앱더 명시적 정의 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 루트 로거: 콘솔 앱더 사용 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!-- MyBatis 내부 로깅 -->
+    <logger name="org.apache.ibatis" level="DEBUG"/>
+    <logger name="org.apache.ibatis.logging" level="DEBUG"/>
+    
+    <!-- JDBC 로깅 (SQL 실행 시 파라미터 포함) -->
+    <logger name="java.sql" level="DEBUG"/>
+    <logger name="java.sql.Connection" level="DEBUG"/>
+    <logger name="java.sql.Statement" level="DEBUG"/>
+    <logger name="java.sql.PreparedStatement" level="DEBUG"/>
+    <logger name="java.sql.ResultSet" level="DEBUG"/>
+
+    <!-- MyBatis: statement id, SQL, 파라미터 (Slf4jImpl 사용 시) -->
+    <logger name="com.example.informationexam.mapper" level="DEBUG"/>
+
+    <!-- JPA: 실행 SQL -->
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <!-- JPA: PreparedStatement 바인딩 값 -->
+    <logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
+
+    <!-- HikariCP: 커넥션 풀 디버그 로그 -->
+    <logger name="com.zaxxer.hikari" level="DEBUG"/>
+    <!-- PostgreSQL 드라이버 로그 -->
+    <logger name="org.postgresql" level="DEBUG"/>
+</configuration>

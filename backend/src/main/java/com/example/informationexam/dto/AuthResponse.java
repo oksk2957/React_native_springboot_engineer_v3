@@ -14,5 +14,13 @@ public class AuthResponse {
     String username;     // 사용자명
     String nickname;     // 닉네임
     String email;        // 이메일
-    String role;         // 역할 (TRIAL_USER, USER, ADMIN 등)
+    String role;         // 역할 (free_user, money_user, admin)
+    boolean isAdmin;     // 관리자 여부
+    boolean trialExpired; // 무료 체험 만료 여부
+    boolean requiresPayment; // 결제 필요 여부
+    boolean canAccessApp; // 앱 접근 가능 여부
+    String paymentMessage; // 결제 안내 메시지
+    boolean isNewUser;    // 신규 사용자 여부
+    boolean requiresNickname; // 닉네임 설정 필요 여부
+    Long userId;          // 사용자 ID
 }

@@ -31,7 +31,7 @@ public class SubjectRestController {
 
     @PutMapping("/{id}")
     public void updateSubject(@PathVariable Long id, @RequestBody Subject subject) {
-        subject.setSubjectId(id);
+        subject.setId(id);
         subjectService.updateSubject(subject);
     }
 

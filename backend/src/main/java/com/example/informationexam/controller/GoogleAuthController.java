@@ -1,5 +1,6 @@
 package com.example.informationexam.controller;
 
+import com.example.informationexam.dto.AuthResponse;
 import com.example.informationexam.service.GoogleTokenVerifierService;
 import com.example.informationexam.service.UserService;
 import com.example.informationexam.config.JwtTokenProvider;
@@ -9,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -23,86 +24,97 @@ public class GoogleAuthController {
     private final GoogleTokenVerifierService googleTokenVerifierService;
 
     /**
-     * Google ID Token 검증 후 사용자 로그인/회원가입 (POST 방식)
+     * POST /api/auth/google
+     * Google ID Token을 받아 백엔드 JWT를 발급합니다.
+     * CORS/OPTIONS 프리플라이트 지원을 위해AllowedOrigins 설정 필요
      */
     @PostMapping("/google")
-    public ResponseEntity<Map<String, Object>> googleAuth(@RequestBody Map<String, String> request) {
-        return processGoogleLogin(request.get("idToken"));
-    }
+    public ResponseEntity<AuthResponse> googleAuth(@RequestBody Map<String, String> request) {
+        long start = System.currentTimeMillis();
+        String traceId = UUID.randomUUID().toString().substring(0, 8);
 
-    /**
-     * Supabase 리다이렉트를 통한 로그인 처리 (GET 방식)
-     * Supabase가 인증 후 서버 주소로 직접 리다이렉트할 때 호출됩니다.
-     */
-    @GetMapping("/google")
-    public ResponseEntity<Map<String, Object>> googleAuthRedirect(@RequestParam(required = false) String access_token) {
-        if (access_token != null) {
-            return processGoogleLogin(access_token);
-        }
-        return ResponseEntity.badRequest().body(Map.of("error", "Access token is missing in redirect"));
-    }
+        log.info("[AUTH][{}][POST][START] google login request received", traceId);
 
-    private ResponseEntity<Map<String, Object>> processGoogleLogin(String idToken) {
+        // 입력 검증: idToken 필수
+        String idToken = request.get("idToken");
         if (idToken == null || idToken.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "ID token is required"));
+            log.warn("[AUTH][{}][POST][FAIL] idToken is empty or null", traceId);
+            return ResponseEntity.badRequest().body(AuthResponse.builder()
+                    .canAccessApp(false)
+                    .requiresPayment(false)
+                    .paymentMessage("Google ID Token is required")
+                    .build());
         }
 
         try {
-            // Google 공식 라이브러리를 사용한 ID Token 검증
-            GoogleIdToken.Payload payload = googleTokenVerifierService.verifyGoogleIdToken(idToken);
-            // ... (기존 로직 유지)
-
-            String googleId = payload.getSubject();
-            String email = payload.getEmail();
-            String name = (String) payload.get("name");
-            String pictureUrl = (String) payload.get("picture");
-
-            log.info("Google login attempt - email: {}, name: {}", email, name);
-
-            // 사용자 로그인/회원가입 (UserService에서 처리)
-            Map<String, Object> authResult = userService.loginWithGoogle(googleId, email, name);
+            // Google ID Token 검증 및 사용자 조회/생성 후 JWT 발급
+            AuthResponse authResponse = userService.loginWithGoogle(idToken, traceId);
             
-            // 응답 구성
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("token", authResult.get("token"));
-            response.put("requiresNickname", authResult.get("requiresNickname"));
-            response.put("user", Map.of(
-                    "id", ((com.example.informationexam.domain.user.User) authResult.get("user")).getId(),
-                    "email", email,
-                    "username", ((com.example.informationexam.domain.user.User) authResult.get("user")).getUsername(),
-                    "nickname", ((com.example.informationexam.domain.user.User) authResult.get("user")).getNickname(),
-                    "role", ((com.example.informationexam.domain.user.User) authResult.get("user")).getRole(),
-                    "pictureUrl", pictureUrl
-            ));
-
-            return ResponseEntity.ok(response);
+            long duration = System.currentTimeMillis() - start;
+            log.info("[AUTH][{}][POST][END] google login completed in {} ms", traceId, duration);
+            
+            return ResponseEntity.ok(authResponse);
 
         } catch (IllegalArgumentException e) {
-            log.warn("Invalid Google ID token: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", "Invalid ID token: " + e.getMessage()));
+            // 잘못된 토큰 (만료, 서명 오류 등)
+            long duration = System.currentTimeMillis() - start;
+            log.error("[AUTH][{}][POST][FAIL] Invalid Google ID token after {} ms: {}", 
+                    traceId, duration, e.getMessage());
+            return ResponseEntity.badRequest().body(AuthResponse.builder()
+                    .canAccessApp(false)
+                    .requiresPayment(false)
+                    .paymentMessage("Invalid Google ID token: " + e.getMessage())
+                    .build());
         } catch (Exception e) {
-            log.error("Google token verification failed", e);
-            return ResponseEntity.status(500).body(Map.of("error", "Token verification failed: " + e.getMessage()));
+            // 기타 서버 오류
+            long duration = System.currentTimeMillis() - start;
+            log.error("[AUTH][{}][POST][FAIL] Google login failed after {} ms", traceId, duration, e);
+            return ResponseEntity.status(500).body(AuthResponse.builder()
+                    .canAccessApp(false)
+                    .requiresPayment(false)
+                    .paymentMessage("Token verification failed: " + e.getMessage())
+                    .build());
         }
     }
 
     /**
-     * 토큰 유효성 검증 (애플리케이션 자체 JWT 토큰용)
+     * OPTIONS /api/auth/google
+     * CORS 프리플라이트 요청 처리
+     * (SecurityConfig에서 이미 모든 Origins 허용하도록 구성됨)
+     */
+    @RequestMapping(value = "/google", method = RequestMethod.OPTIONS)
+    public ResponseEntity<Void> googleAuthOptions() {
+        String traceId = UUID.randomUUID().toString().substring(0, 8);
+        log.info("[AUTH][{}][OPTIONS] CORS preflight request received", traceId);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * GET /api/auth/verify
+     * 백엔드 JWT 검증 엔드포인트
      */
     @GetMapping("/verify")
     public ResponseEntity<Map<String, Object>> verifyToken(@RequestHeader("Authorization") String authHeader) {
+        String traceId = UUID.randomUUID().toString().substring(0, 8);
+        long start = System.currentTimeMillis();
+
+        log.info("[AUTH][{}][VERIFY][START] token verification request received", traceId);
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.warn("[AUTH][{}][VERIFY][FAIL] No token provided", traceId);
             return ResponseEntity.badRequest().body(Map.of("valid", false, "error", "No token provided"));
         }
 
         String token = authHeader.substring(7);
-        
+
         try {
             if (jwtTokenProvider.validateToken(token)) {
                 String username = jwtTokenProvider.getUsername(token);
                 var user = userService.getUserByUsername(username);
-                
+                long duration = System.currentTimeMillis() - start;
+
+                log.info("[AUTH][{}][VERIFY][END] token valid, user loaded in {} ms", traceId, duration);
+
                 return ResponseEntity.ok(Map.of(
                         "valid", true,
                         "user", Map.of(
@@ -115,9 +127,10 @@ public class GoogleAuthController {
                 ));
             }
         } catch (Exception e) {
-            log.error("Token verification failed", e);
+            long duration = System.currentTimeMillis() - start;
+            log.error("[AUTH][{}][VERIFY][FAIL] Token verification failed after {} ms", traceId, duration, e);
         }
-        
+
         return ResponseEntity.ok(Map.of("valid", false));
     }
 }
