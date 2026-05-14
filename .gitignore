@@ -1,3 +1,14 @@
+# Maven build output
+target/
+# IDE
+.idea/
+*.iml
+# OS
+.DS_Store
+# Secret files
+.env
+application-secret.properties
+
 
 #o'auth token
 spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_CLIENT_SECRET:REMOVED_GOOGLE_CLIENT_SECRET_1}

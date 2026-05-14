@@ -1,0 +1,8 @@
+# ============================================
+# Google OAuth Configuration (환경변수 사용)
+# ============================================
+# 실제 Google OAuth 클라이언트 ID - 환경변수 GOOGLE_CLIENT_ID가 없으면 이 기본값 사용
+spring.security.oauth2.client.registration.google.client-id=${GOOGLE_CLIENT_ID:1033672402385-hdhb1unve0rebnh3sor0c6b8cljfkla8.apps.googleusercontent.com}
+# 구글 콘솔 사용자키
+spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_CLIENT_SECRET:REMOVED_GOOGLE_CLIENT_SECRET_1}
+
