@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Text, View, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import AuthScreen from './src/screens/AuthScreen';
 import HomeScreen from './src/screens/HomeScreen';
@@ -14,8 +15,7 @@ import TheoryScreen from './src/screens/TheoryScreen';
 import ProgrammingScreen from './src/screens/ProgrammingScreen';
 import StatisticsScreen from './src/screens/StatisticsScreen';
 import { useAuthStore } from './src/stores/authStore';
-import { supabase } from './src/lib/supabase';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { User } from './src/types';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -23,20 +23,19 @@ const Tab = createMaterialTopTabNavigator();
 function TabIcon({ name, focused }: { name: string; focused: boolean }) {
   const icons: Record<string, string> = {
     Home: '🏠',
-    Problem: '📚',
-    Wrong: '❌',
+    Problem: '✏️',
+    Wrong: '✕',
     Programming: '💻',
     Theory: '📖',
     Stats: '📊',
   };
   return (
     <View style={{ alignItems: 'center' }}>
-      <Text style={{ fontSize: focused ? 20 : 16, opacity: focused ? 1 : 0.5 }}>{icons[name] || '•'}</Text>
+      <Text style={{ fontSize: focused ? 20 : 16, opacity: focused ? 1 : 0.5 }}>{icons[name] || '?'}</Text>
     </View>
   );
 }
 
-// 상단 탭바 (사용자 UX 개선을 위해 안드로이드 물리버튼 간섭을 피해 최상단으로 이동)
 function MainTabs() {
   const insets = useSafeAreaInsets();
   return (
@@ -74,76 +73,85 @@ function MainTabs() {
           tabBarShowIcon: true,
         })}
       >
-        <Tab.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ title: '홈' }}
-        />
-        <Tab.Screen
-          name="Problem"
-          component={ProblemScreen}
-          options={{ title: '학습' }}
-        />
-        <Tab.Screen
-          name="Wrong"
-          component={WrongAnswerScreen}
-          options={{ title: '오답' }}
-        />
-        <Tab.Screen
-          name="Programming"
-          component={ProgrammingScreen}
-          options={{ title: '언어' }}
-        />
-        <Tab.Screen
-          name="Theory"
-          component={TheoryScreen}
-          options={{ title: '이론' }}
-        />
-        <Tab.Screen
-          name="Stats"
-          component={StatisticsScreen}
-          options={{ title: '통계' }}
-        />
+        <Tab.Screen name="Home" component={HomeScreen} options={{ title: '홈' }} />
+        <Tab.Screen name="Problem" component={ProblemScreen} options={{ title: '문제' }} />
+        <Tab.Screen name="Wrong" component={WrongAnswerScreen} options={{ title: '오답' }} />
+        <Tab.Screen name="Programming" component={ProgrammingScreen} options={{ title: '코드' }} />
+        <Tab.Screen name="Theory" component={TheoryScreen} options={{ title: '이론' }} />
+        <Tab.Screen name="Stats" component={StatisticsScreen} options={{ title: '통계' }} />
       </Tab.Navigator>
     </View>
   );
 }
 
+/**
+ * AsyncStorage에 저장된 JWT 토큰으로 세션을 복원합니다.
+ * AuthScreen에서 loginWithGoogleIdToken으로 로그인한 후,
+ * 앱이 다시 시작될 때 이 함수가 호출되어 사용자 정보를 복원합니다.
+ */
+async function restoreSessionFromJWT(): Promise<User | null> {
+  try {
+    const token = await AsyncStorage.getItem('authToken');
+    if (!token) {
+      console.log('[App] 저장된 JWT 토큰 없음');
+      return null;
+    }
+
+    console.log('[App] JWT 토큰으로 세션 복원 시도...');
+
+    // authService.getProfile을 호출해서 사용자 정보를 가져옵니다.
+    // 이 함수는 api.ts에서 이미 정의되어 있습니다.
+    const { authService } = await import('./src/services/api');
+    const profileData = await authService.getProfile();
+    console.log('[App] 세션 복원 성공:', profileData);
+
+    if (profileData?.success && profileData?.data) {
+      const userData = profileData.data;
+      const user: User = {
+        id: userData.id,
+        email: userData.email ?? '',
+        nickname: userData.nickname ?? '',
+        username: userData.username ?? '',
+        profileImage: userData.profileImage,
+        role: userData.role,
+        isAdmin: userData.isAdmin,
+        trialExpired: userData.trialExpired,
+        requiresPayment: userData.requiresPayment,
+        canAccessApp: userData.canAccessApp,
+      };
+      return user;
+    }
+    return null;
+  } catch (error: any) {
+    console.error('[App] 세션 복원 실패:', error.message || error);
+    await AsyncStorage.removeItem('authToken');
+    return null;
+  }
+}
+
 function AppNavigator() {
   const { isAuthenticated, isLoading, setUser, setLoading } = useAuthStore();
 
-  // ✅ 앱 최초 실행 시 기존 Supabase 세션 복원 (새로고침 시 자동 로그아웃 방지)
   useEffect(() => {
-    const restoreSession = async () => {
+    const initializeApp = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) {
-          console.error('[App] 세션 복원 오류:', error.message);
-          return;
-        }
-        if (session?.user) {
-          console.log('[App] 기존 세션 복원 성공:', session.user.email);
-          // authToken이 AsyncStorage에 있으면 백엔드 동기화 완료 상태
-          const savedToken = await AsyncStorage.getItem('authToken');
-          if (savedToken) {
-            setUser({
-              id: session.user.id as any,
-              email: session.user.email ?? '',
-              nickname: session.user.user_metadata?.full_name ?? '사용자',
-            });
-          } else {
-            // 토큰 없으면 AuthScreen의 onAuthStateChange에서 재동기화 처리
-            console.log('[App] authToken 없음 - AuthScreen에서 백엔드 동기화 예정');
-          }
+        // JWT 토큰으로 세션 복원
+        const user = await restoreSessionFromJWT();
+        if (user) {
+          setUser(user);
+          console.log('[App] 세션 복원 완료 - 사용자:', user.email);
         } else {
-          console.log('[App] 저장된 세션 없음 → 로그인 화면 표시');
+          console.log('[App] 세션 복원 안됨 - 비회원으로 시작');
         }
+      } catch (error) {
+        console.error('[App] 초기화 실패:', error);
       } finally {
         setLoading(false);
       }
     };
-    restoreSession();
+
+    initializeApp();
   }, []);
 
   if (isLoading) {

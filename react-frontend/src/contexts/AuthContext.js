@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { supabase } from '../lib/supabase'
 
 const AuthContext = createContext(null)
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9000/api'
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9001/api'
 
 const readStoredAuth = () => {
   const savedToken = localStorage.getItem('authToken')
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
     })
 
     const data = await response.json()
-    if (!response.ok || !data.valid) throw new Error(data.error || '세션 검증에 실패했습니다.')
+    if (!response.ok || !data.valid) throw new Error(data.error || '토큰 검증에 실패했습니다.')
 
     if (data.user) {
       persistAuth(authToken, data.user)
@@ -73,27 +73,32 @@ export const AuthProvider = ({ children }) => {
     setError(null)
 
     try {
-      // 1. Google 인증 후 Supabase 콜백 URL로 돌아오도록 설정 (코드 교환 안정화)
-      const redirectTo = 'https://gmhznnwecujoafdisscl.supabase.co/auth/v1/callback'
+      // [수정] redirectTo: Supabase가 OAuth 처리 후 리디렉션할 앱의 URL
+      // (절대 Supabase Callback URL로 설정하지 말 것 → state 파라미터 누락 오류 발생)
+      const redirectTo = typeof window !== 'undefined'
+        ? window.location.origin + '/auth-callback.html'
+        : undefined
+
       console.info('[AUTH] Google login start', { redirectTo })
 
+// [수정] skipBrowserRedirect 제거 (기본값 false)
+      // Supabase가 브라우저 리디렉션을 직접 처리하도록 함
+      // ✅ scopes 추가: 사용자 이메일/프로필 조회 + state 파라미터 정상 처리를 위해 필수
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo,
+          scopes: 'email profile openid', // ✅ Google 사용자 정보 조회 + state 처리
           queryParams: { prompt: 'select_account' },
-          skipBrowserRedirect: true, // Web 환경에서는 우리가 직접 리다이렉트하므로 true로 설정 (Supabase 자체 리다이렉트 방지)
         },
       })
 
       if (error) throw error
-      // data.url이 존재하면 Google 인증 URL을 얻은 것이므로, 이를 열어 인증 플로우 시작
-      // AuthContext가 직접 window.location.assign을 호출하여 리다이렉트 제어권을 가짐
-      if (data?.url) {
-        window.location.assign(data.url)
-      } else {
-        throw new Error('OAuth 로그인 URL을 받지 못했습니다.')
-      }
+
+      // skipBrowserRedirect: false(기본값)이므로 Supabase가 자동으로
+      // data.url(Google 로그인 페이지)로 브라우저를 리디렉션함
+      // → window.location.assign(data.url) 불필요
+
       return data
     } catch (err) {
       console.error('[AUTH] Google login failed', err)
@@ -107,16 +112,16 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log('[AUTH] State Change:', event, session?.user?.email)
-      
+
       if (event === 'SIGNED_IN' && session) {
         setToken(session.access_token)
         setUser(session.user)
         persistAuth(session.access_token, session.user)
-        
-        // 2. 로그인이 완료되면 사용자가 원하는 9000 포트로 이동 (기존 로직 유지)
-        console.info('[AUTH] Login success, redirecting to port 9000...')
+
+        // 로그인 완료 후 Spring Boot 백엔드(9001)로 이동
+        console.info('[AUTH] Login success, redirecting to app page...')
         setTimeout(() => {
-          window.location.href = 'http://localhost:9000'
+          window.location.href = 'http://localhost:9001'
         }, 500)
       } else if (event === 'SIGNED_OUT') {
         clearAuthStorage()
@@ -129,6 +134,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   const signOut = useCallback(async () => {
+    await supabase.auth.signOut()
     clearAuthStorage()
     setToken(null)
     setUser(null)
@@ -141,9 +147,14 @@ export const AuthProvider = ({ children }) => {
       setToken(stored.token)
       setUser(stored.user)
       try {
-        await supabase.auth.getSession()
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session) {
+          setToken(session.access_token)
+          setUser(session.user)
+          persistAuth(session.access_token, session.user)
+        }
       } catch (err) {
-        console.warn('세션 조회 실패:', err)
+        console.warn('세션 복원 에러:', err)
       } finally {
         setLoading(false)
       }

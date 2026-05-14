@@ -1,8 +1,9 @@
 package com.example.informationexam.controller;
 
+import com.example.informationexam.config.JwtTokenProvider;
+import com.example.informationexam.domain.user.User;
 import com.example.informationexam.service.GoogleTokenVerifierService;
 import com.example.informationexam.service.UserService;
-import com.example.informationexam.config.JwtTokenProvider;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,36 +23,27 @@ public class GoogleAuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final GoogleTokenVerifierService googleTokenVerifierService;
 
-    /**
-     * Google ID Token 검증 후 사용자 로그인/회원가입 (POST 방식)
-     */
     @PostMapping("/google")
     public ResponseEntity<Map<String, Object>> googleAuth(@RequestBody Map<String, String> request) {
-        return processGoogleLogin(request.get("idToken"));
+        String token = request != null ? firstNonBlank(request.get("idToken"), request.get("access_token"), request.get("token")) : null;
+        return processGoogleLogin(token);
     }
 
-    /**
-     * Supabase 리다이렉트를 통한 로그인 처리 (GET 방식)
-     * Supabase가 인증 후 서버 주소로 직접 리다이렉트할 때 호출됩니다.
-     */
     @GetMapping("/google")
     public ResponseEntity<Map<String, Object>> googleAuthRedirect(@RequestParam(required = false) String access_token) {
-        if (access_token != null) {
+        if (access_token != null && !access_token.isBlank()) {
             return processGoogleLogin(access_token);
         }
         return ResponseEntity.badRequest().body(Map.of("error", "Access token is missing in redirect"));
     }
 
     private ResponseEntity<Map<String, Object>> processGoogleLogin(String idToken) {
-        if (idToken == null || idToken.isEmpty()) {
+        if (idToken == null || idToken.isBlank()) {
             return ResponseEntity.badRequest().body(Map.of("error", "ID token is required"));
         }
 
         try {
-            // Google 공식 라이브러리를 사용한 ID Token 검증
             GoogleIdToken.Payload payload = googleTokenVerifierService.verifyGoogleIdToken(idToken);
-            // ... (기존 로직 유지)
-
             String googleId = payload.getSubject();
             String email = payload.getEmail();
             String name = (String) payload.get("name");
@@ -59,37 +51,35 @@ public class GoogleAuthController {
 
             log.info("Google login attempt - email: {}, name: {}", email, name);
 
-            // 사용자 로그인/회원가입 (UserService에서 처리)
             Map<String, Object> authResult = userService.loginWithGoogle(googleId, email, name);
-            
-            // 응답 구성
+            User user = (User) authResult.get("user");
+
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("token", authResult.get("token"));
             response.put("requiresNickname", authResult.get("requiresNickname"));
             response.put("user", Map.of(
-                    "id", ((com.example.informationexam.domain.user.User) authResult.get("user")).getId(),
+                    "id", user.getId(),
                     "email", email,
-                    "username", ((com.example.informationexam.domain.user.User) authResult.get("user")).getUsername(),
-                    "nickname", ((com.example.informationexam.domain.user.User) authResult.get("user")).getNickname(),
-                    "role", ((com.example.informationexam.domain.user.User) authResult.get("user")).getRole(),
+                    "username", user.getUsername(),
+                    "nickname", user.getNickname(),
+                    "role", user.getRole(),
                     "pictureUrl", pictureUrl
             ));
 
             return ResponseEntity.ok(response);
-
         } catch (IllegalArgumentException e) {
             log.warn("Invalid Google ID token: {}", e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("error", "Invalid ID token: " + e.getMessage()));
+        } catch (IllegalStateException e) {
+            log.error("Google login configuration error: {}", e.getMessage());
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
             log.error("Google token verification failed", e);
             return ResponseEntity.status(500).body(Map.of("error", "Token verification failed: " + e.getMessage()));
         }
     }
 
-    /**
-     * 토큰 유효성 검증 (애플리케이션 자체 JWT 토큰용)
-     */
     @GetMapping("/verify")
     public ResponseEntity<Map<String, Object>> verifyToken(@RequestHeader("Authorization") String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -97,12 +87,12 @@ public class GoogleAuthController {
         }
 
         String token = authHeader.substring(7);
-        
+
         try {
             if (jwtTokenProvider.validateToken(token)) {
                 String username = jwtTokenProvider.getUsername(token);
                 var user = userService.getUserByUsername(username);
-                
+
                 return ResponseEntity.ok(Map.of(
                         "valid", true,
                         "user", Map.of(
@@ -117,7 +107,19 @@ public class GoogleAuthController {
         } catch (Exception e) {
             log.error("Token verification failed", e);
         }
-        
+
         return ResponseEntity.ok(Map.of("valid", false));
+    }
+
+    private String firstNonBlank(String... values) {
+        if (values == null) {
+            return null;
+        }
+        for (String value : values) {
+            if (value != null && !value.isBlank()) {
+                return value;
+            }
+        }
+        return null;
     }
 }

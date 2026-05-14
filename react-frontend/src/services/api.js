@@ -1,20 +1,22 @@
 ﻿import axios from 'axios';
 
-const API_BASE_URL = '/api';
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:9001/api',
+});
 
 export const subjectService = {
-  getAllSubjects: () => axios.get(\\/subjects\),
-  getSubjectById: (id) => axios.get(\\/subjects/\\),
-  createSubject: (subject) => axios.post(\\/subjects\, subject),
-  updateSubject: (id, subject) => axios.put(\\/subjects/\\, subject),
-  deleteSubject: (id) => axios.delete(\\/subjects/\\)
+  getAllSubjects: () => api.get('/subjects'),
+  getSubjectById: (id) => api.get(`/subjects/${id}`),
+  createSubject: (subject) => api.post('/subjects', subject),
+  updateSubject: (id, subject) => api.put(`/subjects/${id}`, subject),
+  deleteSubject: (id) => api.delete(`/subjects/${id}`)
 };
 
 export const problemService = {
-  getAllProblems: () => axios.get(\\/problems\),
-  getProblemById: (id) => axios.get(\\/problems/\\),
-  getProblemsBySubject: (subjectId) => axios.get(\\/subjects/\/problems\),
-  createProblem: (problem) => axios.post(\\/problems\, problem),
-  updateProblem: (id, problem) => axios.put(\\/problems/\\, problem),
-  deleteProblem: (id) => axios.delete(\\/problems/\\)
+  getAllProblems: () => api.get('/problems'),
+  getProblemById: (id) => api.get(`/problems/${id}`),
+  getProblemsBySubject: (subjectId) => api.get(`/subjects/${subjectId}/problems`),
+  createProblem: (problem) => api.post('/problems', problem),
+  updateProblem: (id, problem) => api.put(`/problems/${id}`, problem),
+  deleteProblem: (id) => api.delete(`/problems/${id}`)
 };

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 처리 중...</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    h1 { margin: 0 0 10px 0; font-size: 24px; }
+    p { margin: 0; opacity: 0.9; }
+    .error {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: rgba(220, 38, 38, 0.25);
+      border: 1px solid rgba(220, 38, 38, 0.4);
+      border-radius: 8px;
+      display: none;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="spinner"></div>
+    <h1>로그인 처리 중...</h1>
+    <p>잠시만 기다려주세요</p>
+    <div class="error" id="errorBox"></div>
+  </div>
+
+  <script>
+    window.addEventListener('load', function() {
+      var errorBox = document.getElementById('errorBox');
+      var queryParams = new URLSearchParams(window.location.search);
+      var hash = window.location.hash;
+
+      // 1. OAuth 에러 확인 (query string)
+      var error = queryParams.get('error');
+      var errorDescription = queryParams.get('error_description');
+
+      if (error) {
+        errorBox.style.display = 'block';
+        errorBox.textContent = '로그인에 실패했습니다: ' + (errorDescription || error);
+        console.error('[Auth Callback] OAuth error:', error, errorDescription);
+        setTimeout(function() {
+          window.location.href = '/';
+        }, 3000);
+        return;
+      }
+
+      console.log('[Auth Callback] Processing OAuth redirect', {
+        queryString: window.location.search,
+        hasHash: !!hash,
+        hashLength: hash ? hash.length : 0
+      });
+
+      // 2. PKCE Flow: authorization code + state 가 query string 으로 전달됨
+      //    예: /auth-callback.html?code=xxx&state=yyy
+      //    Supabase 클라이언트가 detectSessionInUrl:true 로 이 파라미터를 감지해야 함
+      var code = queryParams.get('code');
+      var state = queryParams.get('state');
+
+      var targetUrl;
+
+      if (code && state) {
+        // PKCE: code + state 를 메인 앱의 query string 으로 전달
+        // Supabase 클라이언트가 window.location.search 에서 code/state 를 읽어 PKCE 교환 수행
+        targetUrl = '/?' + window.location.search.substring(1);
+        console.log('[Auth Callback] PKCE flow detected, forwarding code/state to:', targetUrl);
+      } else if (hash) {
+        // Implicit flow: hash fragment (access_token 등) 를 그대로 전달
+        targetUrl = '/' + hash;
+        console.log('[Auth Callback] Implicit flow detected, forwarding hash to:', targetUrl);
+      } else {
+        // 일반 페이지 로드
+        targetUrl = '/';
+        console.log('[Auth Callback] No OAuth params, redirecting to root');
+      }
+
+      // 메인 앱으로 리다이렉트 (Supabase 클라이언트가 URL 파라미터를 읽도록)
+      setTimeout(function() {
+        window.location.href = targetUrl;
+      }, 800);
+    });
+  </script>
+</body>
+</html>

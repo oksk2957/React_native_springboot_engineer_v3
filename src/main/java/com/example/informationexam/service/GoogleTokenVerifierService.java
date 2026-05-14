@@ -16,13 +16,17 @@ import java.util.Collections;
 @Slf4j
 public class GoogleTokenVerifierService {
 
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    @Value("${spring.security.oauth2.client.registration.google.client-id:}")
     private String googleClientId;
 
     private final NetHttpTransport transport = new NetHttpTransport();
     private final GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
     public GoogleIdToken.Payload verifyGoogleIdToken(String idToken) throws GeneralSecurityException, IOException {
+        if (googleClientId == null || googleClientId.isBlank()) {
+            throw new IllegalStateException("Google client-id 설정이 비어 있습니다.");
+        }
+
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
                 .setAudience(Collections.singletonList(googleClientId))
                 .setIssuer("https://accounts.google.com")

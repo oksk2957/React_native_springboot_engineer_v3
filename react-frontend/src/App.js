@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { subjectService } from './services/api';
 
 function App() {
   const [subjects, setSubjects] = useState([]);
@@ -7,7 +7,7 @@ function App() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get('/api/subjects')
+    subjectService.getAllSubjects()
       .then(response => {
         setSubjects(response.data);
         setLoading(false);

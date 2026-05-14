@@ -66,9 +66,18 @@ export default function ProgrammingScreen() {
   // 언어별 문제 필터링
   const problems = React.useMemo(() => {
     const keywords = LANGUAGE_KEYWORDS[currentLanguage] || [];
-    return allProblems.filter(problem =>
-      keywords.some(keyword => problem.question.includes(keyword))
-    );
+
+    return allProblems.filter((problem) => {
+      const questionText = typeof problem?.question === 'string' ? problem.question : '';
+      const normalizedQuestion = questionText.toLowerCase();
+
+      return keywords.some((keyword) => {
+        if (typeof keyword !== 'string' || keyword.length === 0) {
+          return false;
+        }
+        return normalizedQuestion.includes(keyword.toLowerCase());
+      });
+    });
   }, [allProblems, currentLanguage]);
 
   useEffect(() => {

@@ -4,30 +4,26 @@
 
   <resultMap id="TheoryCardDtoMap" type="com.example.informationexam.dto.theory.TheoryCardDto">
     <id     property="id"               column="id"/>
-    <result property="title"            column="question"/>
-    <result property="summary"          column="explanation"/>
-    <result property="categoryId"       column="subject_id"/>
-    <result property="categoryName"     column="category_name"/>
+    <result property="subjectId"        column="subject_id"/>
+    <result property="frontText"        column="question"/>
+    <result property="backText"         column="answer"/>
+    <result property="explanation"      column="explanation"/>
     <result property="difficulty"       column="difficulty"/>
-    <result property="createdAt"        column="created_at"/>
-    <result property="updatedAt"        column="updated_at"/>
   </resultMap>
 
   <select id="findTheoryCards" resultMap="TheoryCardDtoMap">
     SELECT
       sp.id,
-      sp.question,
-      sp.explanation,
       sp.subject_id,
-      s.name AS category_name,
-      sp.difficulty,
-      sp.created_at,
-      sp.updated_at
+      sp.question,
+      sp.answer,
+      sp.explanation,
+      sp.difficulty
     FROM subjective_problems sp
     LEFT JOIN subject s ON s.id = sp.subject_id
     WHERE 1=1
       <if test="categoryName != null and categoryName != ''">
-        AND s.name = #{categoryName}
+        AND LOWER(s.name) = LOWER(#{categoryName})
       </if>
     ORDER BY sp.created_at DESC
   </select>
@@ -35,18 +31,16 @@
   <select id="selectTheoryCardsByCategory" resultMap="TheoryCardDtoMap">
     SELECT
       sp.id,
-      sp.question,
-      sp.explanation,
       sp.subject_id,
-      s.name AS category_name,
-      sp.difficulty,
-      sp.created_at,
-      sp.updated_at
+      sp.question,
+      sp.answer,
+      sp.explanation,
+      sp.difficulty
     FROM subjective_problems sp
     LEFT JOIN subject s ON s.id = sp.subject_id
     WHERE 1=1
       <if test="category != null and category != ''">
-        AND s.name = #{category}
+        AND LOWER(s.name) = LOWER(#{category})
       </if>
     ORDER BY sp.created_at DESC
   </select>
@@ -54,13 +48,11 @@
   <select id="findTheoryCardById" resultMap="TheoryCardDtoMap">
     SELECT
       sp.id,
-      sp.question,
-      sp.explanation,
       sp.subject_id,
-      s.name AS category_name,
-      sp.difficulty,
-      sp.created_at,
-      sp.updated_at
+      sp.question,
+      sp.answer,
+      sp.explanation,
+      sp.difficulty
     FROM subjective_problems sp
     LEFT JOIN subject s ON s.id = sp.subject_id
     WHERE sp.id = #{id}

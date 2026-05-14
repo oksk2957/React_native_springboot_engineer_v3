@@ -1,3 +1,8 @@
+
+#o'auth token
+spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_CLIENT_SECRET:REMOVED_GOOGLE_CLIENT_SECRET_1}
+
+
 # Gradle
 backend/.gradle/
 InformationExamApp/android/.gradle/
@@ -18,3 +23,33 @@ InformationExamApp/node_modules/*/android/.project
 .vscode/
 .aider*
 node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dev-debug.log
+# Dependency directories
+node_modules/
+# Environment variables
+.env
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# OS specific
+.DS_Store
+
+# Task files
+# tasks.json
+# tasks/ 
+
+backend/server.log
+target/
+**/target/

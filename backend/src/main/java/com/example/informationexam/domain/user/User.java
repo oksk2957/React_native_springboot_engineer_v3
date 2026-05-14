@@ -26,7 +26,7 @@ public class User {
     private String nickname;
 
     @Column(nullable = false, length = 32)
-    @ColumnDefault("'free_user'")
+    @ColumnDefault("'"'free_user'"'")
     private String role;
 
     @Column(name = "trial_started_at")
@@ -51,7 +51,7 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    @ColumnDefault("'unknown'")
+    @ColumnDefault("'"'unknown'"'")
     private String username;
 
     @Builder
@@ -72,7 +72,12 @@ public class User {
         this.nickname = nickname;
         this.updatedAt = LocalDateTime.now();
     }
-    
+
+    public void updateGoogleId(String googleId) {
+        this.googleId = googleId;
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public void setRole(String role) {
         this.role = role;
         this.updatedAt = LocalDateTime.now();

@@ -43,15 +43,40 @@ public class UserService {
 
         log.info("[AUTH][{}][STEP2] user lookup by googleId: {}", traceId, googleId);
 
+        // 1. googleId로 사용자 조회
         Optional<User> existingUser = userRepository.findByGoogleId(googleId);
         User user;
         boolean isNewUser = false;
 
+        // 2. googleId로 찾지 못한 경우, email로 조회 후 googleId 연결
+        if (existingUser.isEmpty()) {
+            log.info("[AUTH][{}][STEP2][FALLBACK] googleId not found, trying email lookup: {}", traceId, email);
+            Optional<User> userByEmail = userRepository.findByEmail(email);
+
+            if (userByEmail.isPresent()) {
+                // 기존 이메일 계정이 있으면 googleId만 연결
+                User foundUser = userByEmail.get();
+                if (foundUser.getGoogleId() == null || foundUser.getGoogleId().isBlank()) {
+                    foundUser.updateGoogleId(googleId);
+                    userRepository.save(foundUser);
+                    log.info("[AUTH][{}][STEP2][LINKED] existing user linked with googleId - id: {}, email: {}",
+                            traceId, foundUser.getId(), foundUser.getEmail());
+                } else {
+                    // 이미 다른 googleId가 있는 경우 (중복 계정)
+                    log.warn("[AUTH][{}][STEP2][CONFLICT] email already linked to different googleId", traceId);
+                    throw new IllegalArgumentException("이 이메일은 이미 다른 Google 계정에 연결되어 있습니다.");
+                }
+                existingUser = Optional.of(foundUser);
+            }
+        }
+
+        // 3. 기존 사용자 또는 신규 사용자 생성
         if (existingUser.isPresent()) {
             user = existingUser.get();
             log.info("[AUTH][{}][STEP2][EXISTING] user found - id: {}, email: {}, username: {}",
                     traceId, user.getId(), user.getEmail(), user.getUsername());
         } else {
+            // 신규 사용자 생성
             String role = resolveRole(email);
             log.info("[AUTH][{}][STEP2][NEW] creating new user - email: {}, role: {}", traceId, email, role);
 
@@ -91,7 +116,7 @@ public class UserService {
                 .trialExpired(trialExpired)
                 .requiresPayment(requiresPayment)
                 .canAccessApp(canAccessApp)
-                .paymentMessage(requiresPayment ? "무료 이용 기간이 종료되었습니다. 결제 정보가 필요합니다." : null)
+                .paymentMessage(requiresPayment ? "무료 이용 기간이 만료되었습니다. 결제 후 계속 이용하세요." : null)
                 .isNewUser(isNewUser)
                 .requiresNickname(isNewUser && (user.getNickname() == null || user.getNickname().isEmpty()))
                 .userId(user.getId())
@@ -142,7 +167,7 @@ public class UserService {
 
     public User getUserByGoogleId(String googleId) {
         return userRepository.findByGoogleId(googleId)
-                .orElseThrow(() -> new IllegalArgumentException("연결된 계정이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
     }
 
     public User getUserByEmail(String email) {

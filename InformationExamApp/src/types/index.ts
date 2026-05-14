@@ -1,8 +1,30 @@
+export type UserRole = 'admin' | 'free_user' | 'money_user';
+
 export interface User {
-  id: number;
+  id: number | string;
   email: string;
   nickname: string;
+  username?: string;
   profileImage?: string;
+  role?: UserRole;
+  isAdmin?: boolean;
+  trialExpired?: boolean;
+  requiresPayment?: boolean;
+  canAccessApp?: boolean;
+}
+
+/**
+ * 백엔드 /auth/google API를 프론트에서 정규화한 응답 타입
+ */
+export interface AuthLoginResponse {
+  token: string;
+  user: User;
+  requiresNickname?: boolean;
+  isNewUser?: boolean;
+  trialExpired?: boolean;
+  requiresPayment?: boolean;
+  canAccessApp?: boolean;
+  paymentMessage?: string | null;
 }
 
 export type ProblemType = 'OBJECTIVE' | 'SUBJECTIVE' | 'PROGRAMMING_LANGUAGE';

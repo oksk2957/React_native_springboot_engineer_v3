@@ -93,22 +93,42 @@ public class StatisticsService {
 
         stats.put("branchStats", branchStats);
 
-        // 과목별 통계 (OBJECTIVE만 해당)
-        List<Subject> subjects = subjectRepository.findAll();
+        // 문제유형별 통계 (item_type 기반)
+        // 참고: user_answer 테이블에 subject_id가 없으므로 item_type(OBJECTIVE/SUBJECTIVE/PROGRAMMING_LANGUAGE) 기반으로 분류
         List<Map<String, Object>> categoryStats = new ArrayList<>();
 
-        for (Subject subject : subjects) {
-            Map<String, Object> categoryStat = new HashMap<>();
-            long categoryTotal = userAnswerRepository.countTotalByCategory(userId);
-            long categoryCorrect = userAnswerRepository.countCorrectByCategory(userId, subject.getName());
+        // OBJECTIVE 통계
+        Map<String, Object> objectiveCat = new HashMap<>();
+        long objTotal = userAnswerRepository.countByUserIdAndProblemType(userId, "OBJECTIVE");
+        long objCorrect = userAnswerRepository.countCorrectByUserIdAndProblemType(userId, "OBJECTIVE");
+        objectiveCat.put("category", "OBJECTIVE");
+        objectiveCat.put("total", objTotal);
+        objectiveCat.put("correct", objCorrect);
+        objectiveCat.put("accuracyRate", objTotal > 0 ?
+                Math.round((double) objCorrect / objTotal * 100 * 10) / 10.0 : 0);
+        categoryStats.add(objectiveCat);
 
-            categoryStat.put("category", subject.getName());
-            categoryStat.put("total", categoryTotal);
-            categoryStat.put("correct", categoryCorrect);
-            categoryStat.put("accuracyRate", categoryTotal > 0 ?
-                    Math.round((double) categoryCorrect / categoryTotal * 100 * 10) / 10.0 : 0);
-            categoryStats.add(categoryStat);
-        }
+        // SUBJECTIVE 통계
+        Map<String, Object> subjectiveCat = new HashMap<>();
+        long subTotal = userAnswerRepository.countByUserIdAndProblemType(userId, "SUBJECTIVE");
+        long subCorrect = userAnswerRepository.countCorrectByUserIdAndProblemType(userId, "SUBJECTIVE");
+        subjectiveCat.put("category", "SUBJECTIVE");
+        subjectiveCat.put("total", subTotal);
+        subjectiveCat.put("correct", subCorrect);
+        subjectiveCat.put("accuracyRate", subTotal > 0 ?
+                Math.round((double) subCorrect / subTotal * 100 * 10) / 10.0 : 0);
+        categoryStats.add(subjectiveCat);
+
+        // PROGRAMMING_LANGUAGE 통계
+        Map<String, Object> programmingCat = new HashMap<>();
+        long progTotal = userAnswerRepository.countByUserIdAndProblemType(userId, "PROGRAMMING_LANGUAGE");
+        long progCorrect = userAnswerRepository.countCorrectByUserIdAndProblemType(userId, "PROGRAMMING_LANGUAGE");
+        programmingCat.put("category", "PROGRAMMING_LANGUAGE");
+        programmingCat.put("total", progTotal);
+        programmingCat.put("correct", progCorrect);
+        programmingCat.put("accuracyRate", progTotal > 0 ?
+                Math.round((double) progCorrect / progTotal * 100 * 10) / 10.0 : 0);
+        categoryStats.add(programmingCat);
 
         stats.put("categoryStats", categoryStats);
         return stats;

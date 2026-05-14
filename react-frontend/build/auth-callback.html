@@ -36,13 +36,17 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    h1 {
-      margin: 0 0 10px 0;
-      font-size: 24px;
-    }
-    p {
-      margin: 0;
-      opacity: 0.9;
+    h1 { margin: 0 0 10px 0; font-size: 24px; }
+    p { margin: 0; opacity: 0.9; }
+    .error {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: rgba(220, 38, 38, 0.25);
+      border: 1px solid rgba(220, 38, 38, 0.4);
+      border-radius: 8px;
+      display: none;
+      font-size: 14px;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -51,19 +55,50 @@
     <div class="spinner"></div>
     <h1>로그인 처리 중...</h1>
     <p>잠시만 기다려주세요</p>
+    <div class="error" id="errorBox"></div>
   </div>
 
   <script>
-    // Supabase OAuth 콜백 처리를 위한 스크립트
-    // 메인 앱으로 리다이렉트하기 전에 Supabase가 세션을 처리하도록 함
-    window.addEventListener('load', () => {
-      // 현재 URL의 hash fragment를 확인하고, Supabase가 처리할 수 있도록 함
-      // 실제 세션 처리는 메인 앱(React)에서 AuthContext의 onAuthStateChange로 처리됨
-      setTimeout(() => {
-        // 메인 앱으로 리다이렉트
-        window.location.href = '/';
-      }, 1500)
-    })
+    // [수정] Supabase OAuth PKCE 콜백 처리 강화
+    // Supabase가 PKCE flow 완료 후 hash fragment에 session 정보를 담아 이 페이지로 리디렉션
+    // (#access_token=xxx&refresh_token=yyy&expires_in=zzz&...)
+    // 이 페이지는 hash를 유지한 채 React 앱의 루트로 전달하는 역할을 함
+    window.addEventListener('load', function() {
+      var hash = window.location.hash;
+      var errorBox = document.getElementById('errorBox');
+
+      // URL query string에서 OAuth 에러 확인
+      var params = new URLSearchParams(window.location.search);
+      var error = params.get('error');
+      var errorDescription = params.get('error_description');
+
+      if (error) {
+        // OAuth 에러 발생 시 사용자에게 표시
+        errorBox.style.display = 'block';
+        errorBox.textContent = '로그인에 실패했습니다: ' + (errorDescription || error);
+        console.error('[Auth Callback] OAuth error:', error, errorDescription);
+
+        // 3초 후 메인으로 리디렉션
+        setTimeout(function() {
+          window.location.href = '/';
+        }, 3000);
+        return;
+      }
+
+      console.log('[Auth Callback] Processing OAuth redirect', {
+        hasHash: hash ? true : false,
+        hashLength: hash ? hash.length : 0
+      });
+
+      // PKCE flow: Supabase가 hash에 session 정보를 담아 리디렉션
+      // hash를 유지한 채 React 앱(/)으로 전달하면,
+      // Supabase 클라이언트의 detectSessionInUrl:true가 URL hash를 자동으로 읽어 세션 복원
+      setTimeout(function() {
+        var targetUrl = hash ? '/' + hash : '/';
+        console.log('[Auth Callback] Redirecting to:', targetUrl);
+        window.location.href = targetUrl;
+      }, 1000);
+    });
   </script>
 </body>
 </html>
