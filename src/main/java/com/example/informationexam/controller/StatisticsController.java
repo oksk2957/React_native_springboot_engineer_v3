@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -25,7 +26,8 @@ public class StatisticsController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getStatistics(
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestParam(value = "userId", required = false) Long userIdParam) {
 
         if (authHeader == null || authHeader.isBlank()) {
             return ResponseEntity.status(401).body(Map.of(
@@ -45,6 +47,14 @@ public class StatisticsController {
             String token = authHeader.substring(7).trim();
             String username = jwtTokenProvider.getUsername(token);
             User user = userService.getUserByUsername(username);
+
+            if (userIdParam != null && !userIdParam.equals(user.getId())) {
+                return ResponseEntity.status(403).body(Map.of(
+                        "error", true,
+                        "message", "userId가 인증된 사용자와 일치하지 않습니다."
+                ));
+            }
+
             return ResponseEntity.ok(statisticsService.getOverallStatistics(user.getId()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(401).body(Map.of(

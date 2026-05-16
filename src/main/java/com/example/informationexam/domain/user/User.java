@@ -72,6 +72,11 @@ public class User {
         this.nickname = nickname;
         this.updatedAt = LocalDateTime.now();
     }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
+        this.updatedAt = LocalDateTime.now();
+    }
     
     public void setRole(String role) {
         this.role = role;

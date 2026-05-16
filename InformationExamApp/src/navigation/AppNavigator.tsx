@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -14,7 +13,15 @@ import WrongAnswerScreen from '../screens/WrongAnswerScreen';
 import { useAuthStore } from '../stores/authStore';
 import { colors } from '../theme';
 
-const Tab = createBottomTabNavigator();
+export type MainTabParamList = {
+  Home: undefined;
+  Problem: undefined;
+  Wrong: { bookmarkDate?: string } | undefined;
+  Theory: undefined;
+  Statistics: undefined;
+};
+
+const Tab = createBottomTabNavigator<MainTabParamList>();
 const Stack = createNativeStackNavigator();
 
 const MainTab = () => {
@@ -54,7 +61,7 @@ const MainTab = () => {
         }}
       />
       <Tab.Screen
-        name="WrongAnswer"
+        name="Wrong"
         component={WrongAnswerScreen}
         options={{
           title: '오답',

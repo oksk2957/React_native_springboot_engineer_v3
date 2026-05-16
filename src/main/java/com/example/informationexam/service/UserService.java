@@ -27,30 +27,42 @@ public class UserService {
      */
     @Transactional
     public Map<String, Object> loginWithGoogle(String googleId, String email, String name) {
-        // 1. googleId로 기존 사용자 조회
-        Optional<User> existingUser = userRepository.findByGoogleId(googleId);
+        Optional<User> byGoogle = userRepository.findByGoogleId(googleId);
 
         User user;
         boolean isNewUser = false;
 
-        if (existingUser.isPresent()) {
-            // 기존 사용자 - 로그인 처리
-            user = existingUser.get();
-            log.info("Existing user login - id: {}, email: {}, username: {}", 
+        if (byGoogle.isPresent()) {
+            user = byGoogle.get();
+            log.info("Existing user login (google_id) - id: {}, email: {}, username: {}",
                     user.getId(), user.getEmail(), user.getUsername());
         } else {
-            // 신규 사용자 - 자동 회원가입
-            user = User.builder()
-                    .googleId(googleId)
-                    .email(email)
-                    .username(generateUsername(email))
-                    .nickname(name != null ? name : email.split("@")[0])
-                    .role(Role.FREE_USER.getKey())
-                    .build();
-            user = userRepository.save(user);
-            isNewUser = true;
-            log.info("New user registered - id: {}, email: {}, username: {}", 
-                    user.getId(), user.getEmail(), user.getUsername());
+            Optional<User> byEmail = userRepository.findByEmail(email);
+            if (byEmail.isPresent()) {
+                user = byEmail.get();
+                if (user.getGoogleId() == null || user.getGoogleId().isBlank()) {
+                    user.setGoogleId(googleId);
+                    user = userRepository.save(user);
+                    log.info("Linked google_id to existing email user - id: {}", user.getId());
+                } else if (!googleId.equals(user.getGoogleId())) {
+                    log.warn("Email match but google_id mismatch for user id={} — keeping existing google_id",
+                            user.getId());
+                }
+                log.info("Existing user login (email) - id: {}, email: {}, username: {}",
+                        user.getId(), user.getEmail(), user.getUsername());
+            } else {
+                user = User.builder()
+                        .googleId(googleId)
+                        .email(email)
+                        .username(generateUsername(email))
+                        .nickname(name != null ? name : email.split("@")[0])
+                        .role(Role.FREE_USER.getKey())
+                        .build();
+                user = userRepository.save(user);
+                isNewUser = true;
+                log.info("New user registered - id: {}, email: {}, username: {}",
+                        user.getId(), user.getEmail(), user.getUsername());
+            }
         }
 
         // JWT 토큰 생성

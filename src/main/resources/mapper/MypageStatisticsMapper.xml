@@ -75,4 +75,65 @@
           AND ua.is_correct = false
         ORDER BY submitted_at DESC
     </select>
+
+    <select id="selectUserStatisticsFromFunction" resultType="map">
+        SELECT total_problems   AS total_problems,
+               solved_problems  AS solved_problems,
+               correct_count    AS correct_count,
+               wrong_count      AS wrong_count
+        FROM get_user_statistics(#{userId})
+    </select>
+
+    <select id="selectDailyAnswerCountsSince" resultType="com.example.informationexam.dto.statistics.HeatmapDayRow">
+        SELECT TO_CHAR(CAST(ua.submitted_at AS DATE), 'YYYY-MM-DD') AS study_date,
+               COUNT(*)::bigint AS answer_count
+        FROM user_answer ua
+        WHERE ua.user_id = #{userId}
+          AND ua.is_correct = false
+          AND CAST(ua.submitted_at AS DATE) &gt;= #{since}
+        GROUP BY CAST(ua.submitted_at AS DATE)
+        ORDER BY study_date ASC
+    </select>
+
+    <select id="selectWrongAnswersByDate" resultType="com.example.informationexam.dto.statistics.WrongAnswerListRow">
+        SELECT ua.id,
+               ua.item_type AS problemType,
+               ua.reference_id AS referenceId,
+               p.question,
+               p.answer AS correctAnswer,
+               ua.submitted_answer AS submittedAnswer,
+               ua.submitted_at AS submittedAt
+        FROM user_answer ua
+        INNER JOIN problem p ON ua.item_type = 'OBJECTIVE' AND ua.reference_id = p.id
+        WHERE ua.user_id = #{userId}
+          AND ua.is_correct = false
+          AND CAST(ua.submitted_at AS DATE) = #{date}
+        UNION ALL
+        SELECT ua.id,
+               ua.item_type AS problemType,
+               ua.reference_id AS referenceId,
+               sp.question,
+               sp.answer AS correctAnswer,
+               ua.submitted_answer AS submittedAnswer,
+               ua.submitted_at AS submittedAt
+        FROM user_answer ua
+        INNER JOIN subjective_problems sp ON ua.item_type = 'SUBJECTIVE' AND ua.reference_id = sp.id
+        WHERE ua.user_id = #{userId}
+          AND ua.is_correct = false
+          AND CAST(ua.submitted_at AS DATE) = #{date}
+        UNION ALL
+        SELECT ua.id,
+               ua.item_type AS problemType,
+               ua.reference_id AS referenceId,
+               plp.question,
+               plp.answer AS correctAnswer,
+               ua.submitted_answer AS submittedAnswer,
+               ua.submitted_at AS submittedAt
+        FROM user_answer ua
+        INNER JOIN programming_language_problems plp ON ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.reference_id = plp.id
+        WHERE ua.user_id = #{userId}
+          AND ua.is_correct = false
+          AND CAST(ua.submitted_at AS DATE) = #{date}
+        ORDER BY submittedAt DESC
+    </select>
 </mapper>

@@ -272,8 +272,12 @@ export const problemService = {
 };
 
 export const statisticsService = {
-  getStatistics: async (): Promise<Statistics> => {
-    const response = await api.get('/statistics');
+  getStatistics: async (userId?: number | string): Promise<Statistics> => {
+    const params =
+      userId != null && userId !== ''
+        ? { userId: typeof userId === 'string' ? userId : String(userId) }
+        : undefined;
+    const response = await api.get('/statistics', { params });
     return response.data;
   },
 
@@ -289,6 +293,20 @@ export const statisticsService = {
 
   getWrongAnswersByType: async (problemType: ProblemType): Promise<WrongAnswer[]> => {
     const response = await api.get(`/wrong-answers/${problemType}`);
+    return response.data;
+  },
+
+  getWrongAnswersByDate: async (date: string): Promise<WrongAnswer[]> => {
+    const response = await api.get('/wrong-answers/by-date', {
+      params: { date },
+    });
+    return response.data;
+  },
+
+  getWrongBookmarksByDate: async (date: string): Promise<WrongAnswer[]> => {
+    const response = await api.get('/wrong-answers/bookmarks/by-date', {
+      params: { date },
+    });
     return response.data;
   },
 };

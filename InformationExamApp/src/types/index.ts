@@ -88,6 +88,10 @@ export interface Statistics {
   solvedProblems: number;
   correctCount: number;
   wrongCount: number;
+  accuracyRate?: number;
+  userId?: number;
+  studyHeatmap?: StudyHeatmapCell[];
+  branchPerformance?: BranchPerformanceRow[];
   branchStats?: {
     problemType: ProblemType;
     totalProblems: number;
@@ -101,6 +105,26 @@ export interface Statistics {
     correct: number;
     accuracyRate?: number;
   }[];
+}
+
+export interface StudyHeatmapCell {
+  date: string;
+  count: number;
+  level: number;
+}
+
+export interface CalendarDayCell extends StudyHeatmapCell {
+  day: number;
+  isCurrentMonth: boolean;
+}
+
+export interface BranchPerformanceRow {
+  branch: ProblemType | string;
+  attempted: number;
+  wrong: number;
+  numerator: number;
+  poolTotal: number;
+  achievementRate: number;
 }
 
 export interface WrongAnswer {
