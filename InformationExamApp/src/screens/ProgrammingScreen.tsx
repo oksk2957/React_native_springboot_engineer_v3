@@ -6,7 +6,6 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
-  Dimensions,
   ActivityIndicator,
   Animated,
   KeyboardAvoidingView,
@@ -17,7 +16,6 @@ import { useRoute } from '@react-navigation/native';
 import { problemService } from '../services/api';
 import type { Problem } from '../types';
 
-const { width } = Dimensions.get('window');
 
 const languageIcons: Record<string, string> = {
   'C언어': '🅒',
@@ -147,6 +145,32 @@ export default function ProgrammingScreen() {
 
   const handleFlipCard = () => setIsFlipped(!isFlipped);
 
+  const handleKnow = async () => {
+    if (!problems[currentIndex]) return;
+
+    try {
+      await problemService.submitAnswer(problems[currentIndex].id, '1', 'PROGRAMMING_LANGUAGE');
+      showToast('Saved as known (1)', 'success');
+      handleNext();
+    } catch (error) {
+      console.error('Failed to save known answer:', error);
+      showToast('Failed to save. Please try again.', 'error');
+    }
+  };
+
+  const handleDontKnow = async () => {
+    if (!problems[currentIndex]) return;
+
+    try {
+      await problemService.submitAnswer(problems[currentIndex].id, '2', 'PROGRAMMING_LANGUAGE');
+      showToast('Saved as unknown (2)', 'success');
+      handleNext();
+    } catch (error) {
+      console.error('Failed to save unknown answer:', error);
+      showToast('Failed to save. Please try again.', 'error');
+    }
+  };
+
   const handleNext = () => {
     if (problems.length === 0) return;
     setIsFlipped(false);
@@ -232,8 +256,17 @@ export default function ProgrammingScreen() {
                           </Text>
                         </View>
                       )}
-                      <Text style={styles.flipGuide}>탭하여 결과 확인 🔄</Text>
+                      <Text style={styles.flipGuide}>Tap to reveal answer 🔄</Text>
                     </TouchableOpacity>
+
+                    <View style={styles.actionRow}>
+                      <TouchableOpacity style={[styles.actionButton, styles.knowButton]} onPress={handleKnow}>
+                        <Text style={styles.actionButtonText}>Know (1)</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={[styles.actionButton, styles.dontKnowButton]} onPress={handleDontKnow}>
+                        <Text style={styles.actionButtonText}>Don't know (2)</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
 
                   <TouchableOpacity style={[styles.sideNavButton, styles.sideNavRight]} onPress={handleNext}>
@@ -407,6 +440,30 @@ const styles = StyleSheet.create({
   },
   flashContainer: {
     alignItems: 'center',
+  },
+  actionRow: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 16,
+    gap: 10,
+  },
+  actionButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  knowButton: {
+    backgroundColor: '#38a169',
+  },
+  dontKnowButton: {
+    backgroundColor: '#e53e3e',
+  },
+  actionButtonText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 14,
   },
   flashCard: {
     width: '100%',

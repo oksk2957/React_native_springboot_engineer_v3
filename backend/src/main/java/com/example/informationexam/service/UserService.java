@@ -162,6 +162,7 @@ public class UserService {
 
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
+                .or(() -> userRepository.findByEmail(username))
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     }
 

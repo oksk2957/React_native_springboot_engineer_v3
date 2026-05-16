@@ -20,7 +20,7 @@ public class UserAnswer {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "session_id", nullable = false)
+    @Column(name = "session_id")
     private Long sessionId;
 
     @Column(name = "item_type", nullable = false, length = 32)

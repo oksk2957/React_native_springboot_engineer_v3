@@ -13,7 +13,7 @@ import {
   Platform,
 } from 'react-native';
 import { useAuthStore } from '../stores/authStore';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { fetchTheoryCards } from '../api/theoryApi';
 import { TheoryCard } from '../types/theory';
 
@@ -39,6 +39,7 @@ const categories = Object.keys(categoryIcons);
 
 export default function TheoryScreen() {
   const route = useRoute() as any;
+  const navigation = useNavigation() as any;
   const { darkMode } = useAuthStore();
   const [activeTab, setActiveTab] = useState<'flash' | 'subjective'>('flash');
   const [currentCategory, setCurrentCategory] = useState(route?.params?.category || '운영체제');
@@ -177,6 +178,16 @@ export default function TheoryScreen() {
               onPress={() => setActiveTab('subjective')}
             >
               <Text style={[styles.tabText, activeTab === 'subjective' && { color: themeColor, fontWeight: 'bold' }]}>주관식 퀴즈</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.programmingCtaWrap}>
+            <TouchableOpacity
+              style={[styles.programmingCtaButton, { backgroundColor: themeColor }]}
+              onPress={() => navigation.navigate('Programming' as never)}
+            >
+              <Text style={styles.programmingCtaTitle}>실기 주관식 랜덤학습</Text>
+              <Text style={styles.programmingCtaSubtitle}>코드 학습 화면으로 이동</Text>
             </TouchableOpacity>
           </View>
 

@@ -178,6 +178,7 @@ export const HomeScreen: React.FC = () => {
             
             <TouchableOpacity
               style={styles.quickMenuItem}
+              onPress={() => navigation.navigate('Wrong' as never)}
               activeOpacity={0.7}
             >
               <View style={[styles.quickMenuIcon, { backgroundColor: colors.error + '20' }]}>
@@ -189,6 +190,7 @@ export const HomeScreen: React.FC = () => {
             
             <TouchableOpacity
               style={styles.quickMenuItem}
+              onPress={() => navigation.navigate('Theory' as never)}
               activeOpacity={0.7}
             >
               <View style={[styles.quickMenuIcon, { backgroundColor: colors.secondary + '20' }]}>
@@ -200,6 +202,7 @@ export const HomeScreen: React.FC = () => {
             
             <TouchableOpacity
               style={styles.quickMenuItem}
+              onPress={() => navigation.navigate('Statistics' as never)}
               activeOpacity={0.7}
             >
               <View style={[styles.quickMenuIcon, { backgroundColor: colors.accent + '20' }]}>

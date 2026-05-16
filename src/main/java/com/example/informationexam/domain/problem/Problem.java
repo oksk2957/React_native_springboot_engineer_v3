@@ -43,7 +43,10 @@ public class Problem {
     @Column(name = "is_ai_generated", nullable = false)
     private boolean isAiGenerated = false;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @Builder

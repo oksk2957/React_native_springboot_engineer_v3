@@ -10,6 +10,7 @@ import ProblemScreen from '../screens/ProblemScreen';
 import TheoryScreen from '../screens/TheoryScreen';
 import StatisticsScreen from '../screens/StatisticsScreen';
 import WrongAnswerScreen from '../screens/WrongAnswerScreen';
+import ProgrammingScreen from '../screens/ProgrammingScreen';
 import { useAuthStore } from '../stores/authStore';
 import { colors } from '../theme';
 
@@ -18,6 +19,7 @@ export type MainTabParamList = {
   Problem: undefined;
   Wrong: { bookmarkDate?: string } | undefined;
   Theory: undefined;
+  Programming: { language?: string } | undefined;
   Statistics: undefined;
 };
 
@@ -74,6 +76,14 @@ const MainTab = () => {
         options={{
           title: '이론',
           tabBarIcon: ({ color, size }) => <AlertCircle color={color} size={size} />,
+        }}
+      />
+      <Tab.Screen
+        name="Programming"
+        component={ProgrammingScreen}
+        options={{
+          title: '코드',
+          tabBarIcon: ({ color, size }) => <BookOpen color={color} size={size} />,
         }}
       />
       <Tab.Screen

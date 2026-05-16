@@ -9,7 +9,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useAuthStore } from '../stores/authStore';
 import { statisticsService } from '../services/api';
@@ -66,6 +66,12 @@ export default function StatisticsScreen() {
     fetchStatistics();
   }, [fetchStatistics]);
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchStatistics();
+    }, [fetchStatistics])
+  );
+
   const handleLogout = () => {
     Alert.alert('로그아웃', '정말 로그아웃하시겠습니까?', [
       { text: '취소', style: 'cancel' },
@@ -88,6 +94,18 @@ export default function StatisticsScreen() {
       return;
     }
     navigation.navigate('Wrong', { bookmarkDate: cell.date });
+  };
+
+  const handleRemoveWeakSubject = () => {
+    Alert.alert('취약과목 제거', '취약과목 필터를 제거하고 오답 문제리스트(전체)로 이동합니다.', [
+      { text: '취소', style: 'cancel' },
+      {
+        text: '이동',
+        onPress: () => {
+          navigation.navigate('Wrong', { bookmarkDate: undefined });
+        },
+      },
+    ]);
   };
 
   const isDark = darkMode;
@@ -142,7 +160,12 @@ export default function StatisticsScreen() {
       </View>
 
       <View style={[styles.chartSection, isDark && styles.sectionDark]}>
-        <Text style={[styles.sectionTitle, isDark && styles.sectionTitleDark]}>영역별 성취도 (user_statistics)</Text>
+        <View style={styles.sectionHeaderRow}>
+          <Text style={[styles.sectionTitle, isDark && styles.sectionTitleDark]}>영역별 성취도 (user_statistics)</Text>
+          <TouchableOpacity style={styles.removeWeakButton} onPress={handleRemoveWeakSubject}>
+            <Text style={styles.removeWeakButtonText}>취약과목 제거</Text>
+          </TouchableOpacity>
+        </View>
         <Text style={[styles.hint, isDark && styles.chartLabelDark]}>
           (푼 수 − 오답 수) / DB 해당 유형 총 문제 수
         </Text>
@@ -274,10 +297,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 8,
+    color: '#2d3748',
+  },
+  removeWeakButton: {
+    backgroundColor: '#e2e8f0',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  removeWeakButtonText: {
+    fontSize: 12,
+    fontWeight: '700',
     color: '#2d3748',
   },
   hint: {

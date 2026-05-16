@@ -20,11 +20,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    /**
-     * Google 로그인 처리
-     * - 이미 등록된 사용자인 경우: 기존 사용자 정보 반환
-     * - 신규 사용자인 경우: 자동으로 회원가입 후 반환
-     */
     @Transactional
     public Map<String, Object> loginWithGoogle(String googleId, String email, String name) {
         Optional<User> byGoogle = userRepository.findByGoogleId(googleId);
@@ -105,6 +100,7 @@ public class UserService {
      */
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
+                .or(() -> userRepository.findByEmail(username))
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     }
 
