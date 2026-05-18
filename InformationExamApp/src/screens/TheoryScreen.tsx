@@ -41,6 +41,7 @@ export default function TheoryScreen() {
   const route = useRoute() as any;
   const navigation = useNavigation() as any;
   const { darkMode } = useAuthStore();
+  const targetProblemId = route?.params?.problemId;
   const [activeTab, setActiveTab] = useState<'flash' | 'subjective'>('flash');
   const [currentCategory, setCurrentCategory] = useState(route?.params?.category || '운영체제');
 
@@ -68,6 +69,20 @@ export default function TheoryScreen() {
   const currentCard = filteredCards[currentIndex] || null;
   const totalInTab = filteredCards.length;
 
+  // [지상 최고 개발자 조치] 오답 노트 연동: 특정 문제 포커싱 로직
+  useEffect(() => {
+    if (route.params?.problemId && filteredCards.length > 0) {
+      const targetId = Number(route.params.problemId);
+      const foundIndex = filteredCards.findIndex(c => c.id === targetId);
+      if (foundIndex !== -1) {
+        setCurrentIndex(foundIndex);
+        setActiveTab('subjective'); // 주관식은 퀴즈 모드로 즉시 전환
+        // 파라미터 처리 완료 후 초기화 (무한 루프 방지)
+        navigation.setParams({ problemId: undefined } as any);
+      }
+    }
+  }, [route.params?.problemId, filteredCards]);
+
   useEffect(() => {
     loadTheoryCards();
   }, [currentCategory]);
@@ -80,16 +95,44 @@ export default function TheoryScreen() {
     setAnswer('');
   }, [activeTab]);
 
+  useEffect(() => {
+    if (!targetProblemId) return;
+    console.log(`[TheoryScreen] targetProblemId received: ${targetProblemId}`);
+  }, [targetProblemId]);
+
+  useEffect(() => {
+    if (!targetProblemId || cards.length === 0) return;
+
+    const matchedCard = cards.find((card) => Number(card.id) === Number(targetProblemId));
+    if (!matchedCard) return;
+
+    const nextTab = matchedCard.cardType === 'SUBJECTIVE' ? 'subjective' : 'flash';
+    if (nextTab !== activeTab) {
+      return;
+    }
+
+    const targetIndex = filteredCards.findIndex((card) => Number(card.id) === Number(targetProblemId));
+    if (targetIndex >= 0 && currentIndex !== targetIndex) {
+      console.log(`[TheoryScreen] syncing currentIndex after filteredCards update - problemId: ${targetProblemId}, index: ${targetIndex}`);
+      setCurrentIndex(targetIndex);
+      setIsFlipped(false);
+      setShowAnswer(false);
+      setAnswer('');
+    }
+  }, [activeTab, cards, currentIndex, filteredCards, targetProblemId]);
+
   const loadTheoryCards = async () => {
     setIsLoading(true);
     try {
-      // fetchTheoryCards API 사용 (TheoryCard[] 반환)
       const data = await fetchTheoryCards(currentCategory);
+      console.log(`[TheoryScreen] loaded cards: ${data?.length ?? 0}, category: ${currentCategory}`);
       setCards(data || []);
-      setCurrentIndex(0);
-      setIsFlipped(false);
-      setAnswer('');
-      setShowAnswer(false);
+      if (!targetProblemId) {
+        setCurrentIndex(0);
+        setIsFlipped(false);
+        setAnswer('');
+        setShowAnswer(false);
+      }
     } catch (error) {
       console.error('Error loading theory cards:', error);
       Alert.alert('오류', '데이터를 불러오지 못했습니다.');
@@ -163,6 +206,7 @@ export default function TheoryScreen() {
             <View>
               <Text style={styles.headerSubtitle}>이론 학습</Text>
               <Text style={styles.headerTitle}>{currentCategory}</Text>
+              <Text style={styles.headerHint}>오답 노트에서 들어오면 해당 문제로 자동 이동합니다.</Text>
             </View>
           </View>
 
@@ -306,6 +350,7 @@ const styles = StyleSheet.create({
   categoryIcon: { fontSize: 40, marginRight: 16, backgroundColor: 'rgba(255,255,255,0.2)', padding: 10, borderRadius: 20 },
   headerTitle: { fontSize: 24, fontWeight: 'bold', color: '#fff' },
   headerSubtitle: { fontSize: 14, color: 'rgba(255,255,255,0.8)', marginBottom: 2 },
+  headerHint: { fontSize: 11, color: 'rgba(255,255,255,0.9)', marginTop: 4 },
   categoryGrid: { flexDirection: 'row', flexWrap: 'wrap', padding: 10, backgroundColor: '#fff', margin: 20, borderRadius: 15, justifyContent: 'space-between' },
   categoryGridDark: { backgroundColor: '#222' },
   categoryTab: { width: '31%', padding: 10, alignItems: 'center', borderRadius: 10, borderWidth: 1, borderColor: 'transparent', marginBottom: 8 },

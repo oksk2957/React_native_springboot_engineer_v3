@@ -37,8 +37,8 @@
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  9.543 s
-[INFO] Finished at: 2026-05-18T12:46:47+09:00
+[INFO] Total time:  9.499 s
+[INFO] Finished at: 2026-05-18T16:53:21+09:00
 [INFO] ------------------------------------------------------------------------
 [INFO] Scanning for projects...
 [INFO] 
@@ -77,99 +77,99 @@ Standard Commons Logging discovery in action with spring-jcl: please remove comm
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.2.5)
 
-2026-05-18 12:46:52 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
-2026-05-18 12:46:52 [main] INFO  c.e.i.InformationExamBackendApplication - Starting InformationExamBackendApplication using Java 21.0.10 with PID 21016 (C:\Users\SEOL\InformationExamProject\target\classes started by SEOL in C:\Users\SEOL\InformationExamProject)
-2026-05-18 12:46:52 [main] INFO  c.e.i.InformationExamBackendApplication - No active profile set, falling back to 1 default profile: "default"
-2026-05-18 12:46:53 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-18 12:46:53 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 77 ms. Found 9 JPA repository interfaces.
-2026-05-18 12:46:53 [main] DEBUG o.apache.ibatis.logging.LogFactory - Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
-2026-05-18 12:46:53 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9001 (http)
-2026-05-18 12:46:53 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9001"]
-2026-05-18 12:46:53 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-05-18 12:46:53 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
-2026-05-18 12:46:53 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2026-05-18 12:46:53 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1431 ms
+2026-05-18 16:53:26 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2026-05-18 16:53:26 [main] INFO  c.e.i.InformationExamBackendApplication - Starting InformationExamBackendApplication using Java 21.0.10 with PID 17352 (C:\Users\SEOL\InformationExamProject\target\classes started by SEOL in C:\Users\SEOL\InformationExamProject)
+2026-05-18 16:53:26 [main] INFO  c.e.i.InformationExamBackendApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-18 16:53:27 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-18 16:53:27 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 84 ms. Found 9 JPA repository interfaces.
+2026-05-18 16:53:27 [main] DEBUG o.apache.ibatis.logging.LogFactory - Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
+2026-05-18 16:53:27 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9001 (http)
+2026-05-18 16:53:27 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9001"]
+2026-05-18 16:53:27 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-18 16:53:27 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-05-18 16:53:27 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-18 16:53:27 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1379 ms
 Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
-2026-05-18 12:46:53 [main] DEBUG com.zaxxer.hikari.HikariConfig - Driver class org.postgresql.Driver found in Thread context class loader jdk.internal.loader.ClassLoaders$AppClassLoader@6bc7c054
-2026-05-18 12:46:53 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-05-18 12:46:53 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
-2026-05-18 12:46:53 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2026-05-18 12:46:54 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - HikariPool-1 - configuration:
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - allowPoolSuspension.............false
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - autoCommit......................true
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - catalog.........................none
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - connectionInitSql...............none
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - connectionTestQuery.............none
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - connectionTimeout...............30000
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSource......................none
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSourceClassName.............none
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSourceJNDI..................none
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSourceProperties............{password=<masked>}
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - driverClassName................."org.postgresql.Driver"
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - exceptionOverrideClassName......none
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - healthCheckProperties...........{}
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - healthCheckRegistry.............none
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - idleTimeout.....................600000
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - initializationFailTimeout.......1
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - isolateInternalQueries..........false
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - jdbcUrl.........................jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - keepaliveTime...................0
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - leakDetectionThreshold..........0
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - maxLifetime.....................1800000
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - maximumPoolSize.................5
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - metricRegistry..................none
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - metricsTrackerFactory...........none
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - minimumIdle.....................1
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - password........................<masked>
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - poolName........................"HikariPool-1"
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - readOnly........................false
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - registerMbeans..................false
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - scheduledExecutor...............none
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - schema..........................none
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - threadFactory...................internal
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - transactionIsolation............default
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - username........................"postgres.gmhznnwecujoafdisscl"
-2026-05-18 12:46:54 [main] DEBUG com.zaxxer.hikari.HikariConfig - validationTimeout...............5000
-2026-05-18 12:46:54 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-05-18 12:46:54 [main] DEBUG org.postgresql.Driver - Loading driver configuration via classloader jdk.internal.loader.ClassLoaders$AppClassLoader@6bc7c054
-2026-05-18 12:46:54 [main] DEBUG org.postgresql.Driver - Connecting with URL: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
-2026-05-18 12:46:54 [main] DEBUG org.postgresql.jdbc.PgConnection - PostgreSQL JDBC Driver 42.6.2
-2026-05-18 12:46:54 [main] DEBUG org.postgresql.jdbc.PgConnection -   setDefaultFetchSize = 0
-2026-05-18 12:46:54 [main] DEBUG org.postgresql.jdbc.PgConnection -   setPrepareThreshold = 0
-2026-05-18 12:46:54 [main] DEBUG o.p.core.v3.ConnectionFactoryImpl - Trying to establish a protocol version 3 connection to aws-1-ap-south-1.pooler.supabase.com:6543
-2026-05-18 12:46:54 [main] DEBUG o.p.core.v3.ConnectionFactoryImpl - Receive Buffer Size is 65,536
-2026-05-18 12:46:54 [main] DEBUG o.p.core.v3.ConnectionFactoryImpl - Send Buffer Size is 65,536
-2026-05-18 12:46:54 [main] DEBUG org.postgresql.ssl.MakeSSL - converting regular socket connection to ssl
-2026-05-18 12:46:55 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@710afd47
-2026-05-18 12:46:55 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-05-18 12:46:56 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=1, active=1, idle=0, waiting=0)
-2026-05-18 12:46:56 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=1, active=1, idle=0, waiting=0)
-2026-05-18 12:46:56 [HikariPool-1 connection adder] DEBUG org.postgresql.Driver - Connecting with URL: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
-2026-05-18 12:46:56 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection - PostgreSQL JDBC Driver 42.6.2
-2026-05-18 12:46:56 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setDefaultFetchSize = 0
-2026-05-18 12:46:56 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setPrepareThreshold = 0
-2026-05-18 12:46:56 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Trying to establish a protocol version 3 connection to aws-1-ap-south-1.pooler.supabase.com:6543
-2026-05-18 12:46:56 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-05-18 12:46:56 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Receive Buffer Size is 65,536
-2026-05-18 12:46:56 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Send Buffer Size is 65,536
-2026-05-18 12:46:56 [HikariPool-1 connection adder] DEBUG org.postgresql.ssl.MakeSSL - converting regular socket connection to ssl
-2026-05-18 12:46:57 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5152c14a
-2026-05-18 12:46:57 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After adding stats (total=2, active=0, idle=2, waiting=0)
-2026-05-18 12:46:57 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-05-18 12:46:57 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18 12:46:57 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-05-18 12:46:58 [main] DEBUG o.apache.ibatis.logging.LogFactory - Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
-2026-05-18 12:46:58 [main] INFO  c.e.i.s.SupabaseTokenVerifierService - JWKS 湲곕컲 Supabase ?좏겙 寃利앷린 珥덇린??以? https://gmhznnwecujoafdisscl.supabase.co/auth/v1/.well-known/jwks.json
-2026-05-18 12:46:58 [main] INFO  c.e.i.s.SupabaseTokenVerifierService - JWKS 湲곕컲 Supabase ?좏겙 寃利앷린 珥덇린???꾨즺
-2026-05-18 12:46:59 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@122c8b64, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@606b9417, org.springframework.security.web.context.SecurityContextHolderFilter@14922268, org.springframework.security.web.header.HeaderWriterFilter@2d67f090, org.springframework.web.filter.CorsFilter@10743711, org.springframework.security.web.authentication.logout.LogoutFilter@694b818f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@69b96cd, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5e4b9f22, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6c31b410, org.springframework.security.web.access.ExceptionTranslationFilter@1b3b650c, org.springframework.security.web.access.intercept.AuthorizationFilter@5875480e]
-2026-05-18 12:46:59 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9001"]
-2026-05-18 12:46:59 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 9001 (http) with context path ''
-2026-05-18 12:46:59 [main] INFO  c.e.i.InformationExamBackendApplication - Started InformationExamBackendApplication in 7.786 seconds (process running for 8.159)
-2026-05-18 12:47:05 [http-nio-9001-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-05-18 12:47:05 [http-nio-9001-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-05-18 12:47:05 [http-nio-9001-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
-2026-05-18 12:47:05 [http-nio-9001-exec-1] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - Driver class org.postgresql.Driver found in Thread context class loader jdk.internal.loader.ClassLoaders$AppClassLoader@6bc7c054
+2026-05-18 16:53:27 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-18 16:53:28 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-05-18 16:53:28 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-18 16:53:28 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - HikariPool-1 - configuration:
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - allowPoolSuspension.............false
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - autoCommit......................true
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - catalog.........................none
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - connectionInitSql...............none
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - connectionTestQuery.............none
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - connectionTimeout...............30000
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSource......................none
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSourceClassName.............none
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSourceJNDI..................none
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSourceProperties............{password=<masked>}
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - driverClassName................."org.postgresql.Driver"
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - exceptionOverrideClassName......none
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - healthCheckProperties...........{}
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - healthCheckRegistry.............none
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - idleTimeout.....................600000
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - initializationFailTimeout.......1
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - isolateInternalQueries..........false
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - jdbcUrl.........................jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - keepaliveTime...................0
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - leakDetectionThreshold..........0
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - maxLifetime.....................1800000
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - maximumPoolSize.................5
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - metricRegistry..................none
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - metricsTrackerFactory...........none
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - minimumIdle.....................1
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - password........................<masked>
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - poolName........................"HikariPool-1"
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - readOnly........................false
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - registerMbeans..................false
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - scheduledExecutor...............none
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - schema..........................none
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - threadFactory...................internal
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - transactionIsolation............default
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - username........................"postgres.gmhznnwecujoafdisscl"
+2026-05-18 16:53:28 [main] DEBUG com.zaxxer.hikari.HikariConfig - validationTimeout...............5000
+2026-05-18 16:53:28 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-18 16:53:28 [main] DEBUG org.postgresql.Driver - Loading driver configuration via classloader jdk.internal.loader.ClassLoaders$AppClassLoader@6bc7c054
+2026-05-18 16:53:28 [main] DEBUG org.postgresql.Driver - Connecting with URL: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
+2026-05-18 16:53:28 [main] DEBUG org.postgresql.jdbc.PgConnection - PostgreSQL JDBC Driver 42.6.2
+2026-05-18 16:53:28 [main] DEBUG org.postgresql.jdbc.PgConnection -   setDefaultFetchSize = 0
+2026-05-18 16:53:28 [main] DEBUG org.postgresql.jdbc.PgConnection -   setPrepareThreshold = 0
+2026-05-18 16:53:28 [main] DEBUG o.p.core.v3.ConnectionFactoryImpl - Trying to establish a protocol version 3 connection to aws-1-ap-south-1.pooler.supabase.com:6543
+2026-05-18 16:53:28 [main] DEBUG o.p.core.v3.ConnectionFactoryImpl - Receive Buffer Size is 65,536
+2026-05-18 16:53:28 [main] DEBUG o.p.core.v3.ConnectionFactoryImpl - Send Buffer Size is 65,536
+2026-05-18 16:53:28 [main] DEBUG org.postgresql.ssl.MakeSSL - converting regular socket connection to ssl
+2026-05-18 16:53:30 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@710afd47
+2026-05-18 16:53:30 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-18 16:53:30 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=1, active=1, idle=0, waiting=0)
+2026-05-18 16:53:30 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=1, active=1, idle=0, waiting=0)
+2026-05-18 16:53:30 [HikariPool-1 connection adder] DEBUG org.postgresql.Driver - Connecting with URL: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
+2026-05-18 16:53:30 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection - PostgreSQL JDBC Driver 42.6.2
+2026-05-18 16:53:30 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setDefaultFetchSize = 0
+2026-05-18 16:53:30 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setPrepareThreshold = 0
+2026-05-18 16:53:30 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Trying to establish a protocol version 3 connection to aws-1-ap-south-1.pooler.supabase.com:6543
+2026-05-18 16:53:30 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-18 16:53:30 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Receive Buffer Size is 65,536
+2026-05-18 16:53:30 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Send Buffer Size is 65,536
+2026-05-18 16:53:30 [HikariPool-1 connection adder] DEBUG org.postgresql.ssl.MakeSSL - converting regular socket connection to ssl
+2026-05-18 16:53:31 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7699f8a3
+2026-05-18 16:53:31 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After adding stats (total=2, active=0, idle=2, waiting=0)
+2026-05-18 16:53:31 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-18 16:53:31 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-18 16:53:31 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-18 16:53:32 [main] DEBUG o.apache.ibatis.logging.LogFactory - Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
+2026-05-18 16:53:32 [main] INFO  c.e.i.s.SupabaseTokenVerifierService - JWKS 湲곕컲 Supabase ?좏겙 寃利앷린 珥덇린??以? https://gmhznnwecujoafdisscl.supabase.co/auth/v1/.well-known/jwks.json
+2026-05-18 16:53:33 [main] INFO  c.e.i.s.SupabaseTokenVerifierService - JWKS 湲곕컲 Supabase ?좏겙 寃利앷린 珥덇린???꾨즺
+2026-05-18 16:53:33 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@26c79134, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@17baf642, org.springframework.security.web.context.SecurityContextHolderFilter@40aff4f1, org.springframework.security.web.header.HeaderWriterFilter@69b96cd, org.springframework.web.filter.CorsFilter@764a5191, org.springframework.security.web.authentication.logout.LogoutFilter@2c0e0ab9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@18681121, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@38388db2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6fc9f8bc, org.springframework.security.web.access.ExceptionTranslationFilter@14922268, org.springframework.security.web.access.intercept.AuthorizationFilter@10743711]
+2026-05-18 16:53:33 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9001"]
+2026-05-18 16:53:34 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 9001 (http) with context path ''
+2026-05-18 16:53:34 [main] INFO  c.e.i.InformationExamBackendApplication - Started InformationExamBackendApplication in 8.096 seconds (process running for 8.519)
+2026-05-18 16:53:39 [http-nio-9001-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-18 16:53:39 [http-nio-9001-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-18 16:53:39 [http-nio-9001-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-05-18 16:53:39 [http-nio-9001-exec-1] DEBUG org.hibernate.SQL - 
     select
         u1_0."id",
         u1_0."created_at",
@@ -207,10 +207,10 @@ Hibernate:
         "users" u1_0 
     where
         u1_0."username"=?
-2026-05-18 12:47:05 [http-nio-9001-exec-1] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-05-18 12:47:08 [http-nio-9001-exec-2] INFO  c.e.i.c.GoogleAuthController - Google login attempt - email: okskycar1@gmail.com, name: ?ㅼ슜沅?
-2026-05-18 12:47:08 [http-nio-9001-exec-2] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-05-18 12:47:08 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:39 [http-nio-9001-exec-1] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
+2026-05-18 16:53:42 [http-nio-9001-exec-6] INFO  c.e.i.c.GoogleAuthController - Google login attempt - email: okskycar1@gmail.com, name: ?ㅼ슜沅?
+2026-05-18 16:53:42 [http-nio-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
+2026-05-18 16:53:42 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
     select
         u1_0."id",
         u1_0."created_at",
@@ -248,10 +248,10 @@ Hibernate:
         "users" u1_0 
     where
         u1_0."google_id"=?
-2026-05-18 12:47:08 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [113353344866989291598]
-2026-05-18 12:47:09 [http-nio-9001-exec-2] INFO  c.e.i.service.UserService - Existing user login (google_id) - id: 1, email: okskycar1@gmail.com, username: okskycar1
-2026-05-18 12:47:09 [http-nio-9001-exec-2] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-05-18 12:47:09 [http-nio-9001-exec-3] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:42 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [113353344866989291598]
+2026-05-18 16:53:42 [http-nio-9001-exec-6] INFO  c.e.i.service.UserService - Existing user login (google_id) - id: 1, email: okskycar1@gmail.com, username: okskycar1
+2026-05-18 16:53:42 [http-nio-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
+2026-05-18 16:53:42 [http-nio-9001-exec-3] DEBUG org.hibernate.SQL - 
     select
         u1_0."id",
         u1_0."created_at",
@@ -289,11 +289,11 @@ Hibernate:
         "users" u1_0 
     where
         u1_0."username"=?
-2026-05-18 12:47:09 [http-nio-9001-exec-3] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-05-18 12:47:09 [http-nio-9001-exec-4] INFO  c.e.i.c.ProblemApiController - [MVC2] ?대줎 移대뱶 議고쉶: category=?댁쁺泥댁젣
-2026-05-18 12:47:09 [http-nio-9001-exec-7] INFO  c.e.i.c.ProblemApiController - [MVC2] ?대줎 移대뱶 議고쉶: category=?꾨줈洹몃옒諛띿뼵??
-2026-05-18 12:47:09 [http-nio-9001-exec-5] INFO  c.e.i.c.ProblemApiController - [MVC2] ?숈뒿 硫뷀? 議고쉶: randomSample=false, type=OBJECTIVE, category=null
-2026-05-18 12:47:09 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:42 [http-nio-9001-exec-3] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
+2026-05-18 16:53:42 [http-nio-9001-exec-7] INFO  c.e.i.c.ProblemApiController - [MVC2] ?대줎 移대뱶 議고쉶: category=?댁쁺泥댁젣
+2026-05-18 16:53:42 [http-nio-9001-exec-9] INFO  c.e.i.c.ProblemApiController - [MVC2] ?대줎 移대뱶 議고쉶: category=?꾨줈洹몃옒諛띿뼵??
+2026-05-18 16:53:42 [http-nio-9001-exec-8] INFO  c.e.i.c.ProblemApiController - [MVC2] ?숈뒿 硫뷀? 議고쉶: randomSample=false, type=OBJECTIVE, category=null
+2026-05-18 16:53:42 [http-nio-9001-exec-4] DEBUG org.hibernate.SQL - 
     select
         u1_0."id",
         u1_0."created_at",
@@ -331,27 +331,27 @@ Hibernate:
         "users" u1_0 
     where
         u1_0."username"=?
-2026-05-18 12:47:09 [HikariPool-1 connection adder] DEBUG org.postgresql.Driver - Connecting with URL: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
-2026-05-18 12:47:09 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection - PostgreSQL JDBC Driver 42.6.2
-2026-05-18 12:47:09 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setDefaultFetchSize = 0
-2026-05-18 12:47:09 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setPrepareThreshold = 0
-2026-05-18 12:47:09 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Trying to establish a protocol version 3 connection to aws-1-ap-south-1.pooler.supabase.com:6543
-2026-05-18 12:47:09 [http-nio-9001-exec-7] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==>  Preparing: SELECT 'SUBJECTIVE' AS card_type, sp.id, sp.question AS front_text, sp.answer AS back_text, sp.explanation, sp.difficulty FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE s.name = ? UNION ALL SELECT 'FLASHCARD' AS card_type, lc.id, lc.front_text, lc.back_text, lc.explanation, 0 AS difficulty FROM learning_card lc INNER JOIN subject s ON lc.subject_id = s.id WHERE s.name = ? ORDER BY card_type, id
-2026-05-18 12:47:09 [http-nio-9001-exec-7] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==> Parameters: ?꾨줈洹몃옒諛띿뼵??String), ?꾨줈洹몃옒諛띿뼵??String)
-2026-05-18 12:47:09 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-05-18 12:47:09 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Receive Buffer Size is 65,536
-2026-05-18 12:47:09 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Send Buffer Size is 65,536
-2026-05-18 12:47:09 [http-nio-9001-exec-7] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - <==      Total: 4
-2026-05-18 12:47:09 [http-nio-9001-exec-4] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==>  Preparing: SELECT 'SUBJECTIVE' AS card_type, sp.id, sp.question AS front_text, sp.answer AS back_text, sp.explanation, sp.difficulty FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE s.name = ? UNION ALL SELECT 'FLASHCARD' AS card_type, lc.id, lc.front_text, lc.back_text, lc.explanation, 0 AS difficulty FROM learning_card lc INNER JOIN subject s ON lc.subject_id = s.id WHERE s.name = ? ORDER BY card_type, id
-2026-05-18 12:47:09 [http-nio-9001-exec-4] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==> Parameters: ?댁쁺泥댁젣(String), ?댁쁺泥댁젣(String)
-2026-05-18 12:47:09 [http-nio-9001-exec-5] DEBUG c.e.i.m.P.selectStudyIdsByType - ==>  Preparing: SELECT p.id FROM problem p WHERE p.type = ? ORDER BY RANDOM() LIMIT ?
-2026-05-18 12:47:09 [http-nio-9001-exec-6] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Add connection elided, waiting=2, adders pending/running=4
-2026-05-18 12:47:09 [http-nio-9001-exec-5] DEBUG c.e.i.m.P.selectStudyIdsByType - ==> Parameters: OBJECTIVE(String), 5000(Integer)
-2026-05-18 12:47:09 [HikariPool-1 connection adder] DEBUG org.postgresql.ssl.MakeSSL - converting regular socket connection to ssl
-2026-05-18 12:47:09 [http-nio-9001-exec-4] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - <==      Total: 4
-2026-05-18 12:47:09 [http-nio-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-05-18 12:47:09 [http-nio-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-05-18 12:47:09 [http-nio-9001-exec-3] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:42 [HikariPool-1 connection adder] DEBUG org.postgresql.Driver - Connecting with URL: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
+2026-05-18 16:53:42 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection - PostgreSQL JDBC Driver 42.6.2
+2026-05-18 16:53:42 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setDefaultFetchSize = 0
+2026-05-18 16:53:42 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setPrepareThreshold = 0
+2026-05-18 16:53:42 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Trying to establish a protocol version 3 connection to aws-1-ap-south-1.pooler.supabase.com:6543
+2026-05-18 16:53:43 [http-nio-9001-exec-9] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==>  Preparing: SELECT 'SUBJECTIVE' AS card_type, sp.id, sp.question AS front_text, sp.answer AS back_text, sp.explanation, sp.difficulty FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE s.name = ? UNION ALL SELECT 'FLASHCARD' AS card_type, lc.id, lc.front_text, lc.back_text, lc.explanation, 0 AS difficulty FROM learning_card lc INNER JOIN subject s ON lc.subject_id = s.id WHERE s.name = ? ORDER BY card_type, id
+2026-05-18 16:53:43 [http-nio-9001-exec-9] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==> Parameters: ?꾨줈洹몃옒諛띿뼵??String), ?꾨줈洹몃옒諛띿뼵??String)
+2026-05-18 16:53:43 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
+2026-05-18 16:53:43 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Receive Buffer Size is 65,536
+2026-05-18 16:53:43 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Send Buffer Size is 65,536
+2026-05-18 16:53:43 [http-nio-9001-exec-9] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - <==      Total: 4
+2026-05-18 16:53:43 [http-nio-9001-exec-7] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==>  Preparing: SELECT 'SUBJECTIVE' AS card_type, sp.id, sp.question AS front_text, sp.answer AS back_text, sp.explanation, sp.difficulty FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE s.name = ? UNION ALL SELECT 'FLASHCARD' AS card_type, lc.id, lc.front_text, lc.back_text, lc.explanation, 0 AS difficulty FROM learning_card lc INNER JOIN subject s ON lc.subject_id = s.id WHERE s.name = ? ORDER BY card_type, id
+2026-05-18 16:53:43 [http-nio-9001-exec-7] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==> Parameters: ?댁쁺泥댁젣(String), ?댁쁺泥댁젣(String)
+2026-05-18 16:53:43 [http-nio-9001-exec-8] DEBUG c.e.i.m.P.selectStudyIdsByType - ==>  Preparing: SELECT p.id FROM problem p WHERE p.type = ? ORDER BY RANDOM() LIMIT ?
+2026-05-18 16:53:43 [http-nio-9001-exec-4] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Add connection elided, waiting=2, adders pending/running=4
+2026-05-18 16:53:43 [http-nio-9001-exec-8] DEBUG c.e.i.m.P.selectStudyIdsByType - ==> Parameters: OBJECTIVE(String), 5000(Integer)
+2026-05-18 16:53:43 [HikariPool-1 connection adder] DEBUG org.postgresql.ssl.MakeSSL - converting regular socket connection to ssl
+2026-05-18 16:53:43 [http-nio-9001-exec-7] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - <==      Total: 4
+2026-05-18 16:53:43 [http-nio-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
+2026-05-18 16:53:43 [http-nio-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
+2026-05-18 16:53:43 [http-nio-9001-exec-3] DEBUG org.hibernate.SQL - 
     select
         count(*) 
     from
@@ -361,14 +361,14 @@ Hibernate:
         count(*) 
     from
         "subjective_problems" sp1_0
-2026-05-18 12:47:09 [http-nio-9001-exec-5] DEBUG c.e.i.m.P.selectStudyIdsByType - <==      Total: 12
-2026-05-18 12:47:09 [http-nio-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-05-18 12:47:09 [http-nio-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-05-18 12:47:09 [http-nio-9001-exec-6] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==>  Preparing: SELECT total_problems AS total_problems, solved_problems AS solved_problems, correct_count AS correct_count, wrong_count AS wrong_count FROM get_user_statistics(?)
-2026-05-18 12:47:09 [http-nio-9001-exec-6] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==> Parameters: 1(Long)
-2026-05-18 12:47:09 [http-nio-9001-exec-8] INFO  c.e.i.c.ProblemApiController - [MVC2] ?④굔 臾몄젣 議고쉶: id=1
-2026-05-18 12:47:09 [http-nio-9001-exec-8] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Add connection elided, waiting=1, adders pending/running=4
-2026-05-18 12:47:09 [http-nio-9001-exec-3] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:43 [http-nio-9001-exec-8] DEBUG c.e.i.m.P.selectStudyIdsByType - <==      Total: 12
+2026-05-18 16:53:43 [http-nio-9001-exec-4] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
+2026-05-18 16:53:43 [http-nio-9001-exec-4] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
+2026-05-18 16:53:43 [http-nio-9001-exec-4] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==>  Preparing: SELECT total_problems AS total_problems, solved_problems AS solved_problems, correct_count AS correct_count, wrong_count AS wrong_count FROM get_user_statistics(?)
+2026-05-18 16:53:43 [http-nio-9001-exec-4] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==> Parameters: 1(Long)
+2026-05-18 16:53:43 [http-nio-9001-exec-5] INFO  c.e.i.c.ProblemApiController - [MVC2] ?④굔 臾몄젣 議고쉶: id=12
+2026-05-18 16:53:43 [http-nio-9001-exec-5] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Add connection elided, waiting=1, adders pending/running=4
+2026-05-18 16:53:43 [http-nio-9001-exec-3] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -384,10 +384,10 @@ Hibernate:
     where
         ua1_0."user_id"=? 
         and ua1_0."item_type"=?
-2026-05-18 12:47:09 [http-nio-9001-exec-3] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:09 [http-nio-9001-exec-3] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
-2026-05-18 12:47:09 [http-nio-9001-exec-6] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - <==      Total: 1
-2026-05-18 12:47:09 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:43 [http-nio-9001-exec-3] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:43 [http-nio-9001-exec-3] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
+2026-05-18 16:53:43 [http-nio-9001-exec-4] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - <==      Total: 1
+2026-05-18 16:53:43 [http-nio-9001-exec-4] DEBUG org.hibernate.SQL - 
     select
         count(p1_0."id") 
     from
@@ -401,8 +401,8 @@ Hibernate:
         "problem" p1_0 
     where
         p1_0."type"=?
-2026-05-18 12:47:09 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:10 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:43 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [OBJECTIVE]
+2026-05-18 16:53:43 [http-nio-9001-exec-4] DEBUG org.hibernate.SQL - 
     select
         count(*) 
     from
@@ -412,11 +412,11 @@ Hibernate:
         count(*) 
     from
         "subjective_problems" sp1_0
-2026-05-18 12:47:10 [http-nio-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-05-18 12:47:10 [http-nio-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-2026-05-18 12:47:10 [http-nio-9001-exec-8] DEBUG c.e.i.m.P.selectById - ==>  Preparing: SELECT p.id, p.question, p.answer AS correct_answer, p.explanation, s.name AS category, p.type, p.difficulty, p.option1, p.option2, p.option3, p.option4, p.option5, p.is_ai_generated, NULL AS programming_language FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE p.id = ? LIMIT 1
-2026-05-18 12:47:10 [http-nio-9001-exec-8] DEBUG c.e.i.m.P.selectById - ==> Parameters: 1(Long)
-2026-05-18 12:47:10 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:43 [http-nio-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
+2026-05-18 16:53:43 [http-nio-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
+2026-05-18 16:53:43 [http-nio-9001-exec-5] DEBUG c.e.i.m.P.selectById - ==>  Preparing: SELECT p.id, p.question, p.answer AS correct_answer, p.explanation, s.name AS category, p.type, p.difficulty, p.option1, p.option2, p.option3, p.option4, p.option5, p.is_ai_generated, NULL AS programming_language FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE p.id = ? LIMIT 1
+2026-05-18 16:53:43 [http-nio-9001-exec-5] DEBUG c.e.i.m.P.selectById - ==> Parameters: 12(Long)
+2026-05-18 16:53:43 [http-nio-9001-exec-4] DEBUG org.hibernate.SQL - 
     select
         count(*) 
     from
@@ -426,8 +426,8 @@ Hibernate:
         count(*) 
     from
         "programming_language_problems" plp1_0
-2026-05-18 12:47:10 [http-nio-9001-exec-8] DEBUG c.e.i.m.P.selectById - <==      Total: 1
-2026-05-18 12:47:10 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:43 [http-nio-9001-exec-5] DEBUG c.e.i.m.P.selectById - <==      Total: 1
+2026-05-18 16:53:43 [http-nio-9001-exec-4] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -443,9 +443,10 @@ Hibernate:
     where
         ua1_0."user_id"=? 
         and ua1_0."item_type"=?
-2026-05-18 12:47:10 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:10 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:10 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:43 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:43 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
+2026-05-18 16:53:44 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@32d2946b
+2026-05-18 16:53:44 [http-nio-9001-exec-4] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -461,10 +462,9 @@ Hibernate:
     where
         ua1_0."user_id"=? 
         and ua1_0."item_type"=?
-2026-05-18 12:47:10 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:10 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
-2026-05-18 12:47:10 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@583eac03
-2026-05-18 12:47:10 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:44 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:44 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
+2026-05-18 16:53:44 [http-nio-9001-exec-4] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -480,9 +480,9 @@ Hibernate:
     where
         ua1_0."user_id"=? 
         and ua1_0."item_type"=?
-2026-05-18 12:47:10 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:10 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
-2026-05-18 12:47:10 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:44 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:44 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
+2026-05-18 16:53:44 [http-nio-9001-exec-4] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -500,9 +500,9 @@ Hibernate:
         ua1_0."user_id"=? 
         and ua1_0."item_type"=? 
         and ua1_0."is_correct"=true
-2026-05-18 12:47:10 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:10 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:10 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:44 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:44 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
+2026-05-18 16:53:44 [http-nio-9001-exec-4] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -520,9 +520,9 @@ Hibernate:
         ua1_0."user_id"=? 
         and ua1_0."item_type"=? 
         and ua1_0."is_correct"=true
-2026-05-18 12:47:10 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:10 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
-2026-05-18 12:47:11 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:44 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:44 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
+2026-05-18 16:53:44 [http-nio-9001-exec-4] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -540,9 +540,9 @@ Hibernate:
         ua1_0."user_id"=? 
         and ua1_0."item_type"=? 
         and ua1_0."is_correct"=true
-2026-05-18 12:47:11 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:11 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
-2026-05-18 12:47:11 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:44 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:44 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
+2026-05-18 16:53:44 [http-nio-9001-exec-4] DEBUG org.hibernate.SQL - 
     select
         us1_0."id",
         us1_0."branch",
@@ -574,60 +574,13 @@ Hibernate:
         "user_statistics" us1_0 
     where
         us1_0."user_id"=?
-2026-05-18 12:47:11 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:11 [http-nio-9001-exec-6] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==>  Preparing: SELECT TO_CHAR(CAST(ua.submitted_at AS DATE), 'YYYY-MM-DD') AS study_date, COUNT(*)::bigint AS answer_count FROM user_answer ua WHERE ua.user_id = ? AND ua.is_correct = false AND CAST(ua.submitted_at AS DATE) >= ? GROUP BY CAST(ua.submitted_at AS DATE) ORDER BY study_date ASC
-2026-05-18 12:47:11 [http-nio-9001-exec-6] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==> Parameters: 1(Long), 2026-02-08(LocalDate)
-2026-05-18 12:47:11 [http-nio-9001-exec-6] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - <==      Total: 0
-2026-05-18 12:47:11 [http-nio-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-05-18 12:47:11 [http-nio-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-2026-05-18 12:47:20 [http-nio-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-05-18 12:47:20 [http-nio-9001-exec-9] INFO  c.e.i.service.AnswerService - [AnswerService] ?듭븞 ?쒖텧 ?쒖옉 - problemId: 1, problemType: OBJECTIVE, username: okskycar1
-2026-05-18 12:47:20 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
-    select
-        p1_0."id",
-        p1_0."answer",
-        p1_0."created_at",
-        p1_0."difficulty",
-        p1_0."explanation",
-        p1_0."is_ai_generated",
-        p1_0."option1",
-        p1_0."option2",
-        p1_0."option3",
-        p1_0."option4",
-        p1_0."option5",
-        p1_0."question",
-        p1_0."subject_id",
-        p1_0."type",
-        p1_0."updated_at" 
-    from
-        "problem" p1_0 
-    where
-        p1_0."id"=?
-Hibernate: 
-    select
-        p1_0."id",
-        p1_0."answer",
-        p1_0."created_at",
-        p1_0."difficulty",
-        p1_0."explanation",
-        p1_0."is_ai_generated",
-        p1_0."option1",
-        p1_0."option2",
-        p1_0."option3",
-        p1_0."option4",
-        p1_0."option5",
-        p1_0."question",
-        p1_0."subject_id",
-        p1_0."type",
-        p1_0."updated_at" 
-    from
-        "problem" p1_0 
-    where
-        p1_0."id"=?
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] INFO  c.e.i.service.AnswerService - [AnswerService] 臾몄젣 議고쉶 ?깃났 - problemId: 1
-2026-05-18 12:47:20 [http-nio-9001-exec-9] INFO  c.e.i.service.AnswerService - [AnswerService] ?뺣떟 ?먯젙 ?꾨즺 - isCorrect: false
-2026-05-18 12:47:20 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:44 [http-nio-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:44 [http-nio-9001-exec-4] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==>  Preparing: SELECT TO_CHAR(CAST(ua.submitted_at AS DATE), 'YYYY-MM-DD') AS study_date, COUNT(*)::bigint AS answer_count FROM user_answer ua WHERE ua.user_id = ? AND ua.is_correct = false AND CAST(ua.submitted_at AS DATE) >= ? GROUP BY CAST(ua.submitted_at AS DATE) ORDER BY study_date ASC
+2026-05-18 16:53:44 [http-nio-9001-exec-4] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==> Parameters: 1(Long), 2026-02-08(LocalDate)
+2026-05-18 16:53:45 [http-nio-9001-exec-4] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - <==      Total: 1
+2026-05-18 16:53:45 [http-nio-9001-exec-4] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
+2026-05-18 16:53:45 [http-nio-9001-exec-4] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
+2026-05-18 16:53:45 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
     select
         u1_0."id",
         u1_0."created_at",
@@ -665,191 +618,13 @@ Hibernate:
         "users" u1_0 
     where
         u1_0."username"=?
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] INFO  c.e.i.service.AnswerService - [AnswerService] UserAnswer ????쒕룄 - userId: 1, problemId: 1
-2026-05-18 12:47:20 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
-    insert 
-    into
-        "user_answer"
-        ("is_correct", "item_type", "reference_id", "session_id", "submitted_answer", "submitted_at", "user_id") 
-    values
-        (?, ?, ?, ?, ?, ?, ?)
-Hibernate: 
-    insert 
-    into
-        "user_answer"
-        ("is_correct", "item_type", "reference_id", "session_id", "submitted_answer", "submitted_at", "user_id") 
-    values
-        (?, ?, ?, ?, ?, ?, ?)
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BOOLEAN) <- [false]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:BIGINT) <- [1]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [113353344866989291598]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [2]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [2026-05-18T12:47:20.437103900]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:BIGINT) <- [1]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] INFO  c.e.i.service.AnswerService - [AnswerService] UserAnswer ????깃났 - sessionId: 113353344866989291598
-2026-05-18 12:47:20 [http-nio-9001-exec-9] INFO  c.e.i.service.AnswerService - [AnswerService] UserStatistics ????쒕룄 - userId: 1, problemType: OBJECTIVE
-2026-05-18 12:47:20 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
-    select
-        us1_0."id",
-        us1_0."branch",
-        us1_0."correct_count",
-        us1_0."created_at",
-        us1_0."incorrect_count",
-        us1_0."last_studied_at",
-        us1_0."subject_id",
-        us1_0."total_attempted",
-        us1_0."updated_at",
-        us1_0."user_id" 
-    from
-        "user_statistics" us1_0 
-    where
-        us1_0."user_id"=? 
-        and us1_0."subject_id"=? 
-        and us1_0."branch"=?
-Hibernate: 
-    select
-        us1_0."id",
-        us1_0."branch",
-        us1_0."correct_count",
-        us1_0."created_at",
-        us1_0."incorrect_count",
-        us1_0."last_studied_at",
-        us1_0."subject_id",
-        us1_0."total_attempted",
-        us1_0."updated_at",
-        us1_0."user_id" 
-    from
-        "user_statistics" us1_0 
-    where
-        us1_0."user_id"=? 
-        and us1_0."subject_id"=? 
-        and us1_0."branch"=?
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:BIGINT) <- [1]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
-    insert 
-    into
-        "user_statistics"
-        ("branch", "correct_count", "created_at", "incorrect_count", "last_studied_at", "subject_id", "total_attempted", "updated_at", "user_id") 
-    values
-        (?, ?, ?, ?, ?, ?, ?, ?, ?)
-Hibernate: 
-    insert 
-    into
-        "user_statistics"
-        ("branch", "correct_count", "created_at", "incorrect_count", "last_studied_at", "subject_id", "total_attempted", "updated_at", "user_id") 
-    values
-        (?, ?, ?, ?, ?, ?, ?, ?, ?)
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:INTEGER) <- [0]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:TIMESTAMP) <- [2026-05-18T12:47:20.732998700]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:INTEGER) <- [1]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:TIMESTAMP) <- [2026-05-18T12:47:20.732998700]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:BIGINT) <- [1]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:INTEGER) <- [1]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:TIMESTAMP) <- [2026-05-18T12:47:20.732998700]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:BIGINT) <- [1]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] INFO  c.e.i.service.AnswerService - [AnswerService] UserStatistics ????깃났
-2026-05-18 12:47:20 [http-nio-9001-exec-9] INFO  c.e.i.service.AnswerService - [AnswerService] WrongAnswerBookmark ????쒕룄 - userId: 1, problemId: 1
-2026-05-18 12:47:20 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
-    select
-        wab1_0."id" 
-    from
-        "wrong_answer_bookmark" wab1_0 
-    where
-        wab1_0."user_id"=? 
-        and wab1_0."item_type"=? 
-        and wab1_0."reference_id"=? 
-    fetch
-        first ? rows only
-Hibernate: 
-    select
-        wab1_0."id" 
-    from
-        "wrong_answer_bookmark" wab1_0 
-    where
-        wab1_0."user_id"=? 
-        and wab1_0."item_type"=? 
-        and wab1_0."reference_id"=? 
-    fetch
-        first ? rows only
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:BIGINT) <- [1]
-2026-05-18 12:47:20 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:INTEGER) <- [1]
-2026-05-18 12:47:21 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
-    insert 
-    into
-        "wrong_answer_bookmark"
-        ("bookmarked_at", "item_type", "reference_id", "review_count", "user_id") 
-    values
-        (?, ?, ?, ?, ?)
-Hibernate: 
-    insert 
-    into
-        "wrong_answer_bookmark"
-        ("bookmarked_at", "item_type", "reference_id", "review_count", "user_id") 
-    values
-        (?, ?, ?, ?, ?)
-2026-05-18 12:47:21 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-05-18T12:47:21.014559700]
-2026-05-18 12:47:21 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:21 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:BIGINT) <- [1]
-2026-05-18 12:47:21 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:INTEGER) <- [0]
-2026-05-18 12:47:21 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:BIGINT) <- [1]
-2026-05-18 12:47:21 [http-nio-9001-exec-9] INFO  c.e.i.service.AnswerService - [AnswerService] WrongAnswerBookmark ????깃났
-2026-05-18 12:47:21 [http-nio-9001-exec-9] INFO  c.e.i.service.AnswerService - [AnswerService] ?듭븞 ?쒖텧 ?꾨즺 - problemId: 1, isCorrect: false
-2026-05-18 12:47:21 [http-nio-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-05-18 12:47:26 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=3, active=0, idle=3, waiting=0)
-2026-05-18 12:47:26 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=3, active=0, idle=3, waiting=0)
-2026-05-18 12:47:26 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled (queueDepth=0).
-2026-05-18 12:47:27 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-05-18 12:47:27 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-05-18 12:47:27 [http-nio-9001-exec-10] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-05-18 12:47:27 [http-nio-9001-exec-10] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-05-18 12:47:27 [http-nio-9001-exec-10] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==>  Preparing: SELECT total_problems AS total_problems, solved_problems AS solved_problems, correct_count AS correct_count, wrong_count AS wrong_count FROM get_user_statistics(?)
-2026-05-18 12:47:27 [http-nio-9001-exec-10] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==> Parameters: 1(Long)
-2026-05-18 12:47:28 [http-nio-9001-exec-10] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - <==      Total: 1
-2026-05-18 12:47:28 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:45 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
+2026-05-18 16:53:45 [http-nio-9001-exec-10] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
+2026-05-18 16:53:45 [http-nio-9001-exec-10] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
+2026-05-18 16:53:45 [http-nio-9001-exec-10] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==>  Preparing: SELECT total_problems AS total_problems, solved_problems AS solved_problems, correct_count AS correct_count, wrong_count AS wrong_count FROM get_user_statistics(?)
+2026-05-18 16:53:45 [http-nio-9001-exec-10] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==> Parameters: 1(Long)
+2026-05-18 16:53:45 [http-nio-9001-exec-10] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - <==      Total: 1
+2026-05-18 16:53:45 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
     select
         count(p1_0."id") 
     from
@@ -863,8 +638,8 @@ Hibernate:
         "problem" p1_0 
     where
         p1_0."type"=?
-2026-05-18 12:47:28 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:28 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:45 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [OBJECTIVE]
+2026-05-18 16:53:46 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
     select
         count(*) 
     from
@@ -874,7 +649,7 @@ Hibernate:
         count(*) 
     from
         "subjective_problems" sp1_0
-2026-05-18 12:47:28 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:46 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
     select
         count(*) 
     from
@@ -884,7 +659,7 @@ Hibernate:
         count(*) 
     from
         "programming_language_problems" plp1_0
-2026-05-18 12:47:28 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:46 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -900,9 +675,9 @@ Hibernate:
     where
         ua1_0."user_id"=? 
         and ua1_0."item_type"=?
-2026-05-18 12:47:28 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:28 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:28 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:46 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:46 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
+2026-05-18 16:53:46 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -918,9 +693,9 @@ Hibernate:
     where
         ua1_0."user_id"=? 
         and ua1_0."item_type"=?
-2026-05-18 12:47:28 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:28 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
-2026-05-18 12:47:28 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:46 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:46 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
+2026-05-18 16:53:46 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -936,9 +711,9 @@ Hibernate:
     where
         ua1_0."user_id"=? 
         and ua1_0."item_type"=?
-2026-05-18 12:47:28 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:28 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
-2026-05-18 12:47:28 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:46 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:46 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
+2026-05-18 16:53:46 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -956,9 +731,9 @@ Hibernate:
         ua1_0."user_id"=? 
         and ua1_0."item_type"=? 
         and ua1_0."is_correct"=true
-2026-05-18 12:47:28 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:28 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:29 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:46 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:46 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
+2026-05-18 16:53:46 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -976,9 +751,9 @@ Hibernate:
         ua1_0."user_id"=? 
         and ua1_0."item_type"=? 
         and ua1_0."is_correct"=true
-2026-05-18 12:47:29 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:29 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
-2026-05-18 12:47:29 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:46 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:46 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
+2026-05-18 16:53:47 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -996,9 +771,9 @@ Hibernate:
         ua1_0."user_id"=? 
         and ua1_0."item_type"=? 
         and ua1_0."is_correct"=true
-2026-05-18 12:47:29 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:29 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
-2026-05-18 12:47:29 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:47 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:47 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
+2026-05-18 16:53:47 [http-nio-9001-exec-10] DEBUG org.hibernate.SQL - 
     select
         us1_0."id",
         us1_0."branch",
@@ -1030,13 +805,13 @@ Hibernate:
         "user_statistics" us1_0 
     where
         us1_0."user_id"=?
-2026-05-18 12:47:29 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:29 [http-nio-9001-exec-10] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==>  Preparing: SELECT TO_CHAR(CAST(ua.submitted_at AS DATE), 'YYYY-MM-DD') AS study_date, COUNT(*)::bigint AS answer_count FROM user_answer ua WHERE ua.user_id = ? AND ua.is_correct = false AND CAST(ua.submitted_at AS DATE) >= ? GROUP BY CAST(ua.submitted_at AS DATE) ORDER BY study_date ASC
-2026-05-18 12:47:29 [http-nio-9001-exec-10] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==> Parameters: 1(Long), 2026-02-08(LocalDate)
-2026-05-18 12:47:29 [http-nio-9001-exec-10] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - <==      Total: 1
-2026-05-18 12:47:29 [http-nio-9001-exec-10] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-05-18 12:47:29 [http-nio-9001-exec-10] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-2026-05-18 12:47:29 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:47 [http-nio-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:47 [http-nio-9001-exec-10] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==>  Preparing: SELECT TO_CHAR(CAST(ua.submitted_at AS DATE), 'YYYY-MM-DD') AS study_date, COUNT(*)::bigint AS answer_count FROM user_answer ua WHERE ua.user_id = ? AND ua.is_correct = false AND CAST(ua.submitted_at AS DATE) >= ? GROUP BY CAST(ua.submitted_at AS DATE) ORDER BY study_date ASC
+2026-05-18 16:53:47 [http-nio-9001-exec-10] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==> Parameters: 1(Long), 2026-02-08(LocalDate)
+2026-05-18 16:53:47 [http-nio-9001-exec-10] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - <==      Total: 1
+2026-05-18 16:53:47 [http-nio-9001-exec-10] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
+2026-05-18 16:53:47 [http-nio-9001-exec-10] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
+2026-05-18 16:53:47 [http-nio-9001-exec-1] DEBUG org.hibernate.SQL - 
     select
         u1_0."id",
         u1_0."created_at",
@@ -1074,11 +849,11 @@ Hibernate:
         "users" u1_0 
     where
         u1_0."username"=?
-2026-05-18 12:47:29 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-05-18 12:47:29 [http-nio-9001-exec-2] DEBUG c.e.i.m.M.selectWrongAnswers - ==>  Preparing: SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, p.question, p.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN problem p ON ua.item_type = 'OBJECTIVE' AND ua.reference_id = p.id WHERE ua.user_id = ? AND ua.is_correct = false UNION ALL SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, sp.question, sp.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN subjective_problems sp ON ua.item_type = 'SUBJECTIVE' AND ua.reference_id = sp.id WHERE ua.user_id = ? AND ua.is_correct = false UNION ALL SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, plp.question, plp.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.reference_id = plp.id WHERE ua.user_id = ? AND ua.is_correct = false ORDER BY submittedAt DESC
-2026-05-18 12:47:29 [http-nio-9001-exec-2] DEBUG c.e.i.m.M.selectWrongAnswers - ==> Parameters: 1(Long), 1(Long), 1(Long)
-2026-05-18 12:47:30 [http-nio-9001-exec-2] DEBUG c.e.i.m.M.selectWrongAnswers - <==      Total: 1
-2026-05-18 12:47:36 [http-nio-9001-exec-7] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:47 [http-nio-9001-exec-1] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
+2026-05-18 16:53:47 [http-nio-9001-exec-1] DEBUG c.e.i.m.M.selectWrongAnswers - ==>  Preparing: SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, p.question, p.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN problem p ON ua.item_type = 'OBJECTIVE' AND ua.reference_id = p.id WHERE ua.user_id = ? AND ua.is_correct = false UNION ALL SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, sp.question, sp.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN subjective_problems sp ON ua.item_type = 'SUBJECTIVE' AND ua.reference_id = sp.id WHERE ua.user_id = ? AND ua.is_correct = false UNION ALL SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, plp.question, plp.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.reference_id = plp.id WHERE ua.user_id = ? AND ua.is_correct = false ORDER BY submittedAt DESC
+2026-05-18 16:53:47 [http-nio-9001-exec-1] DEBUG c.e.i.m.M.selectWrongAnswers - ==> Parameters: 1(Long), 1(Long), 1(Long)
+2026-05-18 16:53:47 [http-nio-9001-exec-1] DEBUG c.e.i.m.M.selectWrongAnswers - <==      Total: 8
+2026-05-18 16:53:52 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
     select
         u1_0."id",
         u1_0."created_at",
@@ -1116,13 +891,13 @@ Hibernate:
         "users" u1_0 
     where
         u1_0."username"=?
-2026-05-18 12:47:36 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-05-18 12:47:36 [http-nio-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-05-18 12:47:36 [http-nio-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-05-18 12:47:36 [http-nio-9001-exec-7] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==>  Preparing: SELECT total_problems AS total_problems, solved_problems AS solved_problems, correct_count AS correct_count, wrong_count AS wrong_count FROM get_user_statistics(?)
-2026-05-18 12:47:36 [http-nio-9001-exec-7] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==> Parameters: 1(Long)
-2026-05-18 12:47:37 [http-nio-9001-exec-7] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - <==      Total: 1
-2026-05-18 12:47:37 [http-nio-9001-exec-7] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:52 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
+2026-05-18 16:53:52 [http-nio-9001-exec-2] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
+2026-05-18 16:53:52 [http-nio-9001-exec-2] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
+2026-05-18 16:53:52 [http-nio-9001-exec-2] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==>  Preparing: SELECT total_problems AS total_problems, solved_problems AS solved_problems, correct_count AS correct_count, wrong_count AS wrong_count FROM get_user_statistics(?)
+2026-05-18 16:53:52 [http-nio-9001-exec-2] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==> Parameters: 1(Long)
+2026-05-18 16:53:52 [http-nio-9001-exec-2] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - <==      Total: 1
+2026-05-18 16:53:52 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
     select
         count(p1_0."id") 
     from
@@ -1136,8 +911,8 @@ Hibernate:
         "problem" p1_0 
     where
         p1_0."type"=?
-2026-05-18 12:47:37 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:37 [http-nio-9001-exec-7] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:52 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [OBJECTIVE]
+2026-05-18 16:53:52 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
     select
         count(*) 
     from
@@ -1147,7 +922,7 @@ Hibernate:
         count(*) 
     from
         "subjective_problems" sp1_0
-2026-05-18 12:47:37 [http-nio-9001-exec-7] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:52 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
     select
         count(*) 
     from
@@ -1157,7 +932,7 @@ Hibernate:
         count(*) 
     from
         "programming_language_problems" plp1_0
-2026-05-18 12:47:37 [http-nio-9001-exec-7] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:52 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -1173,9 +948,9 @@ Hibernate:
     where
         ua1_0."user_id"=? 
         and ua1_0."item_type"=?
-2026-05-18 12:47:37 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:37 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:37 [http-nio-9001-exec-7] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:52 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:52 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
+2026-05-18 16:53:53 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -1191,9 +966,9 @@ Hibernate:
     where
         ua1_0."user_id"=? 
         and ua1_0."item_type"=?
-2026-05-18 12:47:37 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:37 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
-2026-05-18 12:47:37 [http-nio-9001-exec-7] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:53 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:53 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
+2026-05-18 16:53:53 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -1209,9 +984,9 @@ Hibernate:
     where
         ua1_0."user_id"=? 
         and ua1_0."item_type"=?
-2026-05-18 12:47:37 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:37 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
-2026-05-18 12:47:37 [http-nio-9001-exec-7] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:53 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:53 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
+2026-05-18 16:53:53 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -1229,9 +1004,9 @@ Hibernate:
         ua1_0."user_id"=? 
         and ua1_0."item_type"=? 
         and ua1_0."is_correct"=true
-2026-05-18 12:47:37 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:37 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
-2026-05-18 12:47:38 [http-nio-9001-exec-7] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:53 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:53 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
+2026-05-18 16:53:53 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -1249,9 +1024,9 @@ Hibernate:
         ua1_0."user_id"=? 
         and ua1_0."item_type"=? 
         and ua1_0."is_correct"=true
-2026-05-18 12:47:38 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:38 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
-2026-05-18 12:47:38 [http-nio-9001-exec-7] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:53 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:53 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
+2026-05-18 16:53:53 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
     select
         count(ua1_0."id") 
     from
@@ -1269,9 +1044,9 @@ Hibernate:
         ua1_0."user_id"=? 
         and ua1_0."item_type"=? 
         and ua1_0."is_correct"=true
-2026-05-18 12:47:38 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:38 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
-2026-05-18 12:47:38 [http-nio-9001-exec-7] DEBUG org.hibernate.SQL - 
+2026-05-18 16:53:53 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:53 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
+2026-05-18 16:53:53 [http-nio-9001-exec-2] DEBUG org.hibernate.SQL - 
     select
         us1_0."id",
         us1_0."branch",
@@ -1303,12 +1078,331 @@ Hibernate:
         "user_statistics" us1_0 
     where
         us1_0."user_id"=?
-2026-05-18 12:47:38 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2026-05-18 12:47:38 [http-nio-9001-exec-7] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==>  Preparing: SELECT TO_CHAR(CAST(ua.submitted_at AS DATE), 'YYYY-MM-DD') AS study_date, COUNT(*)::bigint AS answer_count FROM user_answer ua WHERE ua.user_id = ? AND ua.is_correct = false AND CAST(ua.submitted_at AS DATE) >= ? GROUP BY CAST(ua.submitted_at AS DATE) ORDER BY study_date ASC
-2026-05-18 12:47:38 [http-nio-9001-exec-7] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==> Parameters: 1(Long), 2026-02-08(LocalDate)
-2026-05-18 12:47:38 [http-nio-9001-exec-7] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - <==      Total: 1
-2026-05-18 12:47:38 [http-nio-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-05-18 12:47:38 [http-nio-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-2026-05-18 12:47:56 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=3, active=0, idle=3, waiting=0)
-2026-05-18 12:47:56 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=3, active=0, idle=3, waiting=0)
-2026-05-18 12:47:56 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled (queueDepth=0).
+2026-05-18 16:53:53 [http-nio-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:53:53 [http-nio-9001-exec-2] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==>  Preparing: SELECT TO_CHAR(CAST(ua.submitted_at AS DATE), 'YYYY-MM-DD') AS study_date, COUNT(*)::bigint AS answer_count FROM user_answer ua WHERE ua.user_id = ? AND ua.is_correct = false AND CAST(ua.submitted_at AS DATE) >= ? GROUP BY CAST(ua.submitted_at AS DATE) ORDER BY study_date ASC
+2026-05-18 16:53:53 [http-nio-9001-exec-2] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==> Parameters: 1(Long), 2026-02-08(LocalDate)
+2026-05-18 16:53:53 [http-nio-9001-exec-2] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - <==      Total: 1
+2026-05-18 16:53:54 [http-nio-9001-exec-2] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
+2026-05-18 16:53:54 [http-nio-9001-exec-2] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
+2026-05-18 16:53:54 [http-nio-9001-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        u1_0."id",
+        u1_0."created_at",
+        u1_0."email",
+        u1_0."google_id",
+        u1_0."nickname",
+        u1_0."password",
+        u1_0."role",
+        u1_0."subscription_expires_at",
+        u1_0."subscription_started_at",
+        u1_0."trial_expires_at",
+        u1_0."trial_started_at",
+        u1_0."updated_at",
+        u1_0."username" 
+    from
+        "users" u1_0 
+    where
+        u1_0."username"=?
+Hibernate: 
+    select
+        u1_0."id",
+        u1_0."created_at",
+        u1_0."email",
+        u1_0."google_id",
+        u1_0."nickname",
+        u1_0."password",
+        u1_0."role",
+        u1_0."subscription_expires_at",
+        u1_0."subscription_started_at",
+        u1_0."trial_expires_at",
+        u1_0."trial_started_at",
+        u1_0."updated_at",
+        u1_0."username" 
+    from
+        "users" u1_0 
+    where
+        u1_0."username"=?
+2026-05-18 16:53:54 [http-nio-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
+2026-05-18 16:53:54 [http-nio-9001-exec-6] DEBUG c.e.i.m.M.selectWrongAnswersByDate - ==>  Preparing: SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, p.question, p.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN problem p ON ua.item_type = 'OBJECTIVE' AND ua.reference_id = p.id WHERE ua.user_id = ? AND ua.is_correct = false AND CAST(ua.submitted_at AS DATE) = ? UNION ALL SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, sp.question, sp.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN subjective_problems sp ON ua.item_type = 'SUBJECTIVE' AND ua.reference_id = sp.id WHERE ua.user_id = ? AND ua.is_correct = false AND CAST(ua.submitted_at AS DATE) = ? UNION ALL SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, plp.question, plp.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.reference_id = plp.id WHERE ua.user_id = ? AND ua.is_correct = false AND CAST(ua.submitted_at AS DATE) = ? ORDER BY submittedAt DESC
+2026-05-18 16:53:54 [http-nio-9001-exec-6] DEBUG c.e.i.m.M.selectWrongAnswersByDate - ==> Parameters: 1(Long), 2026-05-18(LocalDate), 1(Long), 2026-05-18(LocalDate), 1(Long), 2026-05-18(LocalDate)
+2026-05-18 16:53:54 [http-nio-9001-exec-6] DEBUG c.e.i.m.M.selectWrongAnswersByDate - <==      Total: 8
+2026-05-18 16:54:00 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=3, active=0, idle=3, waiting=0)
+2026-05-18 16:54:00 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=3, active=0, idle=3, waiting=0)
+2026-05-18 16:54:00 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled (queueDepth=0).
+2026-05-18 16:54:00 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        u1_0."id",
+        u1_0."created_at",
+        u1_0."email",
+        u1_0."google_id",
+        u1_0."nickname",
+        u1_0."password",
+        u1_0."role",
+        u1_0."subscription_expires_at",
+        u1_0."subscription_started_at",
+        u1_0."trial_expires_at",
+        u1_0."trial_started_at",
+        u1_0."updated_at",
+        u1_0."username" 
+    from
+        "users" u1_0 
+    where
+        u1_0."username"=?
+Hibernate: 
+    select
+        u1_0."id",
+        u1_0."created_at",
+        u1_0."email",
+        u1_0."google_id",
+        u1_0."nickname",
+        u1_0."password",
+        u1_0."role",
+        u1_0."subscription_expires_at",
+        u1_0."subscription_started_at",
+        u1_0."trial_expires_at",
+        u1_0."trial_started_at",
+        u1_0."updated_at",
+        u1_0."username" 
+    from
+        "users" u1_0 
+    where
+        u1_0."username"=?
+2026-05-18 16:54:00 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
+2026-05-18 16:54:00 [http-nio-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
+2026-05-18 16:54:00 [http-nio-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
+2026-05-18 16:54:00 [http-nio-9001-exec-9] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==>  Preparing: SELECT total_problems AS total_problems, solved_problems AS solved_problems, correct_count AS correct_count, wrong_count AS wrong_count FROM get_user_statistics(?)
+2026-05-18 16:54:00 [http-nio-9001-exec-9] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - ==> Parameters: 1(Long)
+2026-05-18 16:54:00 [http-nio-9001-exec-9] DEBUG c.e.i.m.M.selectUserStatisticsFromFunction - <==      Total: 1
+2026-05-18 16:54:00 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(p1_0."id") 
+    from
+        "problem" p1_0 
+    where
+        p1_0."type"=?
+Hibernate: 
+    select
+        count(p1_0."id") 
+    from
+        "problem" p1_0 
+    where
+        p1_0."type"=?
+2026-05-18 16:54:00 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [OBJECTIVE]
+2026-05-18 16:54:00 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(*) 
+    from
+        "subjective_problems" sp1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        "subjective_problems" sp1_0
+2026-05-18 16:54:00 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(*) 
+    from
+        "programming_language_problems" plp1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        "programming_language_problems" plp1_0
+2026-05-18 16:54:01 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(ua1_0."id") 
+    from
+        "user_answer" ua1_0 
+    where
+        ua1_0."user_id"=? 
+        and ua1_0."item_type"=?
+Hibernate: 
+    select
+        count(ua1_0."id") 
+    from
+        "user_answer" ua1_0 
+    where
+        ua1_0."user_id"=? 
+        and ua1_0."item_type"=?
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
+2026-05-18 16:54:01 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(ua1_0."id") 
+    from
+        "user_answer" ua1_0 
+    where
+        ua1_0."user_id"=? 
+        and ua1_0."item_type"=?
+Hibernate: 
+    select
+        count(ua1_0."id") 
+    from
+        "user_answer" ua1_0 
+    where
+        ua1_0."user_id"=? 
+        and ua1_0."item_type"=?
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
+2026-05-18 16:54:01 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(ua1_0."id") 
+    from
+        "user_answer" ua1_0 
+    where
+        ua1_0."user_id"=? 
+        and ua1_0."item_type"=?
+Hibernate: 
+    select
+        count(ua1_0."id") 
+    from
+        "user_answer" ua1_0 
+    where
+        ua1_0."user_id"=? 
+        and ua1_0."item_type"=?
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
+2026-05-18 16:54:01 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(ua1_0."id") 
+    from
+        "user_answer" ua1_0 
+    where
+        ua1_0."user_id"=? 
+        and ua1_0."item_type"=? 
+        and ua1_0."is_correct"=true
+Hibernate: 
+    select
+        count(ua1_0."id") 
+    from
+        "user_answer" ua1_0 
+    where
+        ua1_0."user_id"=? 
+        and ua1_0."item_type"=? 
+        and ua1_0."is_correct"=true
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [OBJECTIVE]
+2026-05-18 16:54:01 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(ua1_0."id") 
+    from
+        "user_answer" ua1_0 
+    where
+        ua1_0."user_id"=? 
+        and ua1_0."item_type"=? 
+        and ua1_0."is_correct"=true
+Hibernate: 
+    select
+        count(ua1_0."id") 
+    from
+        "user_answer" ua1_0 
+    where
+        ua1_0."user_id"=? 
+        and ua1_0."item_type"=? 
+        and ua1_0."is_correct"=true
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
+2026-05-18 16:54:01 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(ua1_0."id") 
+    from
+        "user_answer" ua1_0 
+    where
+        ua1_0."user_id"=? 
+        and ua1_0."item_type"=? 
+        and ua1_0."is_correct"=true
+Hibernate: 
+    select
+        count(ua1_0."id") 
+    from
+        "user_answer" ua1_0 
+    where
+        ua1_0."user_id"=? 
+        and ua1_0."item_type"=? 
+        and ua1_0."is_correct"=true
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [PROGRAMMING_LANGUAGE]
+2026-05-18 16:54:01 [http-nio-9001-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        us1_0."id",
+        us1_0."branch",
+        us1_0."correct_count",
+        us1_0."created_at",
+        us1_0."incorrect_count",
+        us1_0."last_studied_at",
+        us1_0."subject_id",
+        us1_0."total_attempted",
+        us1_0."updated_at",
+        us1_0."user_id" 
+    from
+        "user_statistics" us1_0 
+    where
+        us1_0."user_id"=?
+Hibernate: 
+    select
+        us1_0."id",
+        us1_0."branch",
+        us1_0."correct_count",
+        us1_0."created_at",
+        us1_0."incorrect_count",
+        us1_0."last_studied_at",
+        us1_0."subject_id",
+        us1_0."total_attempted",
+        us1_0."updated_at",
+        us1_0."user_id" 
+    from
+        "user_statistics" us1_0 
+    where
+        us1_0."user_id"=?
+2026-05-18 16:54:01 [http-nio-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-05-18 16:54:02 [http-nio-9001-exec-9] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==>  Preparing: SELECT TO_CHAR(CAST(ua.submitted_at AS DATE), 'YYYY-MM-DD') AS study_date, COUNT(*)::bigint AS answer_count FROM user_answer ua WHERE ua.user_id = ? AND ua.is_correct = false AND CAST(ua.submitted_at AS DATE) >= ? GROUP BY CAST(ua.submitted_at AS DATE) ORDER BY study_date ASC
+2026-05-18 16:54:02 [http-nio-9001-exec-9] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - ==> Parameters: 1(Long), 2026-02-08(LocalDate)
+2026-05-18 16:54:02 [http-nio-9001-exec-9] DEBUG c.e.i.m.M.selectDailyAnswerCountsSince - <==      Total: 1
+2026-05-18 16:54:02 [http-nio-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
+2026-05-18 16:54:02 [http-nio-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
+2026-05-18 16:54:02 [http-nio-9001-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        u1_0."id",
+        u1_0."created_at",
+        u1_0."email",
+        u1_0."google_id",
+        u1_0."nickname",
+        u1_0."password",
+        u1_0."role",
+        u1_0."subscription_expires_at",
+        u1_0."subscription_started_at",
+        u1_0."trial_expires_at",
+        u1_0."trial_started_at",
+        u1_0."updated_at",
+        u1_0."username" 
+    from
+        "users" u1_0 
+    where
+        u1_0."username"=?
+Hibernate: 
+    select
+        u1_0."id",
+        u1_0."created_at",
+        u1_0."email",
+        u1_0."google_id",
+        u1_0."nickname",
+        u1_0."password",
+        u1_0."role",
+        u1_0."subscription_expires_at",
+        u1_0."subscription_started_at",
+        u1_0."trial_expires_at",
+        u1_0."trial_started_at",
+        u1_0."updated_at",
+        u1_0."username" 
+    from
+        "users" u1_0 
+    where
+        u1_0."username"=?
+2026-05-18 16:54:02 [http-nio-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
+2026-05-18 16:54:02 [http-nio-9001-exec-7] DEBUG c.e.i.m.M.selectWrongAnswers - ==>  Preparing: SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, p.question, p.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN problem p ON ua.item_type = 'OBJECTIVE' AND ua.reference_id = p.id WHERE ua.user_id = ? AND ua.is_correct = false UNION ALL SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, sp.question, sp.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN subjective_problems sp ON ua.item_type = 'SUBJECTIVE' AND ua.reference_id = sp.id WHERE ua.user_id = ? AND ua.is_correct = false UNION ALL SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, plp.question, plp.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.reference_id = plp.id WHERE ua.user_id = ? AND ua.is_correct = false ORDER BY submittedAt DESC
+2026-05-18 16:54:02 [http-nio-9001-exec-7] DEBUG c.e.i.m.M.selectWrongAnswers - ==> Parameters: 1(Long), 1(Long), 1(Long)
+2026-05-18 16:54:02 [http-nio-9001-exec-7] DEBUG c.e.i.m.M.selectWrongAnswers - <==      Total: 8
+2026-05-18 16:54:10 [http-nio-9001-exec-8] INFO  c.e.i.c.ProblemApiController - [MVC2] ?④굔 臾몄젣 議고쉶: id=11
+2026-05-18 16:54:10 [http-nio-9001-exec-8] DEBUG c.e.i.m.P.selectById - ==>  Preparing: SELECT p.id, p.question, p.answer AS correct_answer, p.explanation, s.name AS category, p.type, p.difficulty, p.option1, p.option2, p.option3, p.option4, p.option5, p.is_ai_generated, NULL AS programming_language FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE p.id = ? LIMIT 1
+2026-05-18 16:54:10 [http-nio-9001-exec-8] DEBUG c.e.i.m.P.selectById - ==> Parameters: 11(Long)
+2026-05-18 16:54:10 [http-nio-9001-exec-8] DEBUG c.e.i.m.P.selectById - <==      Total: 1

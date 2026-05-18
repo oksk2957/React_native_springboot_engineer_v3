@@ -16,10 +16,10 @@ import { colors } from '../theme';
 
 export type MainTabParamList = {
   Home: undefined;
-  Problem: undefined;
+  Problem: { problemId?: number; mode?: 'normal' | 'random' | 'subjective' | 'multiple' } | undefined;
   Wrong: { bookmarkDate?: string } | undefined;
-  Theory: undefined;
-  Programming: { language?: string } | undefined;
+  Theory: { problemId?: number; category?: string } | undefined;
+  Programming: { problemId?: number; language?: string } | undefined;
   Statistics: undefined;
 };
 

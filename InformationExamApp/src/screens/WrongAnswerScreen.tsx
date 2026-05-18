@@ -195,10 +195,41 @@ export default function WrongAnswerScreen() {
   };
 
   const handleRetry = (wrongAnswer: WrongAnswer) => {
-    navigation.navigate('Problem', {
-      problemId: wrongAnswer.referenceId,
-      problemType: wrongAnswer.problemType,
-    } as never);
+    const problemId = Number(wrongAnswer.referenceId);
+
+    console.log(
+      `[WrongAnswerScreen] retry navigation - problemType: ${wrongAnswer.problemType}, referenceId: ${wrongAnswer.referenceId}, parsedProblemId: ${problemId}`
+    );
+
+    if (Number.isNaN(problemId)) {
+      console.log('[WrongAnswerScreen] retry navigation aborted - invalid problemId');
+      return;
+    }
+
+    const targetTab =
+      wrongAnswer.problemType === 'OBJECTIVE'
+        ? 'Problem'
+        : wrongAnswer.problemType === 'SUBJECTIVE'
+          ? 'Theory'
+          : 'Programming';
+
+    console.log(`[WrongAnswerScreen] navigating to ${targetTab} for problemId: ${problemId}`);
+    console.log(`[WrongAnswerScreen] navigation payload ready - targetTab: ${targetTab}, problemId: ${problemId}`);
+
+    switch (wrongAnswer.problemType) {
+      case 'OBJECTIVE':
+        navigation.navigate('Problem', { problemId, mode: 'normal' } as never);
+        break;
+      case 'SUBJECTIVE':
+        navigation.navigate('Theory', { problemId } as never);
+        break;
+      case 'PROGRAMMING_LANGUAGE':
+        navigation.navigate('Programming', { problemId } as never);
+        break;
+      default:
+        navigation.navigate('Problem', { problemId } as never);
+        break;
+    }
   };
 
   const getTypeLabel = (type: ProblemType): string => {
@@ -295,6 +326,9 @@ export default function WrongAnswerScreen() {
         <Text style={[styles.subtitle, isDark && styles.subtitleDark]}>
           {activeDate ? `${activeDate} 오답` : '전체 오답'} · {wrongProblems.length}개
         </Text>
+        <Text style={[styles.navigationHint, isDark && styles.navigationHintDark]}>
+          객관식은 학습 탭, 주관식은 이론 탭, 프로그래밍은 코드 탭으로 이동합니다.
+        </Text>
       </View>
 
       <View style={[styles.miniTabs, isDark && styles.categoryFilterDark]}>
@@ -390,6 +424,8 @@ const styles = StyleSheet.create({
   header: { padding: 20, backgroundColor: '#4a90e2' },
   title: { fontSize: 24, fontWeight: 'bold', color: '#fff' },
   subtitle: { fontSize: 14, color: '#fff', opacity: 0.8, marginTop: 4 },
+  navigationHint: { fontSize: 12, color: '#e2e8f0', marginTop: 8, lineHeight: 18 },
+  navigationHintDark: { color: '#cbd5e0' },
   miniTabs: { flexDirection: 'row', padding: 12, backgroundColor: '#fff', gap: 8 },
   miniTab: { flex: 1, paddingVertical: 10, borderRadius: 12, backgroundColor: '#e2e8f0', alignItems: 'center' },
   miniTabActive: { backgroundColor: '#4a90e2' },

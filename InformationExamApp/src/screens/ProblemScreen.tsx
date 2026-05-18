@@ -29,6 +29,17 @@ export default function ProblemScreen() {
   const hasExplicitProblemId =
     rawPid !== undefined && rawPid !== null && `${rawPid}`.trim() !== '' && Number.isFinite(Number(rawPid));
 
+  useEffect(() => {
+    console.log(
+      `[ProblemScreen] route params received - mode: ${routeMode}, category: ${categoryParam ?? 'none'}, problemId: ${rawPid ?? 'none'}, explicit: ${hasExplicitProblemId}`
+    );
+  }, [routeMode, categoryParam, rawPid, hasExplicitProblemId]);
+
+  useEffect(() => {
+    if (!hasExplicitProblemId) return;
+    console.log(`[ProblemScreen] explicit problem mode enabled - problemId: ${rawPid}, sessionId: ${sessionId ?? 'none'}`);
+  }, [hasExplicitProblemId, rawPid, sessionId]);
+
   const [problemIds, setProblemIds] = useState<number[]>([]);
   const [problems, setProblems] = useState<Problem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -43,7 +54,9 @@ export default function ProblemScreen() {
   const loadSeqRef = useRef(0);
 
   const isDark = darkMode;
-  const poolSize = routeMode === 'random' ? problems.length : problemIds.length;
+  const poolSize = hasExplicitProblemId 
+    ? 1 
+    : (routeMode === 'random' ? problems.length : problemIds.length);
 
   useEffect(() => {
     problemIdsRef.current = problemIds;
@@ -69,14 +82,21 @@ export default function ProblemScreen() {
     setSelectedAnswer('');
     setShowResult(false);
 
+    console.log(
+      `[ProblemScreen] loadProblems start - seq: ${seq}, mode: ${routeMode}, category: ${categoryParam ?? 'none'}, problemId: ${rawPid ?? 'none'}, explicit: ${hasExplicitProblemId}`
+    );
+
     try {
       if (hasExplicitProblemId) {
         const problem = await problemService.getProblem(Number(rawPid));
+        console.log(`[ProblemScreen] loaded explicit problem - id: ${problem.id}, type: ${problem.type}`);
         setProblems([problem]);
         setCurrentProblem(problem);
+        console.log(`[ProblemScreen] currentProblem set from explicit load - id: ${problem.id}`);
       } else if (routeMode === 'random') {
         const problemList = await problemService.getOneRandomProblemPerSubject();
         if (seq === loadSeqRef.current) {
+          console.log(`[ProblemScreen] loaded random problems - count: ${problemList?.length ?? 0}`);
           setProblems(problemList);
           setCurrentProblem(problemList[0] || null);
         }
@@ -110,6 +130,8 @@ export default function ProblemScreen() {
           ids = meta.ids || [];
         }
 
+        console.log(`[ProblemScreen] loaded study meta - count: ${ids.length}, mode: ${routeMode}, category: ${categoryParam ?? 'none'}`);
+
         if (seq !== loadSeqRef.current) return;
 
         setProblemIds(ids);
@@ -121,6 +143,7 @@ export default function ProblemScreen() {
 
         const first = await problemService.getProblem(ids[0]);
         if (seq !== loadSeqRef.current) return;
+        console.log(`[ProblemScreen] first problem selected - id: ${first.id}, type: ${first.type}`);
         setCurrentProblem(first);
       }
     } catch (error) {
@@ -162,20 +185,24 @@ export default function ProblemScreen() {
   const goToProblemIndex = async (nextIndex: number) => {
     const ids = problemIdsRef.current;
     if (ids.length === 0 || nextIndex < 0 || nextIndex >= ids.length) {
+      console.log(`[ProblemScreen] goToProblemIndex blocked - nextIndex: ${nextIndex}, poolSize: ${ids.length}`);
       return;
     }
     const seqAtTap = loadSeqRef.current;
     setIsNavLoading(true);
     setSelectedAnswer('');
     setShowResult(false);
+    console.log(`[ProblemScreen] goToProblemIndex start - nextIndex: ${nextIndex}, problemId: ${ids[nextIndex]}, seq: ${seqAtTap}`);
     try {
       const p = await problemService.getProblem(ids[nextIndex]);
       if (seqAtTap !== loadSeqRef.current) {
+        console.log('[ProblemScreen] goToProblemIndex ignored - stale request');
         return;
       }
       currentIndexRef.current = nextIndex;
       setCurrentIndex(nextIndex);
       setCurrentProblem(p);
+      console.log(`[ProblemScreen] goToProblemIndex success - problemId: ${p.id}, index: ${nextIndex}`);
     } catch (e) {
       console.error(e);
       Alert.alert('오류', '문제를 불러오지 못했습니다.');
@@ -249,6 +276,9 @@ export default function ProblemScreen() {
   }
 
   if (!currentProblem || poolSize === 0) {
+    console.log(
+      `[ProblemScreen] empty render guard hit - currentProblem: ${currentProblem ? currentProblem.id : 'none'}, poolSize: ${poolSize}, mode: ${routeMode}, problemId: ${rawPid ?? 'none'}`
+    );
     return (
       <View style={styles.loadingContainer}>
         <Text>표시할 문제가 없습니다.</Text>

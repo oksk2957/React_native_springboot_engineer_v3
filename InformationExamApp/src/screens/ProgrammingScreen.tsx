@@ -44,6 +44,7 @@ const LANGUAGE_KEYWORDS: Record<string, string[]> = {
 export default function ProgrammingScreen() {
   const route = useRoute() as any;
   const { darkMode, sessionId: storedSessionId } = useAuthStore();
+  const targetProblemId = route?.params?.problemId;
   const sessionId = route?.params?.sessionId ?? route?.params?.studySessionId ?? storedSessionId ?? null;
   const [currentLanguage, setCurrentLanguage] = useState(route?.params?.language || 'C언어');
   const [allProblems, setAllProblems] = useState<Problem[]>([]);
@@ -62,6 +63,44 @@ export default function ProgrammingScreen() {
   const isDark = darkMode;
   const themeColor = languageColors[currentLanguage] || '#4a90e2';
 
+  // [지상 최고 개발자 조치] 오답 노트 연동: 특정 문제 포커싱 및 언어 자동 전환
+  useEffect(() => {
+    if (route.params?.problemId && allProblems.length > 0) {
+      const targetId = Number(route.params.problemId);
+      const targetProblem = allProblems.find(p => p.id === targetId);
+      
+      if (targetProblem) {
+        // 1. 해당 문제가 속한 언어 찾기
+        const questionText = (targetProblem.question || '').toLowerCase();
+        let matchedLang = '공통개념';
+        for (const [lang, keywords] of Object.entries(LANGUAGE_KEYWORDS)) {
+          if (keywords.some(k => questionText.includes(k.toLowerCase()))) {
+            matchedLang = lang;
+            break;
+          }
+        }
+        
+        // 2. 언어 변경 및 인덱스 설정
+        setCurrentLanguage(matchedLang);
+        
+        // 3. 필터링된 리스트에서의 인덱스 찾기는 다음 렌더링(problems useMemo) 후에 수행되도록 지연
+        setTimeout(() => {
+          const filteredItems = allProblems.filter(p => {
+            const q = (p.question || '').toLowerCase();
+            return LANGUAGE_KEYWORDS[matchedLang].some(k => q.includes(k.toLowerCase()));
+          });
+          const idx = filteredItems.findIndex(p => p.id === targetId);
+          if (idx !== -1) {
+            setCurrentIndex(idx);
+          }
+        }, 100);
+
+        // 파라미터 처리 완료 후 초기화
+        navigation.setParams({ problemId: undefined } as any);
+      }
+    }
+  }, [route.params?.problemId, allProblems]);
+
   // 언어별 문제 필터링
   const problems = React.useMemo(() => {
     const keywords = LANGUAGE_KEYWORDS[currentLanguage] || [];
@@ -78,6 +117,45 @@ export default function ProgrammingScreen() {
       });
     });
   }, [allProblems, currentLanguage]);
+
+  useEffect(() => {
+    if (!targetProblemId) return;
+    console.log(`[ProgrammingScreen] targetProblemId received: ${targetProblemId}`);
+  }, [targetProblemId]);
+
+  useEffect(() => {
+    if (!targetProblemId || allProblems.length === 0) return;
+
+    const matchedProblem = allProblems.find((problem) => Number(problem.id) === Number(targetProblemId));
+    if (!matchedProblem) {
+      console.log(`[ProgrammingScreen] auto-focus miss - problemId: ${targetProblemId}`);
+      return;
+    }
+
+    const matchedLanguage = languages.find((language) => {
+      const keywords = LANGUAGE_KEYWORDS[language] || [];
+      const text = `${matchedProblem.question ?? ''} ${matchedProblem.explanation ?? ''}`.toLowerCase();
+      return keywords.some((keyword) => text.includes(keyword.toLowerCase()));
+    }) || '공통개념';
+
+    console.log(`[ProgrammingScreen] auto-focus candidate - problemId: ${targetProblemId}, matchedLanguage: ${matchedLanguage}, currentLanguage: ${currentLanguage}`);
+
+    if (matchedLanguage !== currentLanguage) {
+      console.log(`[ProgrammingScreen] switching language to ${matchedLanguage} before focusing problemId: ${targetProblemId}`);
+      setCurrentLanguage(matchedLanguage);
+      return;
+    }
+
+    const matchedIndex = problems.findIndex((problem) => Number(problem.id) === Number(targetProblemId));
+    console.log(`[ProgrammingScreen] matched index: ${matchedIndex}, language: ${currentLanguage}`);
+
+    if (matchedIndex >= 0 && currentIndex !== matchedIndex) {
+      console.log(`[ProgrammingScreen] syncing currentIndex after language filter - problemId: ${targetProblemId}, index: ${matchedIndex}, language: ${currentLanguage}`);
+      setCurrentIndex(matchedIndex);
+      setIsFlipped(false);
+      console.log(`[ProgrammingScreen] auto-focus success - problemId: ${targetProblemId}, index: ${matchedIndex}, language: ${currentLanguage}`);
+    }
+  }, [allProblems, currentIndex, currentLanguage, problems, targetProblemId]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -107,6 +185,7 @@ export default function ProgrammingScreen() {
     try {
       const data = await problemService.getTheoryProblems('프로그래밍언어');
       if (isMountedRef.current) {
+        console.log(`[ProgrammingScreen] loaded problems: ${data?.length ?? 0}`);
         setAllProblems(data || []);
       }
     } catch (error) {
@@ -220,6 +299,7 @@ export default function ProgrammingScreen() {
             <View>
               <Text style={styles.headerSubtitle}>프로그래밍 언어</Text>
               <Text style={styles.headerTitle}>{currentLanguage}</Text>
+              <Text style={styles.headerHint}>오답 노트에서 들어오면 해당 문제와 언어로 자동 정렬됩니다.</Text>
             </View>
           </View>
 
@@ -371,6 +451,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'rgba(255,255,255,0.8)',
     marginBottom: 2,
+  },
+  headerHint: {
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.9)',
+    marginTop: 4,
   },
   categoryGrid: {
     flexDirection: 'row',
