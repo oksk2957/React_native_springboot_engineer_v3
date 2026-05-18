@@ -16,4 +16,6 @@ public class AnswerRequest {
     
     // 제출한 답
     private String submittedAnswer;
+
+    
 }

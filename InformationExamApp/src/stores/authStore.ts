@@ -9,10 +9,12 @@ interface AuthState {
   isLoading: boolean;
   darkMode: boolean;
   lastProblemId: number;
+  sessionId: number | null;
   setUser: (user: User | null) => void;
   setLoading: (loading: boolean) => void;
   setDarkMode: (enabled: boolean) => Promise<void>;
   setLastProblemId: (id: number) => void;
+  setSessionId: (sessionId: number | null) => void;
   /**
    * Google 로그인 - 백엔드 JWT 방식
    *
@@ -37,6 +39,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoading: false,
   darkMode: false,
   lastProblemId: 1,
+  sessionId: null,
 
   setUser: (user) => set({ user, isAuthenticated: !!user }),
   setLoading: (isLoading) => set({ isLoading }),
@@ -45,6 +48,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ darkMode: enabled });
   },
   setLastProblemId: (id) => set({ lastProblemId: id }),
+  setSessionId: (sessionId) => set({ sessionId }),
 
   /**
    * Google 로그인 - 백엔드 JWT 방식

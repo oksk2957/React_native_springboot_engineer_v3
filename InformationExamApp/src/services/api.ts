@@ -178,12 +178,14 @@ export const problemService = {
   submitAnswer: async (
     problemId: number,
     submittedAnswer: string,
-    problemType: ProblemType = 'OBJECTIVE'
+    problemType: ProblemType = 'OBJECTIVE',
+    sessionId?: number
   ): Promise<Answer> => {
     const response = await api.post('/answers/submit', {
       problemId,
       problemType,
       submittedAnswer,
+      ...(sessionId != null ? { sessionId } : {}),
     });
     return response.data;
   },

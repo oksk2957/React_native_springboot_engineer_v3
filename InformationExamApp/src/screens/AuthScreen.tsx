@@ -18,7 +18,7 @@ const GOOGLE_WEB_CLIENT_ID =
   '1033672402385-hdhb1unve0rebnh3sor0c6b8cljfkla8.apps.googleusercontent.com';
 
 export default function AuthScreen() {
-  const { isLoading, loginWithGoogleIdToken } = useAuthStore();
+  const { isLoading, loginWithGoogleIdToken, setSessionId } = useAuthStore();
   const [loginInProgress, setLoginInProgress] = useState(false);
 
   const [request, response, promptAsync] = Google.useAuthRequest({
@@ -53,7 +53,10 @@ export default function AuthScreen() {
           throw new Error('Google ID Token을 획득하지 못했습니다.');
         }
 
-        await loginWithGoogleIdToken(idToken);
+        const result = await loginWithGoogleIdToken(idToken);
+        if (result && typeof result === 'object' && 'sessionId' in result) {
+          setSessionId(typeof result.sessionId === 'number' ? result.sessionId : null);
+        }
       } catch (error: any) {
         console.error('[AuthScreen] Google 로그인 완료 처리 실패:', error.message || error);
         Alert.alert(

@@ -21,7 +21,7 @@ public class UserAnswer {
     private Long userId;
 
     @Column(name = "session_id")
-    private Long sessionId;
+    private String sessionId;
 
     @Column(name = "item_type", nullable = false, length = 32)
     private String itemType;
@@ -39,10 +39,10 @@ public class UserAnswer {
     private LocalDateTime submittedAt;
 
     @Builder
-    public UserAnswer(Long userId, Long sessionId, String itemType, Long referenceId, 
+    public UserAnswer(Long userId, String sessionId, String itemType, Long referenceId, 
                       String submittedAnswer, Boolean isCorrect) {
         this.userId = userId;
-        this.sessionId = sessionId;
+        this.sessionId = (sessionId != null) ? sessionId : "0";
         this.itemType = itemType;
         this.referenceId = referenceId;
         this.submittedAnswer = submittedAnswer;

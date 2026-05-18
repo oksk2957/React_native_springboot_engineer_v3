@@ -30,9 +30,6 @@ public class WrongAnswerBookmark {
     @Column(name = "review_count", nullable = false)
     private Integer reviewCount;
 
-    @Column(name = "last_reviewed_at")
-    private LocalDateTime lastReviewedAt;
-
     @Builder
     public WrongAnswerBookmark(Long userId, String itemType, Long referenceId) {
         this.userId = userId;
@@ -44,6 +41,5 @@ public class WrongAnswerBookmark {
 
     public void incrementReviewCount() {
         this.reviewCount++;
-        this.lastReviewedAt = LocalDateTime.now();
     }
 }

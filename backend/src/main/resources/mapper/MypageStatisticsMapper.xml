@@ -73,6 +73,6 @@
         INNER JOIN programming_language_problems plp ON ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.reference_id = plp.id
         WHERE ua.user_id = #{userId}
           AND ua.is_correct = false
-        ORDER BY submittedAt DESC
+        ORDER BY submittedAt DESC, id DESC
     </select>
 </mapper>

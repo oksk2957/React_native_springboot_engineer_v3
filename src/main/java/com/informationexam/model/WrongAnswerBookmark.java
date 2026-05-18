@@ -9,7 +9,6 @@ public class WrongAnswerBookmark {
     private Long referenceId;
     private Timestamp bookmarkedAt;
     private Integer reviewCount;
-    private Timestamp lastReviewedAt;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -23,6 +22,4 @@ public class WrongAnswerBookmark {
     public void setBookmarkedAt(Timestamp bookmarkedAt) { this.bookmarkedAt = bookmarkedAt; }
     public Integer getReviewCount() { return reviewCount; }
     public void setReviewCount(Integer reviewCount) { this.reviewCount = reviewCount; }
-    public Timestamp getLastReviewedAt() { return lastReviewedAt; }
-    public void setLastReviewedAt(Timestamp lastReviewedAt) { this.lastReviewedAt = lastReviewedAt; }
 }

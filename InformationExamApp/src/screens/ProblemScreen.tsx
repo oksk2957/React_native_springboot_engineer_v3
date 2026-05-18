@@ -20,7 +20,8 @@ type StudyMode = 'normal' | 'random' | 'subjective' | 'multiple';
 
 export default function ProblemScreen() {
   const route = useRoute() as any;
-  const { darkMode } = useAuthStore();
+  const { darkMode, sessionId: storedSessionId } = useAuthStore();
+  const sessionId = route?.params?.sessionId ?? route?.params?.studySessionId ?? storedSessionId ?? null;
 
   const routeMode: StudyMode = route?.params?.mode ?? 'normal';
   const categoryParam: string | undefined = route?.params?.category;
@@ -140,7 +141,12 @@ export default function ProblemScreen() {
     }
 
     try {
-      const result = await problemService.submitAnswer(currentProblem.id, selectedAnswer);
+      const result = await problemService.submitAnswer(
+        currentProblem.id,
+        selectedAnswer,
+        currentProblem.type,
+        sessionId ?? undefined
+      );
       setShowResult(true);
 
       if (result.isCorrect) {

@@ -12,6 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
+import java.nio.ByteBuffer;
 
 @Service
 @RequiredArgsConstructor
@@ -156,5 +161,21 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         user.setRole(role);
         return userRepository.save(user);
+    }
+
+    /**
+     * [시니어 개발자 조치] 사용자명을 기반으로 고유한 해시 세션 ID 생성
+     */
+    public Long generateSessionIdFromUsername(String username) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(username.getBytes(StandardCharsets.UTF_8));
+            ByteBuffer buffer = ByteBuffer.wrap(hash);
+            // SHA-256 해시의 처음 8바이트를 Long으로 변환하여 사용
+            return buffer.getLong();
+        } catch (NoSuchAlgorithmException e) {
+            log.error("SHA-256 알고리즘을 찾을 수 없습니다. UUID 기반 임시 ID를 생성합니다.", e);
+            return UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        }
     }
 }

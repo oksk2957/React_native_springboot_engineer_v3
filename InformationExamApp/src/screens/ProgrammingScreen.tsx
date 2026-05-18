@@ -43,7 +43,8 @@ const LANGUAGE_KEYWORDS: Record<string, string[]> = {
 
 export default function ProgrammingScreen() {
   const route = useRoute() as any;
-  const { darkMode } = useAuthStore();
+  const { darkMode, sessionId: storedSessionId } = useAuthStore();
+  const sessionId = route?.params?.sessionId ?? route?.params?.studySessionId ?? storedSessionId ?? null;
   const [currentLanguage, setCurrentLanguage] = useState(route?.params?.language || 'C언어');
   const [allProblems, setAllProblems] = useState<Problem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -149,7 +150,12 @@ export default function ProgrammingScreen() {
     if (!problems[currentIndex]) return;
 
     try {
-      await problemService.submitAnswer(problems[currentIndex].id, '1', 'PROGRAMMING_LANGUAGE');
+      await problemService.submitAnswer(
+        problems[currentIndex].id,
+        '1',
+        'PROGRAMMING_LANGUAGE',
+        sessionId ?? undefined
+      );
       showToast('Saved as known (1)', 'success');
       handleNext();
     } catch (error) {
@@ -162,7 +168,12 @@ export default function ProgrammingScreen() {
     if (!problems[currentIndex]) return;
 
     try {
-      await problemService.submitAnswer(problems[currentIndex].id, '2', 'PROGRAMMING_LANGUAGE');
+      await problemService.submitAnswer(
+        problems[currentIndex].id,
+        '2',
+        'PROGRAMMING_LANGUAGE',
+        sessionId ?? undefined
+      );
       showToast('Saved as unknown (2)', 'success');
       handleNext();
     } catch (error) {

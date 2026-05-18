@@ -33,11 +33,13 @@ public class AnswerService {
     private final UserRepository userRepository;
     private final UserStatisticsRepository userStatisticsRepository;
     private final WrongAnswerBookmarkRepository wrongAnswerBookmarkRepository;
+    private final UserService userService;
 
     @Transactional
     public Map<String, Object> submitAnswer(AnswerRequest request, String username) {
         String problemType = normalizeProblemType(request.getProblemType());
         Long problemId = request.getProblemId();
+        String submittedAnswer = request.getSubmittedAnswer();
         
         log.info("[AnswerService] 답안 제출 시작 - problemId: {}, problemType: {}, username: {}", problemId, problemType, username);
         
@@ -56,7 +58,7 @@ public class AnswerService {
         String question = problemInfo.get("question");
         
         // 정답 판정
-        boolean isCorrect = correctAnswer.trim().equalsIgnoreCase(request.getSubmittedAnswer().trim());
+        boolean isCorrect = correctAnswer.trim().equalsIgnoreCase(submittedAnswer.trim());
         log.info("[AnswerService] 정답 판정 완료 - isCorrect: {}", isCorrect);
         
         // 사용자가 명시된 경우 DB에 저장
@@ -69,17 +71,27 @@ public class AnswerService {
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
                 log.info("[AnswerService] UserAnswer 저장 시도 - userId: {}, problemId: {}", user.getId(), problemId);
-                
+
+                // [지상 최고 개발자 조치] 구글 ID가 있으면 사용, 없으면 이메일, 둘 다 없으면 username 사용
+                String actualSessionId = user.getGoogleId();
+                if (actualSessionId == null || actualSessionId.isBlank()) {
+                    actualSessionId = user.getEmail();
+                }
+                if (actualSessionId == null || actualSessionId.isBlank()) {
+                    actualSessionId = user.getUsername();
+                }
+
                 try {
                     UserAnswer userAnswer = UserAnswer.builder()
                             .userId(user.getId())
+                            .sessionId(actualSessionId) // 해시 대신 실제 식별자 직접 저장
                             .itemType(problemType)
                             .referenceId(problemId)
-                            .submittedAnswer(request.getSubmittedAnswer())
+                            .submittedAnswer(submittedAnswer)
                             .isCorrect(isCorrect)
                             .build();
                     userAnswerRepository.save(userAnswer);
-                    log.info("[AnswerService] UserAnswer 저장 성공");
+                    log.info("[AnswerService] UserAnswer 저장 성공 - sessionId: {}", actualSessionId);
                 } catch (Exception e) {
                     log.error("[AnswerService] UserAnswer 저장 실패 - userId: {}, problemId: {}, 오류: {}", user.getId(), problemId, e.getMessage(), e);
                     throw new RuntimeException("답안 저장 중 오류가 발생했습니다.", e);

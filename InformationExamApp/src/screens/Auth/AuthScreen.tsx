@@ -18,7 +18,7 @@ import { colors } from '../../theme';
  */
 export const AuthScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { loginWithGoogleIdToken } = useAuthStore();
+  const { loginWithGoogleIdToken, setSessionId } = useAuthStore();
 
   /**
    * Google 로그인 - 실제 Google Sign-In 라이브러리 연결 필요
@@ -29,7 +29,8 @@ export const AuthScreen: React.FC = () => {
       // TODO: 실제 Google Sign-In 라이브러리로 교체 필요
       // 예시:
       // const { idToken } = await GoogleSignin.signIn();
-      // await loginWithGoogleIdToken(idToken);
+      // const result = await loginWithGoogleIdToken(idToken);
+      // if (result && 'sessionId' in result) setSessionId(result.sessionId ?? null);
       Alert.alert(
         '알림',
         '아직 Google ID Token 획득 라이브러리가 설정되지 않아 로그인 테스트가 불가능합니다.\n\n' +

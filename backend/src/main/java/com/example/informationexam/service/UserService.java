@@ -6,6 +6,7 @@ import com.example.informationexam.domain.user.Role;
 import com.example.informationexam.config.JwtTokenProvider;
 import com.example.informationexam.dto.AuthResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.example.informationexam.domain.useranswer.StudySessionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final GoogleTokenVerifierService googleTokenVerifierService;
+    private final StudySessionRepository studySessionRepository;
+    private final StudySessionRepository studySessionRepository;
 
     @Transactional
     public AuthResponse loginWithGoogle(String idToken, String traceId) {
@@ -43,12 +46,12 @@ public class UserService {
 
         log.info("[AUTH][{}][STEP2] user lookup by googleId: {}", traceId, googleId);
 
-        // 1. googleId로 사용자 조회
+        // 1. googleId로 사용자 조회 (우선)
         Optional<User> existingUser = userRepository.findByGoogleId(googleId);
         User user;
         boolean isNewUser = false;
 
-        // 2. googleId로 찾지 못한 경우, email로 조회 후 googleId 연결
+        // 2. googleId로 찾지 못한 경우, email로 조회 후 googleId 연결 (보조)
         if (existingUser.isEmpty()) {
             log.info("[AUTH][{}][STEP2][FALLBACK] googleId not found, trying email lookup: {}", traceId, email);
             Optional<User> userByEmail = userRepository.findByEmail(email);
@@ -94,10 +97,19 @@ public class UserService {
                     traceId, user.getId(), user.getEmail(), user.getUsername(), role);
         }
 
-        log.info("[AUTH][{}][STEP3] generating JWT token", traceId);
+        // 4. 사용자별 세션 조회 또는 생성
+        String sessionKey = "google:" + googleId;
+        StudySession studySession = studySessionRepository.findByUserId(user.getId())
+                .orElseGet(() -> StudySession.builder()
+                        .user(user)
+                        .sessionKey(sessionKey)
+                        .build());
+        studySessionRepository.save(studySession);
+
+                log.info("[AUTH][{}][STEP3] generating JWT token", traceId);
         String token = jwtTokenProvider.createToken(user.getUsername());
 
-        log.info("[AUTH][{}][STEP4] checking trial status", traceId);
+        log.info("[AUTH][{}][STEP3] checking trial status", traceId);
         boolean trialExpired = isTrialExpired(user);
         boolean requiresPayment = trialExpired && !Role.MONEY_USER.getKey().equals(user.getRole());
         boolean canAccessApp = Role.ADMIN.getKey().equals(user.getRole()) || !requiresPayment;
@@ -201,5 +213,19 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         user.setRole(role);
         return userRepository.save(user);
+    }
+
+    public Long generateSessionIdFromUsername(String username) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(username.getBytes(StandardCharsets.UTF_8));
+            ByteBuffer buffer = ByteBuffer.wrap(hash);
+            // SHA-256 해시의 처음 8바이트를 Long으로 변환하여 사용
+            return buffer.getLong();
+        } catch (NoSuchAlgorithmException e) {
+            log.error("SHA-256 알고리즘을 찾을 수 없습니다. UUID 기반 임시 ID를 생성합니다.", e);
+            // 예외 발생 시 대안으로 UUID 기반 임시 ID 생성
+            return UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        }
     }
 }

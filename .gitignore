@@ -64,3 +64,8 @@ node_modules/
 backend/server.log
 target/
 **/target/
+
+# OpenCode config (API keys - use global config only)
+opencode.json
+opencode.jsonc
+.opencode/

@@ -13,6 +13,7 @@ import com.example.informationexam.domain.statistics.UserStatistics;
 import com.example.informationexam.domain.statistics.UserStatisticsRepository;
 import com.example.informationexam.mapper.ProblemQueryMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,26 +21,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AnswerService {
-
-    private final ProblemRepository problemRepository;
-    private final ProblemQueryMapper problemQueryMapper;
-    private final UserAnswerRepository userAnswerRepository;
-    private final UserRepository userRepository;
-    private final UserStatisticsRepository userStatisticsRepository;
-    private final WrongAnswerBookmarkRepository wrongAnswerBookmarkRepository;
+    // ... 다른 필드 ...
 
     @Transactional
     public Map<String, Object> submitAnswer(AnswerRequest request, String username) {
         String problemType = normalizeProblemType(request.getProblemType());
         Long problemId = request.getProblemId();
+        String submittedAnswer = request.getSubmittedAnswer();
+
+        log.info("[AnswerService] 답안 제출 시작 - problemId: {}, problemType: {}, username: {}, submittedAnswer: {}", problemId, problemType, username, submittedAnswer);
+        log.debug("[AnswerService] 요청 원문 확인 - requestProblemType: {}, requestProblemId: {}, requestSubmittedAnswerLength: {}", request.getProblemType(), request.getProblemId(), submittedAnswer != null ? submittedAnswer.length() : 0);
         
-        log.info("[AnswerService] 답안 제출 시작 - problemId: {}, problemType: {}, username: {}", problemId, problemType, username);
+        // 세션 개념 제거로 인해 sessionId 검증은 더 이상 수행하지 않음
         
         // 문제 유형별 처리
         Map<String, String> problemInfo = getProblemInfo(problemType, problemId);
@@ -56,8 +53,8 @@ public class AnswerService {
         String question = problemInfo.get("question");
         
         // 정답 판정
-        boolean isCorrect = correctAnswer.trim().equalsIgnoreCase(request.getSubmittedAnswer().trim());
-        log.info("[AnswerService] 정답 판정 완료 - isCorrect: {}", isCorrect);
+        boolean isCorrect = correctAnswer.trim().equalsIgnoreCase(submittedAnswer.trim());
+        log.info("[AnswerService] 정답 판정 완료 - problemId: {}, isCorrect: {}", problemId, isCorrect);
         
         // 사용자가 명시된 경우 DB에 저장
         if (username != null) {
@@ -68,44 +65,46 @@ public class AnswerService {
 
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
-                log.info("[AnswerService] UserAnswer 저장 시도 - userId: {}, problemId: {}", user.getId(), problemId);
+                log.info("[AnswerService] 사용자 저장 처리 시작 - userId: {}, problemId: {}, problemType: {}, isCorrect: {}", user.getId(), problemId, problemType, isCorrect);
                 
                 try {
                     UserAnswer userAnswer = UserAnswer.builder()
                             .userId(user.getId())
+                            .sessionId(null)
                             .itemType(problemType)
                             .referenceId(problemId)
-                            .submittedAnswer(request.getSubmittedAnswer())
+                            .submittedAnswer(submittedAnswer)
                             .isCorrect(isCorrect)
                             .build();
                     userAnswerRepository.save(userAnswer);
-                    log.info("[AnswerService] UserAnswer 저장 성공");
+                    log.info("[AnswerService] UserAnswer 저장 성공 - userId: {}, problemId: {}, problemType: {}", user.getId(), problemId, problemType);
                 } catch (Exception e) {
-                    log.error("[AnswerService] UserAnswer 저장 실패 - userId: {}, problemId: {}, 오류: {}", user.getId(), problemId, e.getMessage(), e);
+                    log.error("[AnswerService] UserAnswer 저장 실패 - userId: {}, problemId: {}, problemType: {}, submittedAnswer: {}, 오류: {}", user.getId(), problemId, problemType, submittedAnswer, e.getMessage(), e);
                     throw new RuntimeException("답안 저장 중 오류가 발생했습니다.", e);
                 }
 
-                log.info("[AnswerService] UserStatistics 저장 시도 - userId: {}, problemType: {}", user.getId(), problemType);
-                try {
-                    upsertUserStatistics(user.getId(), problemType, problemId, isCorrect);
-                    log.info("[AnswerService] UserStatistics 저장 성공");
-                } catch (Exception e) {
-                    log.error("[AnswerService] UserStatistics 저장 실패 - userId: {}, 오류: {}", user.getId(), e.getMessage(), e);
-                    throw new RuntimeException("통계 저장 중 오류가 발생했습니다.", e);
-                }
-
                 if (!isCorrect) {
-                    log.info("[AnswerService] WrongAnswerBookmark 저장 시도 - userId: {}, problemId: {}", user.getId(), problemId);
+                    log.info("[AnswerService] WrongAnswerBookmark 저장 시도 - userId: {}, problemId: {}, problemType: {}", user.getId(), problemId, problemType);
                     try {
+                        log.debug("[AnswerService] WrongAnswerBookmark insert 준비 - userId: {}, problemId: {}, problemType: {}", user.getId(), problemId, problemType);
                         upsertWrongAnswerBookmarkIfAbsent(user.getId(), problemType, problemId);
-                        log.info("[AnswerService] WrongAnswerBookmark 저장 성공");
+                        log.info("[AnswerService] WrongAnswerBookmark 저장 성공 - userId: {}, problemId: {}", user.getId(), problemId);
                     } catch (Exception e) {
-                        log.error("[AnswerService] WrongAnswerBookmark 저장 실패 - userId: {}, 오류: {}", user.getId(), e.getMessage(), e);
+                        log.error("[AnswerService] WrongAnswerBookmark 저장 실패 - userId: {}, problemId: {}, problemType: {}, 오류: {}", user.getId(), problemId, problemType, e.getMessage(), e);
                         throw new RuntimeException("오답 북마크 저장 중 오류가 발생했습니다.", e);
                     }
                 }
+
+                log.info("[AnswerService] UserStatistics 저장 시도 - userId: {}, problemId: {}, problemType: {}, isCorrect: {}", user.getId(), problemId, problemType, isCorrect);
+                try {
+                    upsertUserStatistics(user.getId(), problemType, problemId, isCorrect);
+                    log.info("[AnswerService] UserStatistics 저장 성공 - userId: {}, problemId: {}, problemType: {}", user.getId(), problemId, problemType);
+                } catch (Exception e) {
+                    log.error("[AnswerService] UserStatistics 저장 실패 - userId: {}, problemId: {}, problemType: {}, 오류: {}", user.getId(), problemId, problemType, e.getMessage(), e);
+                    throw new RuntimeException("통계 저장 중 오류가 발생했습니다.", e);
+                }
             } else {
-                log.warn("[AnswerService] 사용자를 찾을 수 없음 - username: {}", username);
+                log.warn("[AnswerService] 사용자 식별 실패로 저장 생략 - username: {}", username);
             }
         }
         
