@@ -3,32 +3,53 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import type { Problem, Answer, Statistics, WrongAnswer, ProblemType } from '../types';
 
-// DEBUG: [API-2026-05-28] API URL 설정 업데이트
-// 원인: CORS 및 연결 문제로 인해 API 요청 실패
-// 해결: 연결 테스트 및 fallback URL 추가, CORS 설정 개선
-// 참고: Supabase OAuth 콜백 후 Oracle Cloud로 리디렉션
+// DEBUG: [B-2026-05-28] API URL 동적 설정
+// 원인: 하드코딩된 IP로 인해 개발/스테이징/프로덕션 환경 전환이 어려움
+// 해결: 환경변수를 통한 동적 URL 설정 + Platform별 자동 감지
+// 사용법: .env 파일에서 EXPO_PUBLIC_API_HOST, EXPO_PUBLIC_API_PORT 설정
 const getApiBaseUrl = () => {
-  // OCI 서버 IP (환경변수로 오버라이드 가능)
-  const OCI_IP = process.env.REACT_APP_OCI_IP || '158.180.78.125';
+  // DEBUG: [B-2026-05-28] 환경변수에서 API 호스트/포트 가져오기
+  const envHost = process.env.EXPO_PUBLIC_API_HOST;
+  const envPort = process.env.EXPO_PUBLIC_API_PORT;
+
+  // DEBUG: [B-2026-05-28] Platform별 기본값 설정
+  // Android 에뮬레이터: 10.0.2.2 (호스트 머신의 localhost)
+  // iOS 에뮬레이터: localhost
+  // 실제 기기: 환경변수 또는 OCI 서버 IP
+  let host: string;
+  let port: string;
+
+  if (envHost && envPort) {
+    // 환경변수가 설정된 경우 우선 사용
+    host = envHost;
+    port = envPort;
+    console.log('[API Config] Using env vars:', { host, port });
+  } else if (Platform.OS === 'android' && !envHost) {
+    // Android 에뮬레이터 기본값
+    host = '10.0.2.2';
+    port = '9001';
+    console.log('[API Config] Android emulator detected, using 10.0.2.2');
+  } else if (Platform.OS === 'ios' && !envHost) {
+    // iOS 에뮬레이터 기본값
+    host = 'localhost';
+    port = '9001';
+    console.log('[API Config] iOS emulator detected, using localhost');
+  } else {
+    // 기본값: OCI 서버 IP
+    host = '158.180.78.125';
+    port = '9001';
+    console.log('[API Config] Using default OCI server IP');
+  }
 
   // DEBUG: 현재 환경 로깅
   console.log('[API Config] __DEV__:', __DEV__);
   console.log('[API Config] Platform:', Platform.OS);
-  console.log('[API Config] OCI_IP:', OCI_IP);
+  console.log('[API Config] Host:', host);
+  console.log('[API Config] Port:', port);
 
-  if (__DEV__) {
-    // 로컬 개발 환경: localhost 우선 사용
-    // 원인: OCI 서버 연결 실패 (ETIMEDOUT)
-    // 해결: 로컬 개발 환경에서는 localhost 사용
-    const localUrl = 'http://localhost:9001/api';
-    console.log('[API Config] Development environment, using local URL:', localUrl);
-    return localUrl;
-  }
-
-  // 프로덕션 환경: OCI 서버 사용
-  const prodUrl = `http://${OCI_IP}:9001/api`;
-  console.log('[API Config] Production environment, using URL:', prodUrl);
-  return prodUrl;
+  const apiUrl = `http://${host}:${port}/api`;
+  console.log('[API Config] Using API URL:', apiUrl);
+  return apiUrl;
 };
 
 const API_BASE_URL = getApiBaseUrl();
@@ -206,8 +227,8 @@ export const authService = {
   },
 
   // DEBUG: [API-2026-05-28] 백엔드 연결 테스트
-  // 원인: 백엔드 연결 실패 시 사용자에게 알림 필요
-  // 해결: 연결 테스트 API 추가
+  // 원인: /health 엔드포인트 부재로 인한 연결 테스트 실패
+  // 해결: /health 엔드포인트 사용 (백엔드에 HealthController 추가됨)
   testConnection: async () => {
     try {
       console.log('[API] 백엔드 연결 테스트');
@@ -215,7 +236,14 @@ export const authService = {
       console.log('[API] 백엔드 연결 성공:', response.data);
       return true;
     } catch (error: any) {
-      console.error('[API] 백엔드 연결 실패:', error.message);
+      // 404는 엔드포인트가 없는 것, 그 외는 네트워크 오류
+      if (error.response && error.response.status === 404) {
+        console.error('[API] 백엔드 연결 실패: /health 엔드포인트 없음 (404)');
+      } else if (error.request) {
+        console.error('[API] 백엔드 연결 실패: 네트워크 오류 (CORS 또는 서버 다운)');
+      } else {
+        console.error('[API] 백엔드 연결 실패:', error.message);
+      }
       return false;
     }
   },

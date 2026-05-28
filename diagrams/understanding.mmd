@@ -1,0 +1,12 @@
+graph TB
+    subgraph "❌ 잘못된 이해 (X)"
+        WRONG1["React Native 서버를 면<br/>Spring Boot 서버가 필요하다"] --> WRONG2["(둘이 서로 의존적)"]
+    end
+
+    subgraph "✅ 올바른 이해 (O)"
+        RIGHT1["React Native 개발 서버(Metro)는<br/>Spring Boot와 무관하게 실행된다"] --> RIGHT2["(둘은 완전히 독립적)"]
+        RIGHT2 --> RIGHT3["단, API 호출 시<br/>Spring Boot가 실행 중이어야<br/>응답을 받을 수 있음"]
+    end
+
+    style WRONG1 fill:#ffebee,stroke:#c62828
+    style RIGHT1 fill:#e8f5e9,stroke:#2e7d32

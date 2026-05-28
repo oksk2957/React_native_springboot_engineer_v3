@@ -1,0 +1,17 @@
+ graph LR
+    subgraph "React Native 실행 (독립적)"
+        A1["📁 InformationExamApp/"] --> B1["⚡ npm start"]
+        B1 --> C1["🚀 Metro 서버 시작<br/>(포트 8081)"]
+        C1 --> D1["📱 핸드폰/에뮬레이터<br/>앱 실행"]
+    end
+
+    subgraph "Spring Boot 실행 (독립적)"
+        A2["📁 backend/"] --> B2["⚡ ./gradlew bootRun"]
+        B2 --> C2["🌐 Spring Boot 서버 시작<br/>(포트 9001)"]
+        C2 --> D2["📡 API 엔드포인트<br/>사용 가능"]
+    end
+
+    style A1 fill:#e1f5fe,stroke:#0277bd
+    style A2 fill:#e8f5e9,stroke:#2e7d32
+    style C1 fill:#e1f5fe,stroke:#0277bd
+    style C2 fill:#e8f5e9,stroke:#2e7d32

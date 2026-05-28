@@ -27,7 +27,9 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // 프론트엔드 Origin을 환경변수 또는 기본값으로 설정
+    // DEBUG: [OCI-2026-05-28] 프론트엔드 Origin을 환경변수 또는 기본값으로 설정
+    // 원인: 하드코딩된 IP로 인해 서버 IP 변경 시 재빌드 필요
+    // 해결: 환경변수 FRONTEND_ORIGIN 사용, 미설정시 localhost:9000 fallback
     @Value("${frontend.origin:http://localhost:9000}")
     private String frontendOrigin;
 
@@ -64,9 +66,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // DEBUG: [Supabase-OAuth-2026-05-27] CORS 설정 업데이트
-        // 원인: Supabase OAuth 도입으로 Supabase 도메인 추가 필요
-        // 해결: Supabase 도메인을 allowedOriginPatterns에 추가
+        // DEBUG: [C-2026-05-28] 와일드카드(*) 제거 - allowCredentials(true)와 충돌 방지
+        // 원인: "*"와 allowCredentials(true) 동시 사용 시 CORS 오류 발생
+        // 해결: 구체적인 Origin 패턴으로 대체
         List<String> allowedOriginPatterns = Arrays.asList(
             frontendOrigin,
             "http://158.180.78.125:9000",   // OCI Public IP (React frontend)
@@ -84,13 +86,18 @@ public class SecurityConfig {
             "http://192.168.*:*",      // 일반 사설망
             "exp://*",               // Expo 개발 서버
             "https://gmhznnwecujoafdisscl.supabase.co", // Supabase 도메인
-            "*"                      // DEBUG: 모든 Origin 허용 (개발/테스트용)
+            "null"                   // DEBUG: [C-2026-05-28] React Native Origin이 null일 수 있음
         );
 
-        // PRODUCTION 환경에서는 환경변수에서 오리진 설정을 덮어쓰거나 "*" 모든 origins 허용 등 환경별 설정
+        // DEBUG: [C-2026-05-28] 환경변수로 Origin 동적 설정
+        // 원인: 프로덕션 환경에서 특정 Origin만 허용해야 함
+        // 해결: ALLOWED_ORIGINS 환경변수로 동적 설정
+        // 사용법: export ALLOWED_ORIGINS="http://158.180.78.125:9000,http://localhost:3000"
         String envOrigins = System.getenv("ALLOWED_ORIGINS");
         if (envOrigins != null && !envOrigins.isEmpty()) {
             allowedOriginPatterns = Arrays.asList(envOrigins.split(","));
+            // DEBUG: [C-2026-05-28] 환경변수로 설정된 Origin 로깅
+            System.out.println("[CORS] 환경변수 ALLOWED_ORIGINS 적용: " + envOrigins);
         }
 
         configuration.setAllowedOriginPatterns(allowedOriginPatterns);

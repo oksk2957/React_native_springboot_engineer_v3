@@ -1,0 +1,24 @@
+graph TD
+    A[Information Exam Project] --> B[내 PC]
+    A --> C[OCI 서버]
+    A --> D[클라우드 서비스]
+
+    B --> B1[React Native App]
+    B --> B2[Spring Boot 백엔드]
+    B1 --> B1a[Expo 개발서버<br/>localhost:8081]
+    B1 --> B1b[Google OAuth]
+    B2 --> B2a[localhost:9001<br/>✅ 실행중]
+
+    C --> C1[IP: 158.180.78.125]
+    C1 --> C1a[SSH 포트 22]
+    C1 --> C1b[Spring Boot<br/>❌ 꺼짐]
+
+    D --> D1[Supabase]
+    D --> D2[Google OAuth]
+    D1 --> D1a[PostgreSQL]
+    D1 --> D1b[JWT 검증]
+    D2 --> D2a[ID Token 발급]
+
+    B1b -.->|인증 요청| D2
+    D2 -.->|Token 반환| B1b
+    B1 -.->|API 요청| C1b

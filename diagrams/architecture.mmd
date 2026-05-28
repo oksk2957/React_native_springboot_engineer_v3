@@ -1,0 +1,37 @@
+graph TB
+    subgraph "🖥️ 개발 환경 (내 PC)"
+        subgraph "📱 React Native 앱 (InformationExamApp/)"
+            RN["React Native App<br/>📦 Metro 번들러 (개발용)<br/>🚀 실제 앱은 핸드폰/에뮬레이터에서 실행"]
+            RN_API["API 호출 대상:<br/>• localhost:9001 (로컬 백엔드)<br/>• 158.180.78.125:9001 (OCI 서버)"]
+        end
+
+        subgraph "🔧 Spring Boot 백엔드 (backend/)"
+            SB["Spring Boot Server<br/>🌐 localhost:9001<br/>📡 REST API 제공"]
+            SB_DB[("데이터베이스<br/>PostgreSQL / SQLite")]
+        end
+
+        subgraph "☁️ 외부 서비스"
+            SUP["Supabase<br/>🔐 OAuth / JWT 인증"]
+            GOOGLE["Google OAuth<br/>🔑 로그인 인증"]
+        end
+    end
+
+    subgraph "🌐 OCI 서버 (158.180.78.125)"
+        OCI["Spring Boot Server<br/>🌐 :9001<br/>❌ 현재 꺼짐"]
+    end
+
+    %% 관계 정의
+    RN -.->|"HTTP 요청"| RN_API
+    RN_API -.->|"API 호출"| SB
+    RN_API -.->|"API 호출"| OCI
+    SB -->|"연동"| SB_DB
+    RN -.->|"OAuth 인증"| SUP
+    SUP -.->|"인증"| GOOGLE
+    SB -.->|"JWT 검증"| SUP
+
+    %% 스타일링
+    style RN fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    style SB fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style OCI fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style SUP fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    style GOOGLE fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px

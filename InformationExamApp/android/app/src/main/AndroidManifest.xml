@@ -11,6 +11,9 @@
       <data android:scheme="https"/>
     </intent>
   </queries>
+  <!-- DEBUG: [A-2026-05-28] android:usesCleartextTraffic="true" 추가 -->
+  <!-- 원인: Android 9+에서 HTTP 통신이 기본적으로 차단됨 -->
+  <!-- 해결: CleartextTraffic 허용으로 HTTP API 통신 가능 -->
   <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme" android:supportsRtl="true" android:enableOnBackInvokedCallback="false" android:usesCleartextTraffic="true">
     <meta-data android:name="expo.modules.updates.ENABLED" android:value="false"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
