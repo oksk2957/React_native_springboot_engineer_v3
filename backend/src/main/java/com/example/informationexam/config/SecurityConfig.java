@@ -102,22 +102,32 @@ public class SecurityConfig {
 
         configuration.setAllowedOriginPatterns(allowedOriginPatterns);
 
-        // 허용 HTTP 메서드
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        // DEBUG: [C-2026-05-28] 허용 HTTP 메서드 설정
+        // 원인: CORS preflight 실패 시 메서드 불일치 가능성
+        // 해결: 모든 RESTful 메서드 명시적 허용
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
 
-        // 허용 헤더
+        // DEBUG: [C-2026-05-28] 허용 헤더 설정
+        // 원인: React Native/Expo에서 추가 헤더 전송 시 CORS 차단
+        // 해결: Authorization, Content-Type 외 추가 헤더 허용
         configuration.setAllowedHeaders(Arrays.asList(
             "Authorization",
             "Content-Type",
             "X-Requested-With",
             "Accept",
-            "Origin"
+            "Origin",
+            "X-CSRF-Token",
+            "X-Api-Key"
         ));
 
-        // 노출 헤더
+        // DEBUG: [C-2026-05-28] 노출 헤더 설정
+        // 원인: 프론트엔드에서 응답 헤더 접근 시 CORS 차단
+        // 해결: Authorization, Content-Type 외 추가 헤더 노출
         configuration.setExposedHeaders(Arrays.asList(
             "Authorization",
-            "Content-Type"
+            "Content-Type",
+            "X-Request-Id",
+            "X-Rate-Limit-Remaining"
         ));
 
         // 자격 증명 허용 설정 (프론트엔드 withCredentials=true와 일치)
