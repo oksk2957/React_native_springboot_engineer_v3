@@ -21,7 +21,13 @@ public class AnswerController {
     @PostMapping
     public AnswerResponse submitAnswer(@RequestBody AnswerRequest answerRequest) {
         Long problemId = answerRequest.getProblemId();
+        // DEBUG: [2026-05-26] submittedAnswer null 체크 추가
+        // 원인: Potential null pointer access 경고
+        // 해결: answerRequest.getSubmittedAnswer()가 null일 경우 빈 문자열로 초기화
         String submittedAnswer = answerRequest.getSubmittedAnswer();
+        if (submittedAnswer == null) {
+            submittedAnswer = "";
+        }
 
         Map<String, Object> result = problemQueryMapper.validateAnswerProc(problemId, submittedAnswer);
         

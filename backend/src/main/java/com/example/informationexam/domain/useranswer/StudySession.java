@@ -15,6 +15,9 @@ public class StudySession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "session_key", nullable = false, unique = true, length = 255)
+    private String sessionKey;
+
     @Column(name = "google_id", nullable = false, unique = true, length = 255)
     private String googleId;
 
@@ -49,10 +52,9 @@ public class StudySession {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
-}
 
+    // DEBUG: [2026-05-26] 클래스 닫는 중괄호 뒤에 불필요한 메서드가 분리되어 있어 컴파일 오류 수정
     public void touch() {
         this.updatedAt = LocalDateTime.now();
-        this.lastUsedAt = LocalDateTime.now();
     }
 }

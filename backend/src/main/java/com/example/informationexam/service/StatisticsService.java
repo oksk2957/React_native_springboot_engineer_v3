@@ -2,8 +2,6 @@ package com.example.informationexam.service;
 
 import com.example.informationexam.domain.problem.ProblemRepository;
 import com.example.informationexam.domain.problem.ProblemType;
-import com.example.informationexam.domain.problem.Subject;
-import com.example.informationexam.domain.problem.SubjectRepository;
 import com.example.informationexam.domain.problem.ProgrammingLanguageProblemRepository;
 import com.example.informationexam.domain.problem.SubjectiveProblemRepository;
 import com.example.informationexam.mapper.MypageStatisticsMapper;
@@ -26,7 +24,6 @@ public class StatisticsService {
     private final SubjectiveProblemRepository subjectiveProblemRepository;
     private final ProgrammingLanguageProblemRepository programmingLanguageProblemRepository;
     private final UserAnswerRepository userAnswerRepository;
-    private final SubjectRepository subjectRepository;
     private final MypageStatisticsMapper mypageStatisticsMapper;
 
     /**

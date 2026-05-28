@@ -69,3 +69,6 @@ target/
 opencode.json
 opencode.jsonc
 .opencode/
+# DEBUG: [Supabase-Config-2026-05-27] 환경변수 파일 무시
+.env.local
+

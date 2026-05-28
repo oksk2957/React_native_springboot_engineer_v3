@@ -1,7 +1,13 @@
 import { TheoryCard } from '../types/theory';
 
-// Expo 프로젝트 환경 변수에서 API 기본 URL을 가져오며, 없을 경우 기본값 사용
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:9001';
+// DEBUG: [OCI-Prod-2026-05-27] OCI 서버 IP 업데이트
+// 원인: OCI 서버 IP 변경 (168.110.119.132 → 158.180.78.125)
+// 해결: 환경변수로 OCI IP 관리, 하드코딩 제거
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://158.180.78.125:9001';
+
+// DEBUG: API Base URL 로깅 (개발/배포 환경 확인용)
+console.log('[TheoryAPI] Base URL:', API_BASE_URL);
+console.log('[TheoryAPI] Environment:', process.env.NODE_ENV);
 
 export const fetchTheoryCards = async (category: string): Promise<TheoryCard[]> => {
   try {

@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.informationexam.app'
+    namespace 'com.oksky.myapp'
     defaultConfig {
-        applicationId 'com.informationexam.app'
+        applicationId 'com.oksky.myapp'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

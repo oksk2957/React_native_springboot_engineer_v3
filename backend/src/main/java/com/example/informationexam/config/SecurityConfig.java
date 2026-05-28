@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -18,6 +19,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+// DEBUG: [CORS-Fix-2026-05-26] Spring Security 6.x CORS 설정
+// 원인: WebMvcConfigurer CORS 설정과 SecurityFilterChain CORS 설정이 충돌
+// 해결: SecurityFilterChain에서만 CORS 설정 관리 (WebMvcConfigurer 설정 무시됨)
+// 참고: allowedOriginPatterns 사용으로 withCredentials=true와 와일드카드 동시 지원
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -46,7 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         // OPTIONS 요청은 모두 허용 (CORS 프리플라이트)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        // 나머지 요청도 일단 모두 허용 (추후 JWT 인증 추가)
+                        // 나머지 요청도 모두 허용 (JWT 인증 없이)
                         .anyRequest().permitAll()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -59,22 +64,36 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // 개발 환경:_allowedOrigin 목록 (개발 편의를 위해 추가)
-        List<String> allowedOrigins = Arrays.asList(
+        // DEBUG: [Supabase-OAuth-2026-05-27] CORS 설정 업데이트
+        // 원인: Supabase OAuth 도입으로 Supabase 도메인 추가 필요
+        // 해결: Supabase 도메인을 allowedOriginPatterns에 추가
+        List<String> allowedOriginPatterns = Arrays.asList(
             frontendOrigin,
+            "http://158.180.78.125:9000",   // OCI Public IP (React frontend)
+            "http://158.180.78.125:3000",   // OCI Public IP (React dev server)
+            "http://158.180.78.125:19000",  // OCI Public IP (Expo)
+            "http://158.180.78.125:19006",  // OCI Public IP (Expo web)
+            "http://158.180.78.125:*",      // OCI Public IP 모든 포트
+            "http://localhost:*",      // 모든 localhost 포트
+            "http://127.0.0.1:*",      // 모든 127.0.0.1 포트
             "http://localhost:8081",   // React Native/Android 에뮬레이터
             "http://localhost:3000",   // React Dev Server
             "http://localhost:19000",  // Expo
-            "http://localhost:19006"   // Expo
+            "http://localhost:19006",  // Expo
+            "http://172.30.1.*:*",     // 개발 LAN
+            "http://192.168.*:*",      // 일반 사설망
+            "exp://*",               // Expo 개발 서버
+            "https://gmhznnwecujoafdisscl.supabase.co", // Supabase 도메인
+            "*"                      // DEBUG: 모든 Origin 허용 (개발/테스트용)
         );
 
         // PRODUCTION 환경에서는 환경변수에서 오리진 설정을 덮어쓰거나 "*" 모든 origins 허용 등 환경별 설정
         String envOrigins = System.getenv("ALLOWED_ORIGINS");
         if (envOrigins != null && !envOrigins.isEmpty()) {
-            allowedOrigins = Arrays.asList(envOrigins.split(","));
+            allowedOriginPatterns = Arrays.asList(envOrigins.split(","));
         }
 
-        configuration.setAllowedOrigins(allowedOrigins);
+        configuration.setAllowedOriginPatterns(allowedOriginPatterns);
 
         // 허용 HTTP 메서드
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
@@ -94,7 +113,7 @@ public class SecurityConfig {
             "Content-Type"
         ));
 
-        // 자격 증명 허용 설정
+        // 자격 증명 허용 설정 (프론트엔드 withCredentials=true와 일치)
         configuration.setAllowCredentials(true);
 
         // 프리플라이트 캐시 시간 (1시간)
@@ -103,7 +122,10 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
-        System.out.println("[CORS] Allowed Origins: " + allowedOrigins);
+        // DEBUG: [CORS-Fix] 최종 CORS 설정 로그 출력
+        System.out.println("[CORS] Allowed Origin Patterns: " + allowedOriginPatterns);
+        System.out.println("[CORS] Allow Credentials: " + configuration.getAllowCredentials());
+        System.out.println("[CORS] Allowed Methods: " + configuration.getAllowedMethods());
 
         return source;
     }

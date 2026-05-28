@@ -59,4 +59,31 @@ public class JwtTokenProvider {
             return false;
         }
     }
+
+    // DEBUG: [JWT-2026-05-28] 토큰 만료 시간 확인 메서드 추가
+    // 원인: 12시간 유효기간 만료 전 자동 갱신을 위해 만료 시간 확인 필요
+    // 해결: 토큰에서 만료 시간(Expiration)을 추출하여 반환
+    public Date getExpirationDate(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getExpiration();
+        } catch (JwtException | IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    // DEBUG: [JWT-2026-05-28] 토큰 갱신 메서드 추가
+    // 원인: 12시간 유효기간 만료 전 자동 갱신을 위해 토큰 재발급 필요
+    // 해결: 기존 토큰에서 사용자명을 추출하여 새로운 토큰 발급
+    public String refreshToken(String token) {
+        String username = getUsername(token);
+        if (username == null) {
+            throw new JwtException("토큰에서 사용자명을 추출할 수 없습니다.");
+        }
+        return createToken(username);
+    }
 }

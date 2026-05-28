@@ -13,11 +13,12 @@ public interface UserAnswerRepository extends JpaRepository<UserAnswer, Long> {
 
     List<UserAnswer> findByUserIdAndItemType(Long userId, String itemType);
 
-    List<UserAnswer> findBySessionId(Long sessionId);
+    // DEBUG: [2026-05-26] sessionId가 String 타입이므로 파라미터 타입을 String으로 수정
+    List<UserAnswer> findBySessionId(String sessionId);
 
-    Optional<UserAnswer> findBySessionIdAndReferenceIdAndItemType(Long sessionId, Long referenceId, String itemType);
+    Optional<UserAnswer> findBySessionIdAndReferenceIdAndItemType(String sessionId, Long referenceId, String itemType);
 
-    boolean existsBySessionIdAndReferenceIdAndItemType(Long sessionId, Long referenceId, String itemType);
+    boolean existsBySessionIdAndReferenceIdAndItemType(String sessionId, Long referenceId, String itemType);
 
     // Added methods for StatisticsService
     @Query("SELECT COUNT(ua) FROM UserAnswer ua WHERE ua.userId = :userId AND ua.itemType = :problemType")

@@ -103,8 +103,6 @@ export default function ServerScreen() {
             </View>
           </ScrollView>
         </View>
-          )}
-        </View>
       )}
     </ScrollView>
   );

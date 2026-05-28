@@ -10,37 +10,41 @@ import {
 import { useAuthStore } from '../../stores/authStore';
 import { colors } from '../../theme';
 
+// DEBUG: [Supabase-OAuth-2026-05-27] AuthScreen - Supabase OAuth 통합
+// 원인: Google ID Token 직접 전달 → Supabase OAuth + JWT 검증으로 전환
+// 해결: Supabase signInWithOAuth 사용 후 access_token을 백엔드로 전달
 /**
  * AuthScreen (screens/Auth/)
- * - 비회원 진입 제거
- * - Google OAuth 회원가입/로그인 단일 진입점
- * - 백엔드 JWT 기반 인증
+ * - Supabase OAuth 회원가입/로그인 단일 진입점
+ * - Supabase JWT 기반 인증
  */
 export const AuthScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { loginWithGoogleIdToken, setSessionId } = useAuthStore();
+  const { loginWithSupabase } = useAuthStore();
 
   /**
-   * Google 로그인 - 실제 Google Sign-In 라이브러리 연결 필요
+   * Supabase OAuth 로그인
    */
   const handleLogin = async () => {
     setIsLoading(true);
     try {
-      // TODO: 실제 Google Sign-In 라이브러리로 교체 필요
-      // 예시:
-      // const { idToken } = await GoogleSignin.signIn();
-      // const result = await loginWithGoogleIdToken(idToken);
-      // if (result && 'sessionId' in result) setSessionId(result.sessionId ?? null);
-      Alert.alert(
-        '알림',
-        '아직 Google ID Token 획득 라이브러리가 설정되지 않아 로그인 테스트가 불가능합니다.\n\n' +
-          '이 화면에서는 authService/loginWithGoogle 호출만 가능합니다.'
-      );
+      console.log('[AuthScreen] Supabase OAuth 로그인 시작');
+      const result = await loginWithSupabase();
+      
+      if (result.isNewUser) {
+        console.log('[AuthScreen] 신규 사용자, 닉네임 설정 필요:', result.requiresNickname);
+      }
+      
+      console.log('[AuthScreen] 로그인 완료');
     } catch (err: any) {
-      console.error('Auth handleLogin error:', err);
+      console.error('[AuthScreen] 로그인 실패:', err);
+      
+      // 사용자 취소 처리
       if (err.message?.includes('USER_CANCELLED') || err.message?.includes('cancel')) {
+        console.log('[AuthScreen] 사용자가 로그인을 취소했습니다.');
         return;
       }
+      
       Alert.alert(
         '로그인 실패',
         err?.message || '로그인 처리 중 오류가 발생했습니다.'
@@ -59,7 +63,7 @@ export const AuthScreen: React.FC = () => {
         </View>
 
         <TouchableOpacity
-          style={styles.googleButton}
+          style={[styles.googleButton, isLoading && styles.googleButtonDisabled]}
           onPress={handleLogin}
           disabled={isLoading}
         >
@@ -107,6 +111,9 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
+  },
+  googleButtonDisabled: {
+    opacity: 0.7,
   },
   googleButtonText: {
     color: '#fff',

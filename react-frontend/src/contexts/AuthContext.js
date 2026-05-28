@@ -2,7 +2,18 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { supabase } from '../lib/supabase'
 
 const AuthContext = createContext(null)
+
+// DEBUG: [Supabase-OAuth-2026-05-27] React Frontend AuthContext - Supabase OAuth 통합
+// 원인: Google OAuth HTTP origin 차단 → Supabase OAuth로 전환
+// 해결: Supabase signInWithOAuth 사용, 백엔드 /api/auth/verify에서 Supabase JWT 검증
+
+// DEBUG: [2026-05-27] API Base URL 설정
+// 환경변수 REACT_APP_API_BASE_URL 미설정시 localhost fallback
+// OCI 서버 배포시 .env 파일에 REACT_APP_API_BASE_URL=http://158.180.78.125:9001/api 설정 필요
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9001/api'
+
+// DEBUG: API Base URL 로깅 (개발/배포 환경 확인용)
+console.log('[AuthContext] API Base URL:', API_BASE_URL)
 
 const readStoredAuth = () => {
   const savedToken = localStorage.getItem('authToken')
@@ -50,9 +61,12 @@ export const AuthProvider = ({ children }) => {
 
   const isAuthenticated = !!token
 
+  // DEBUG: [Supabase-OAuth-2026-05-27] Supabase JWT를 백엔드에 검증
   const syncProfile = useCallback(async (authToken) => {
+    // DEBUG: [Supabase-OAuth-2026-05-27] 백엔드 /api/auth/verify 엔드포인트 호출
+    // Supabase JWT를 백엔드에서 검증
     const response = await fetch(`${API_BASE_URL}/auth/verify`, {
-      method: 'GET',
+      method: 'POST',
       headers: createAuthHeaders(authToken),
     })
 
@@ -68,37 +82,35 @@ export const AuthProvider = ({ children }) => {
     return data
   }, [])
 
+  // DEBUG: [Supabase-OAuth-2026-05-27] Supabase OAuth를 통한 Google 로그인
   const signInWithGoogle = useCallback(async () => {
     setLoading(true)
     setError(null)
 
     try {
-      // [수정] redirectTo: Supabase가 OAuth 처리 후 리디렉션할 앱의 URL
-      // (절대 Supabase Callback URL로 설정하지 말 것 → state 파라미터 누락 오류 발생)
+      // DEBUG: [Supabase-OAuth-2026-05-27] redirectTo 설정
+      // DEBUG: [Supabase-OAuth-2026-05-27] redirectTo 원복
+      // 원인: Supabase 콜백 URL 직접 설정 시 state 파라미터 충돌
+      // 해결: 애플리케이션 콜백 URL로 설정 (Supabase가 자동으로 state 추가)
       const redirectTo = typeof window !== 'undefined'
-        ? window.location.origin + '/auth-callback.html'
+        ? 'http://158.180.78.125:9000/auth-callback'
         : undefined
 
       console.info('[AUTH] Google login start', { redirectTo })
 
-// [수정] skipBrowserRedirect 제거 (기본값 false)
-      // Supabase가 브라우저 리디렉션을 직접 처리하도록 함
-      // ✅ scopes 추가: 사용자 이메일/프로필 조회 + state 파라미터 정상 처리를 위해 필수
+      // Supabase OAuth로 Google 로그인
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo,
-          scopes: 'email profile openid', // ✅ Google 사용자 정보 조회 + state 처리
+          scopes: 'email profile openid',
           queryParams: { prompt: 'select_account' },
         },
       })
 
       if (error) throw error
 
-      // skipBrowserRedirect: false(기본값)이므로 Supabase가 자동으로
-      // data.url(Google 로그인 페이지)로 브라우저를 리디렉션함
-      // → window.location.assign(data.url) 불필요
-
+      // Supabase가 자동으로 data.url(Google 로그인 페이지)로 브라우저를 리디렉션함
       return data
     } catch (err) {
       console.error('[AUTH] Google login failed', err)
@@ -118,10 +130,13 @@ export const AuthProvider = ({ children }) => {
         setUser(session.user)
         persistAuth(session.access_token, session.user)
 
-        // 로그인 완료 후 Spring Boot 백엔드(9001)로 이동
-        console.info('[AUTH] Login success, redirecting to app page...')
+        // DEBUG: [OCI-Prod-2026-05-27] OCI 서버 IP 업데이트
+        // 원인: OCI 서버 IP 변경 (168.110.119.132 → 158.180.78.125)
+        // 해결: 환경변수에서 Frontend URL을 가져오거나 기본값 사용
+        const redirectUrl = process.env.REACT_APP_FRONTEND_URL || 'http://158.180.78.125:9000'
+        console.info('[AUTH] Login success, redirecting to:', redirectUrl)
         setTimeout(() => {
-          window.location.href = 'http://localhost:9001'
+          window.location.href = redirectUrl
         }, 500)
       } else if (event === 'SIGNED_OUT') {
         clearAuthStorage()

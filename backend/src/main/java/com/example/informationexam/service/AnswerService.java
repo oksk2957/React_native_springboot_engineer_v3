@@ -25,7 +25,13 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AnswerService {
-    // ... 다른 필드 ...
+    // DEBUG: [2026-05-26] @RequiredArgsConstructor를 사용하므로 명시적 필드 선언 필요
+    private final ProblemRepository problemRepository;
+    private final UserRepository userRepository;
+    private final UserAnswerRepository userAnswerRepository;
+    private final WrongAnswerBookmarkRepository wrongAnswerBookmarkRepository;
+    private final UserStatisticsRepository userStatisticsRepository;
+    private final ProblemQueryMapper problemQueryMapper;
 
     @Transactional
     public Map<String, Object> submitAnswer(AnswerRequest request, String username) {
@@ -183,9 +189,10 @@ public class AnswerService {
 
     private Long resolveSubjectId(String problemType, Long problemId) {
         if ("OBJECTIVE".equals(problemType)) {
+            // DEBUG: [2026-05-26] Subject.id가 Integer이므로 longValue()로 변환
             return problemRepository.findById(problemId)
                     .map(Problem::getSubject)
-                    .map(subject -> subject != null ? subject.getId() : null)
+                    .map(subject -> subject != null ? subject.getId().longValue() : null)
                     .orElse(null);
         }
 

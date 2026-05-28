@@ -1,9 +1,5 @@
 package com.example.informationexam.controller;
 
-import com.example.informationexam.domain.problem.Problem;
-import com.example.informationexam.domain.problem.ProblemRepository;
-import com.example.informationexam.domain.problem.ProgrammingLanguageProblem;
-import com.example.informationexam.domain.problem.ProgrammingLanguageProblemRepository;
 import com.example.informationexam.domain.user.User;
 import com.example.informationexam.domain.useranswer.UserAnswer;
 import com.example.informationexam.service.UserService;
@@ -23,8 +19,6 @@ import java.util.stream.Collectors;
 public class UserAnswerApiController {
 
     private final UserAnswerRepository userAnswerRepository;
-    private final ProblemRepository problemRepository;
-    private final ProgrammingLanguageProblemRepository programmingLanguageProblemRepository;
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 

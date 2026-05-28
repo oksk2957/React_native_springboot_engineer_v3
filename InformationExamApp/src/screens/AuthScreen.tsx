@@ -6,90 +6,135 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
-import { ResponseType } from 'expo-auth-session';
 import { useAuthStore } from '../stores/authStore';
+import { supabase } from '../lib/supabase';
 
+// DEBUG: [Supabase-OAuth-2026-05-27] AuthScreen - Supabase OAuth 전환
+// 원인: Google OAuth HTTP origin 차단 → Supabase OAuth로 전환
+// 해결: expo-auth-session 제거, Supabase signInWithOAuth 사용
 WebBrowser.maybeCompleteAuthSession();
 
-const GOOGLE_WEB_CLIENT_ID =
-  '1033672402385-hdhb1unve0rebnh3sor0c6b8cljfkla8.apps.googleusercontent.com';
-
 export default function AuthScreen() {
-  const { isLoading, loginWithGoogleIdToken, setSessionId } = useAuthStore();
+  const { isLoading, loginWithSupabase, setSessionId } = useAuthStore();
   const [loginInProgress, setLoginInProgress] = useState(false);
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    webClientId: GOOGLE_WEB_CLIENT_ID,
-    responseType: ResponseType.IdToken,
-    scopes: ['openid', 'profile', 'email'],
-  });
-
-  useEffect(() => {
-    const completeGoogleLogin = async () => {
-      if (!response) {
-        return;
-      }
-
-      if (response.type === 'dismiss' || response.type === 'cancel') {
-        setLoginInProgress(false);
-        return;
-      }
-
-      if (response.type !== 'success') {
-        setLoginInProgress(false);
-        Alert.alert('로그인 실패', 'Google 로그인 인증이 완료되지 않았습니다.');
-        return;
-      }
-
-      try {
-        const idToken =
-          response.params?.id_token ||
-          response.authentication?.idToken;
-
-        if (!idToken) {
-          throw new Error('Google ID Token을 획득하지 못했습니다.');
-        }
-
-        const result = await loginWithGoogleIdToken(idToken);
-        if (result && typeof result === 'object' && 'sessionId' in result) {
-          setSessionId(typeof result.sessionId === 'number' ? result.sessionId : null);
-        }
-      } catch (error: any) {
-        console.error('[AuthScreen] Google 로그인 완료 처리 실패:', error.message || error);
-        Alert.alert(
-          '로그인 실패',
-          error.message || 'Google 로그인 처리 중 오류가 발생했습니다.'
-        );
-      } finally {
-        setLoginInProgress(false);
-      }
-    };
-
-    completeGoogleLogin();
-  }, [response, loginWithGoogleIdToken]);
-
-  const handleGoogleLogin = async () => {
-    if (!request) {
-      Alert.alert(
-        '로그인 준비 중',
-        'Google 로그인 요청을 준비하고 있습니다. 잠시 후 다시 시도해주세요.'
-      );
-      return;
+  // DEBUG: [Supabase-OAuth-2026-05-27] Supabase OAuth 로그인 처리
+  // 원인: Google OAuth HTTP origin 차단 → Supabase OAuth로 전환
+  // 해결: Supabase signInWithOAuth 사용, 백엔드로 access_token 전달
+  // 참고: Supabase Console Redirect URLs 설정에 맞춰 동적으로 redirectTo 설정
+  //       - 개발: http://localhost:9000/auth-callback
+  //       - Expo: exp://172.30.1.8:9100/--/auth-callback
+  //       - 프로덕션: com.oksky.myapp://auth-callback
+  const getRedirectUrl = (): string => {
+    const isDev = __DEV__;
+    const isWeb = Platform.OS === 'web';
+    
+    if (isWeb) {
+      // 웹 환경: localhost 개발 서버
+      return isDev ? 'http://localhost:9000/auth-callback' : 'https://gmhznnwecujoafdisscl.supabase.co';
     }
+    
+    // 네이티브 환경
+    if (isDev) {
+      // Expo 개발 환경
+      return 'exp://172.30.1.8:9100/--/auth-callback';
+    }
+    
+    // 프로덕션 환경
+    return 'com.oksky.myapp://auth-callback';
+  };
 
+  const handleSupabaseLogin = async () => {
+    console.log('[AuthScreen] Supabase OAuth 로그인 시작');
     setLoginInProgress(true);
+
     try {
-      await promptAsync();
+      // 1. Supabase OAuth 로그인 (Google Provider)
+      console.log('[AuthScreen] Supabase signInWithOAuth 호출');
+      const redirectTo = getRedirectUrl();
+      console.log('[AuthScreen] Redirect URL:', redirectTo);
+      
+      const { data: oauthData, error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          // DEBUG: [Supabase-OAuth-2026-05-27] redirectTo 수정
+          // 원인: Google OAuth IP 주소 불가 → Supabase OAuth로 전환
+          // 해결: Supabase Console에 설정된 Redirect URLs에 맞춰 동적 설정
+          //       CORS 고려: HTTPS 연결 사용, 웹/네이티브 환경 분기
+          redirectTo,
+          scopes: 'email profile openid',
+          queryParams: {
+            prompt: 'select_account',
+          },
+        },
+      });
+
+      if (oauthError) {
+        console.error('[AuthScreen] Supabase OAuth 오류:', oauthError);
+        throw new Error(oauthError.message);
+      }
+
+      console.log('[AuthScreen] Supabase OAuth URL:', oauthData.url);
+
+      // 2. WebBrowser에서 OAuth 열기
+      console.log('[AuthScreen] WebBrowser에서 OAuth 열기');
+      let result;
+      if (Platform.OS === 'web') {
+        // 웹: 직접 리다이렉트
+        window.location.href = oauthData.url;
+        return { requiresNickname: false, isNewUser: false };
+      } else {
+        // 모바일: WebBrowser 사용
+        result = await WebBrowser.openAuthSessionAsync(
+          oauthData.url,
+          redirectTo
+        );
+      }
+
+      console.log('[AuthScreen] WebBrowser 결과:', result);
+
+      if (result.type !== 'success') {
+        throw new Error('사용자가 로그인을 취소했습니다.');
+      }
+
+      // 3. OAuth 완료 후 세션 확인
+      console.log('[AuthScreen] OAuth 완료, 세션 확인');
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) {
+        console.error('[AuthScreen] 세션 획득 오류:', sessionError);
+        throw new Error(sessionError.message);
+      }
+
+      const accessToken = sessionData.session?.access_token;
+      
+      if (!accessToken) {
+        console.error('[AuthScreen] access_token을 획득하지 못했습니다.');
+        throw new Error('Supabase access_token을 획득하지 못했습니다.');
+      }
+
+      console.log('[AuthScreen] Supabase access_token 획득 완료');
+
+      // 4. 백엔드로 access_token 전달
+      console.log('[AuthScreen] 백엔드 /api/auth/google로 access_token 전달');
+      const loginResult = await loginWithSupabase();
+      
+      if (loginResult && typeof loginResult === 'object' && 'sessionId' in loginResult) {
+        setSessionId(typeof loginResult.sessionId === 'number' ? loginResult.sessionId : null);
+      }
+
+      console.log('[AuthScreen] 로그인 완료');
     } catch (error: any) {
-      console.error('[AuthScreen] Google 로그인 시작 실패:', error.message || error);
-      setLoginInProgress(false);
+      console.error('[AuthScreen] Supabase OAuth 로그인 실패:', error.message || error);
       Alert.alert(
         '로그인 실패',
-        error.message || 'Google 로그인 화면을 여는 중 오류가 발생했습니다.'
+        error.message || 'Supabase OAuth 로그인 처리 중 오류가 발생했습니다.'
       );
+    } finally {
+      setLoginInProgress(false);
     }
   };
 
@@ -105,10 +150,10 @@ export default function AuthScreen() {
         <TouchableOpacity
           style={[
             styles.googleButton,
-            (isLoading || loginInProgress || !request) && styles.googleButtonDisabled,
+            (isLoading || loginInProgress) && styles.googleButtonDisabled,
           ]}
-          onPress={handleGoogleLogin}
-          disabled={isLoading || loginInProgress || !request}
+          onPress={handleSupabaseLogin}
+          disabled={isLoading || loginInProgress}
           activeOpacity={0.8}
         >
           {isLoading || loginInProgress ? (

@@ -65,39 +65,17 @@ public class UserAnswer {
     protected void onUpdate() {
         this.submittedAt = LocalDateTime.now();
     }
-}
 
-    @PrePersist
-    protected void onCreate() {
-        if (this.submittedAt == null) {
-            this.submittedAt = LocalDateTime.now();
-        }
-        if (this.isCorrect == null) {
-            this.isCorrect = false;
-        }
-        // sessionId가 null이면 기본 세션 값 설정
-        if (this.sessionId == null) {
-            // 이 부분은 실제로는 발생하면 안 되지만, 안전성을 위해
-            // 사용자 식별이 가능한 경우 기본 세션 생성 로직을 추가할 수 있음
-            // 현재는 AnswerService에서 항상 세션을 생성하므로 이 블록은 실행되지 않음
-        }
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.submittedAt = LocalDateTime.now();
-    }
-    
-    // Added methods for compatibility with existing code
+    // DEBUG: [2026-05-26] 클래스 닫는 중괄호 뒤에 불필요한 메서드가 분리되어 있어 컴파일 오류 수정
     public String getProblemType() {
         return this.itemType;
     }
-    
+
     public String getProblemQuestion() {
         // This would need to be looked up from the appropriate problem repository
         return null;
     }
-    
+
     public String getCorrectAnswer() {
         // This would need to be looked up from the appropriate problem repository
         return null;

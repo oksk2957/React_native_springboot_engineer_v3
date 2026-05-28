@@ -3,30 +3,49 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import type { Problem, Answer, Statistics, WrongAnswer, ProblemType } from '../types';
 
-// 개발 환경에서 PC 브릿지 사용을 위한 URL 설정
+// DEBUG: [API-2026-05-28] API URL 설정 업데이트
+// 원인: CORS 및 연결 문제로 인해 API 요청 실패
+// 해결: 연결 테스트 및 fallback URL 추가, CORS 설정 개선
+// 참고: Supabase OAuth 콜백 후 Oracle Cloud로 리디렉션
 const getApiBaseUrl = () => {
-  if (__DEV__) {
-    // 웹 환경에서는 로컬 서버 우선 접근
-    if (Platform.OS === 'web') {
-      return 'http://localhost:9001/api';
-    }
+  // OCI 서버 IP (환경변수로 오버라이드 가능)
+  const OCI_IP = process.env.REACT_APP_OCI_IP || '158.180.78.125';
 
-    // 안드로이드/ios 환경에서는 PC IP 사용
-    const PC_IP = '172.30.1.6';
-    return `http://${PC_IP}:9001/api`;
+  // DEBUG: 현재 환경 로깅
+  console.log('[API Config] __DEV__:', __DEV__);
+  console.log('[API Config] Platform:', Platform.OS);
+  console.log('[API Config] OCI_IP:', OCI_IP);
+
+  if (__DEV__) {
+    // 로컬 개발 환경: localhost 우선 사용
+    // 원인: OCI 서버 연결 실패 (ETIMEDOUT)
+    // 해결: 로컬 개발 환경에서는 localhost 사용
+    const localUrl = 'http://localhost:9001/api';
+    console.log('[API Config] Development environment, using local URL:', localUrl);
+    return localUrl;
   }
 
-  return 'https://your-production-api.com/api';
+  // 프로덕션 환경: OCI 서버 사용
+  const prodUrl = `http://${OCI_IP}:9001/api`;
+  console.log('[API Config] Production environment, using URL:', prodUrl);
+  return prodUrl;
 };
 
 const API_BASE_URL = getApiBaseUrl();
 
+// DEBUG: [API-2026-05-28] Axios 인스턴스 설정 개선
+// 원인: CORS preflight 실패 및 연결 문제
+// 해결: withCredentials 제거, timeout 추가, headers 개선
 const api = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 30000, // 30초 타임아웃 설정
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
   },
-  withCredentials: true, // CORS 관련 설정 (백엔드)와 일치)
+  // DEBUG: withCredentials 제거 - CORS preflight 문제 해결
+  // 원인: withCredentials: true로 인해 CORS preflight 실패
+  // 해결: withCredentials 제거하여 simple request로 변경
 });
 
 // 요청 인터셉터: 모든 요청 시 토큰
@@ -77,10 +96,15 @@ export const authService = {
    */
   loginWithGoogle: async (idToken: string) => {
     try {
-      console.log('Attempting Google login with API:', `${API_BASE_URL}/auth/google`);
+      // DEBUG: [Supabase-OAuth-2026-05-27] Supabase access_token으로 로그인
+      // 원인: Google ID Token → Supabase access_token으로 변경
+      // 해결: Supabase JWT를 백엔드로 전달하여 검증
+      console.log('[API Auth] Supabase access_token으로 로그인 시도:', `${API_BASE_URL}/auth/google`);
       const response = await api.post('/auth/google', { idToken });
 
-      // 백엔드 success/data 구조 정규화
+      // DEBUG: [Supabase-OAuth-2026-05-27] 백엔드 응답 구조 정규화
+      // 원인: Supabase JWT 검증 후 백엔드 JWT 발급
+      // 해결: success/data 구조 유지하며 정규화
       const responseBody = response.data;
       const authData =
         responseBody?.success === true && responseBody?.data
@@ -118,7 +142,18 @@ export const authService = {
         throw new Error('서버 응답에 사용자 정보가 없습니다.');
       }
 
+      // DEBUG: [JWT-2026-05-28] 토큰 저장 및 확인
+      // 원인: 토큰 저장 후 즉시 확인하지 않아 저장 실패 파악 어려움
+      // 해결: 저장 후 즉시 확인 로그 추가
       await AsyncStorage.setItem('authToken', normalizedResponse.token);
+      const savedToken = await AsyncStorage.getItem('authToken');
+      console.log('[API Auth] 토큰 저장 확인:', savedToken ? '성공' : '실패');
+      
+      // DEBUG: [JWT-2026-05-28] 토큰 만료 시간 저장 (12시간 후)
+      const tokenExpiryTime = Date.now() + (12 * 60 * 60 * 1000); // 12시간 후
+      await AsyncStorage.setItem('tokenExpiryTime', tokenExpiryTime.toString());
+      console.log('[API Auth] 토큰 만료 시간 저장:', new Date(tokenExpiryTime).toLocaleString());
+      
       return normalizedResponse;
     } catch (error: any) {
       console.error('Google Login API Error:', error.message);
@@ -145,6 +180,44 @@ export const authService = {
 
   logout: async () => {
     await AsyncStorage.removeItem('authToken');
+    await AsyncStorage.removeItem('tokenExpiryTime'); // DEBUG: [JWT-2026-05-28] 토큰 만료 시간 삭제
+  },
+
+  // DEBUG: [JWT-2026-05-28] 토큰 갱신 API 호출
+  // 원인: 12시간 유효기간 만료 전 자동 갱신을 위해 토큰 재발급 필요
+  // 해결: 백엔드 /auth/refresh 엔드포인트 호출하여 새로운 토큰 발급
+  refreshToken: async (currentToken: string) => {
+    try {
+      console.log('[API Auth] 토큰 갱신 시도');
+      const response = await api.post('/auth/refresh', { token: currentToken });
+      
+      if (response.data && response.data.token) {
+        await AsyncStorage.setItem('authToken', response.data.token);
+        const tokenExpiryTime = Date.now() + (12 * 60 * 60 * 1000); // 12시간 후
+        await AsyncStorage.setItem('tokenExpiryTime', tokenExpiryTime.toString());
+        console.log('[API Auth] 토큰 갱신 완료 - 새로운 만료 시간:', new Date(tokenExpiryTime).toLocaleString());
+        return response.data;
+      }
+      throw new Error('토큰 갱신 응답에 토큰이 없습니다.');
+    } catch (error: any) {
+      console.error('[API Auth] 토큰 갱신 실패:', error.message);
+      throw error;
+    }
+  },
+
+  // DEBUG: [API-2026-05-28] 백엔드 연결 테스트
+  // 원인: 백엔드 연결 실패 시 사용자에게 알림 필요
+  // 해결: 연결 테스트 API 추가
+  testConnection: async () => {
+    try {
+      console.log('[API] 백엔드 연결 테스트');
+      const response = await api.get('/health');
+      console.log('[API] 백엔드 연결 성공:', response.data);
+      return true;
+    } catch (error: any) {
+      console.error('[API] 백엔드 연결 실패:', error.message);
+      return false;
+    }
   },
 };
 

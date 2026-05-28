@@ -24,11 +24,11 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="com.oksky.myapp" android:host="auth-callback" />
+        <data android:scheme="com.oksky.myapp" android:host="auth-callback"/>
       </intent-filter>
       <intent-filter android:autoVerify="true" data-generated="true">
         <action android:name="android.intent.action.VIEW"/>
-        <data android:scheme="com.informationexam.app"/>
+        <data android:scheme="com.oksky.myapp"/>
         <category android:name="android.intent.category.BROWSER"/>
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>

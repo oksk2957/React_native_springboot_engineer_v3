@@ -1,7 +1,6 @@
 package com.example.informationexam.controller.dto;
 
 import com.example.informationexam.domain.problem.Problem;
-import com.example.informationexam.domain.problem.ProblemType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
