@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -13,29 +13,18 @@ import {
   Platform,
 } from 'react-native';
 import { useAuthStore } from '../stores/authStore';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useCategoryStore, getCategoryIcons, getCategoryColors, getCategoryNames, Category } from '../stores/categoryStore';
+import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { fetchTheoryCards } from '../api/theoryApi';
 import { TheoryCard } from '../types/theory';
 
-const categoryIcons: Record<string, string> = {
-  '운영체제': '💻',
-  '네트워크': '🌐',
-  '데이터베이스': '🗄️',
-  '소프트웨어공학': '📋',
-  '정보보안': '🔒',
-  '애플리케이션테스트': '🧪',
-};
+// DEBUG: [카테고리 중앙화] 하드코딩 제거 - categoryStore에서 가져옴
+// 원인: HomeScreen과 TheoryScreen의 카테고리 불일치
+// 해결: categoryStore의 헬퍼 함수를 사용하여 동적으로 생성
 
-const categoryColors: Record<string, string> = {
-  '운영체제': '#4a90e2',
-  '네트워크': '#48bb78',
-  '데이터베이스': '#f6ad55',
-  '소프트웨어공학': '#9f7aea',
-  '정보보안': '#f56565',
-  '애플리케이션테스트': '#ed64a6',
-};
-
-const categories = Object.keys(categoryIcons);
+const categoryIcons = getCategoryIcons();
+const categoryColors = getCategoryColors();
+const categories = getCategoryNames();
 
 export default function TheoryScreen() {
   const route = useRoute() as any;
@@ -44,6 +33,17 @@ export default function TheoryScreen() {
   const targetProblemId = route?.params?.problemId;
   const [activeTab, setActiveTab] = useState<'flash' | 'subjective'>('flash');
   const [currentCategory, setCurrentCategory] = useState(route?.params?.category || '운영체제');
+
+  // DEBUG: [과목 동기화] route.params.category 변경 감지
+  // 원인: HomeScreen에서 navigation.navigate('Theory', { category: name })로 전달
+  // 해결: route.params.category가 변경되면 currentCategory를 즉시 업데이트
+  useEffect(() => {
+    const paramCategory = route?.params?.category;
+    if (paramCategory && paramCategory !== currentCategory) {
+      console.log('[TheoryScreen] route.params.category 변경 감지:', paramCategory);
+      setCurrentCategory(paramCategory);
+    }
+  }, [route?.params?.category]);
 
   // 통합된 카드 데이터 관리 (TheoryCard 타입 사용)
   const [cards, setCards] = useState<TheoryCard[]>([]);
@@ -124,8 +124,19 @@ export default function TheoryScreen() {
   const loadTheoryCards = async () => {
     setIsLoading(true);
     try {
+      // DEBUG: [이론카드 로딩] API 호출 시작
+      console.log(`[TheoryScreen] fetchTheoryCards 호출 - category: ${currentCategory}`);
       const data = await fetchTheoryCards(currentCategory);
       console.log(`[TheoryScreen] loaded cards: ${data?.length ?? 0}, category: ${currentCategory}`);
+      // DEBUG: [이론카드 로딩] 응답 데이터 상세 로깅
+      if (data && data.length > 0) {
+        console.log(`[TheoryScreen] 첫 번째 카드 샘플:`, JSON.stringify(data[0], null, 2));
+        const subjectiveCount = data.filter(c => c.cardType === 'SUBJECTIVE').length;
+        const flashcardCount = data.filter(c => c.cardType === 'FLASHCARD').length;
+        console.log(`[TheoryScreen] 카드 유형별 개수 - SUBJECTIVE: ${subjectiveCount}, FLASHCARD: ${flashcardCount}`);
+      } else {
+        console.warn(`[TheoryScreen] 빈 데이터 응답 - category: ${currentCategory}`);
+      }
       setCards(data || []);
       if (!targetProblemId) {
         setCurrentIndex(0);
@@ -133,9 +144,18 @@ export default function TheoryScreen() {
         setAnswer('');
         setShowAnswer(false);
       }
-    } catch (error) {
-      console.error('Error loading theory cards:', error);
-      Alert.alert('오류', '데이터를 불러오지 못했습니다.');
+    } catch (error: any) {
+      // DEBUG: [이론카드 로딩] 에러 상세 로깅
+      console.error('[TheoryScreen] Error loading theory cards:', error);
+      console.error('[TheoryScreen] Error message:', error?.message);
+      console.error('[TheoryScreen] Error stack:', error?.stack);
+      Alert.alert(
+        '데이터 로딩 실패',
+        `서버에서 데이터를 불러올 수 없습니다.\n\n` +
+        `카테고리: ${currentCategory}\n` +
+        `오류: ${error?.message || '알 수 없는 오류'}\n\n` +
+        `네트워크 연결을 확인하거나 서버 상태를 점검해주세요.`
+      );
     } finally {
       setIsLoading(false);
     }
@@ -311,7 +331,19 @@ export default function TheoryScreen() {
               </>
             ) : (
               <View style={styles.emptyContainer}>
-                <Text style={[styles.emptyText, isDark && styles.textWhite]}>데이터가 없습니다.</Text>
+                {/* DEBUG: [빈 상태] 데이터가 없을 때 표시되는 메시지 */}
+                <Text style={[styles.emptyText, isDark && styles.textWhite]}>
+                  {activeTab === 'subjective' ? '주관식 문제' : '플래시카드'}가 없습니다.
+                </Text>
+                <Text style={[styles.emptySubText, isDark && styles.textWhite]}>
+                  카테고리: {currentCategory}
+                </Text>
+                <TouchableOpacity
+                  style={[styles.retryButton, { backgroundColor: themeColor }]}
+                  onPress={() => loadTheoryCards()}
+                >
+                  <Text style={styles.retryButtonText}>다시 불러오기</Text>
+                </TouchableOpacity>
               </View>
             )}
           </View>
@@ -384,7 +416,10 @@ const styles = StyleSheet.create({
   answerLabel: { fontSize: 18, fontWeight: 'bold', marginBottom: 8 },
   resultExplanationText: { fontSize: 14, color: '#64748b', textAlign: 'center', lineHeight: 20 },
   emptyContainer: { padding: 40, alignItems: 'center' },
-  emptyText: { color: '#64748b', fontSize: 16 },
+  emptyText: { color: '#64748b', fontSize: 16, marginBottom: 8 },
+  emptySubText: { color: '#94a3b8', fontSize: 14, marginBottom: 20 },
+  retryButton: { paddingHorizontal: 24, paddingVertical: 12, borderRadius: 8 },
+  retryButtonText: { color: '#fff', fontSize: 14, fontWeight: '600' },
   textWhite: { color: '#fff' },
   toastContainer: { position: 'absolute', top: 60, left: 20, right: 20, padding: 16, borderRadius: 12, alignItems: 'center', zIndex: 1000 },
   toastSuccess: { backgroundColor: '#48bb78' },

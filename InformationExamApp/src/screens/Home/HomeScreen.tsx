@@ -10,42 +10,33 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAuthStore } from '../../stores/authStore';
+import { useCategoryStore, CATEGORIES, Category } from '../../stores/categoryStore';
 import { Card, ProgressBar } from '../../components';
 import { colors, typography, spacing, borderRadius, shadows } from '../../theme';
 
-// 대과목 분류 데이터
-const CATEGORIES = [
-  { id: 'screen-design', name: '화면설계', icon: '📐', color: '#007AFF' },
-  { id: 'programming', name: '프로그래밍 언어', icon: '💻', color: '#34C759' },
-  { id: 'database', name: '데이터베이스', icon: '🗄️', color: '#FF9500' },
-  { id: 'security', name: '정보보안', icon: '🔒', color: '#FF3B30' },
-  { id: 'testing', name: '애플리케이션 테스트', icon: '🧪', color: '#AF52DE' },
-  { id: 'application-sw', name: '응용SW기초', icon: '📱', color: '#5AC8FA' },
-] as const;
-
-type CategoryId = typeof CATEGORIES[number]['id'];
+// DEBUG: [카테고리 중앙화] 하드코딩 제거 - useCategoryStore에서 가져옴
+// 원인: HomeScreen과 TheoryScreen의 카테고리 불일치
+// 해결: categoryStore의 CATEGORIES를 import하여 사용
 
 type RootStackParamList = {
   Home: undefined;
-  Problem: { categoryId?: CategoryId };
+  Problem: { categoryId?: string };
 };
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 const examDate = new Date('2026-06-14');
 
-const sampleProblemCount: Record<CategoryId, number> = {
-  'screen-design': 3,
-  'programming': 3,
-  'database': 3,
-  'security': 3,
-  'testing': 3,
-  'application-sw': 3,
-};
+// DEBUG: [카테고리 중앙화] sampleProblemCount도 CATEGORIES 기반으로 동적 생성
+const sampleProblemCount: Record<string, number> = Object.fromEntries(
+  CATEGORIES.map(c => [c.id, 3])
+);
 
 export const HomeScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const { user } = useAuthStore();
+  // DEBUG: [탭 전환 카테고리 유지] categoryStore에서 setSelectedCategory 가져옴
+  const { setSelectedCategory } = useCategoryStore();
   
   const todayStats = {
     solved: 15,
@@ -61,8 +52,15 @@ export const HomeScreen: React.FC = () => {
   
   const daysUntilExam = getDaysUntilExam();
   
-  const handleCategoryPress = (categoryId: CategoryId) => {
-    navigation.navigate('Problem', { categoryId });
+  const handleCategoryPress = (categoryId: string) => {
+    // DEBUG: [과목 동기화] 과목 클릭 시 category 이름을 파라미터로 직접 전달
+    // 원인: Zustand Store 방식에서 타이밍 문제 발생
+    // 해결: Navigation 파라미터로 직접 전달하여 TheoryScreen에서 즉시 반영
+    const selectedCat = CATEGORIES.find(c => c.id === categoryId);
+    if (selectedCat) {
+      console.log('[HomeScreen] 과목 선택:', selectedCat.name, '→ Theory 탭 이동');
+      navigation.navigate('Theory' as never, { category: selectedCat.name } as never);
+    }
   };
   
   const recentActivities = [
@@ -198,6 +196,22 @@ export const HomeScreen: React.FC = () => {
               </View>
               <Text style={styles.quickMenuTitle}>이론 학습</Text>
               <Text style={styles.quickMenuSubtitle}>플래시 카드</Text>
+            </TouchableOpacity>
+
+            {/* DEBUG: [UX-개선] 실기 주관식 랜덤 학습 → 이론 탭으로 이동 */}
+            <TouchableOpacity
+              style={styles.quickMenuItem}
+              onPress={() => {
+                console.log('[Navigation] 실기 주관식 랜덤 학습 → TheoryTab 이동');
+                navigation.navigate('Theory' as never);
+              }}
+              activeOpacity={0.7}
+            >
+              <View style={[styles.quickMenuIcon, { backgroundColor: '#FF9500' + '20' }]}>
+                <Text style={styles.quickMenuEmoji}>✍️</Text>
+              </View>
+              <Text style={styles.quickMenuTitle}>실기 주관식</Text>
+              <Text style={styles.quickMenuSubtitle}>랜덤 학습</Text>
             </TouchableOpacity>
             
             <TouchableOpacity

@@ -43,13 +43,24 @@ public class ProblemApiController {
 
     @GetMapping("/theory")
     public ResponseEntity<List<TheoryCardDto>> getTheoryCards(@RequestParam String category) {
-        log.info("[MVC2] 이론 카드 조회: category={}", category);
+        // DEBUG: [이론 카드 API] 요청 파라미터 로깅
+        log.info("[MVC2] 이론 카드 조회 요청 - category: {}", category);
+        
         List<Map<String, Object>> maps = problemQueryMapper.selectTheoryCardsByCategory(category);
+        
+        // DEBUG: [이론 카드 API] 쿼리 결과 로깅
+        log.info("[MVC2] 이론 카드 쿼리 결과 - category: {}, 결과 수: {}", category, maps.size());
+        if (!maps.isEmpty()) {
+            log.debug("[MVC2] 첫 번째 결과 샘플: {}", maps.get(0));
+        }
 
         List<TheoryCardDto> cardDtos = maps.stream()
             .map(TheoryCardDto::fromMap)
             .collect(Collectors.toList());
 
+        // DEBUG: [이론 카드 API] 최종 응답 로깅
+        log.info("[MVC2] 이론 카드 응답 - category: {}, DTO 수: {}", category, cardDtos.size());
+        
         return ResponseEntity.ok(cardDtos);
     }
 

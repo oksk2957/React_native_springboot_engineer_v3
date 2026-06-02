@@ -52,7 +52,11 @@ export default function HomeScreen() {
       title: '실기 주관식 랜덤 학습',
       subtitle: `잔여 주관식: ${subjectiveCount}문제`,
       icon: '📝',
-      onPress: () => navigation.navigate('Problem', { mode: 'subjective' }),
+      // DEBUG: [UX-개선] 실기 주관식 랜덤 학습 클릭 시 이론 탭으로 이동
+      onPress: () => {
+        console.log('[Navigation] 실기 주관식 랜덤 학습 → TheoryTab 이동');
+        navigation.navigate('Theory' as never);
+      },
     },
     {
       title: '이어서 풀기',
