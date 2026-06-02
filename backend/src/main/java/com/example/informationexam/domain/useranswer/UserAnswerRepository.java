@@ -1,6 +1,7 @@
 package com.example.informationexam.domain.useranswer;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -37,4 +38,11 @@ public interface UserAnswerRepository extends JpaRepository<UserAnswer, Long> {
     List<UserAnswer> findByUserIdAndIsCorrect(Long userId, boolean isCorrect);
 
     List<UserAnswer> findByUserIdAndIsCorrectAndItemType(Long userId, boolean isCorrect, String itemType);
+
+    // DEBUG: [오답삭제] 로그인 시 7일 이상 된 오답 기록 삭제
+    // 원인: 무료/유료 구분 없이 모든 사용자 동일하게 7일 기준 적용
+    // 해결: 순수 SQL 쿼리로 구현 (트리거, 인덱스 없이)
+    @Modifying
+    @Query(value = "DELETE FROM user_answer WHERE user_id = :userId AND submitted_at < DATEADD('DAY', -7, CURRENT_TIMESTAMP)", nativeQuery = true)
+    int deleteOldWrongAnswers(@Param("userId") Long userId);
 }

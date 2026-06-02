@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.informationexam.mapper.TheoryMapper">
+    <!-- DEBUG: [주관식 보기] 쿼리에 option1~5 컬럼 추가 -->
+    <!-- 원인: 주관식 문제를 5개 보기 중 선택하는 형태로 변경 -->
+    <!-- 해결: subjective_problems에서 option1~5를 조회하여 프론트엔드에 전달 -->
     <select id="selectTheoryCardsByCategory" parameterType="string" resultType="TheoryCardDto">
         <!-- 주관식 카드 -->
         SELECT
@@ -10,7 +13,12 @@
             sp.question AS frontText,
             sp.answer AS backText,
             sp.explanation,
-            sp.difficulty
+            sp.difficulty,
+            sp.option1,
+            sp.option2,
+            sp.option3,
+            sp.option4,
+            sp.option5
         FROM subjective_problems sp
         INNER JOIN subject s ON sp.subject_id = s.id
         WHERE s.name = #{category}
@@ -25,7 +33,12 @@
             lc.front_text AS frontText,
             lc.back_text AS backText,
             lc.explanation,
-            0 AS difficulty
+            0 AS difficulty,
+            NULL AS option1,
+            NULL AS option2,
+            NULL AS option3,
+            NULL AS option4,
+            NULL AS option5
         FROM learning_card lc
         INNER JOIN subject s ON lc.subject_id = s.id
         WHERE s.name = #{category}

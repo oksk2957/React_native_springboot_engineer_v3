@@ -58,6 +58,12 @@ export default function TheoryScreen() {
   const [toastConfig, setToastConfig] = useState({ message: '', type: 'success' });
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  // DEBUG: [주관식 보기] 주관식 퀴즈를 5개 보기 중 선택하는 형태로 변경
+  // 원인: 사용자가 TextInput 대신 5개 보기 버튼 형태로 변경 요청
+  // 해결: 선택된 보기와 셔플된 보기 상태 추가
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
+
   const isDark = darkMode;
   const themeColor = categoryColors[currentCategory] || '#4a90e2';
 
@@ -178,6 +184,8 @@ export default function TheoryScreen() {
     setIsFlipped(false);
     setShowAnswer(false);
     setAnswer('');
+    // DEBUG: [주관식 보기] 다음 문제로 이동 시 선택 상태 초기화
+    setSelectedOption(null);
   };
 
   const handlePrev = () => {
@@ -186,6 +194,8 @@ export default function TheoryScreen() {
     setIsFlipped(false);
     setShowAnswer(false);
     setAnswer('');
+    // DEBUG: [주관식 보기] 이전 문제로 이동 시 선택 상태 초기화
+    setSelectedOption(null);
   };
 
   const handleCheckAnswer = () => {
@@ -206,6 +216,39 @@ export default function TheoryScreen() {
       showToast('오답입니다. ✍️', 'error');
     }
   };
+
+  // DEBUG: [주관식 보기] 주관식 퀴즈를 5개 보기 중 선택하는 형태로 변경
+  // 원인: 사용자가 TextInput 대신 5개 보기 버튼 형태로 변경 요청
+  // 해결: 선택된 보기와 정답을 비교하는 핸들러 추가
+  const handleOptionSelect = (option: string) => {
+    if (showAnswer) return; // 이미 정답을 확인한 경우 선택 불가
+    setSelectedOption(option);
+  };
+
+  // DEBUG: [주관식 보기] Fisher-Yates 셔플 알고리즘으로 보기 순서 랜덤화
+  // 원인: 보기가 항상 같은 순서로 표시되면 정답 위치를 외울 수 있음
+  // 해결: 문제를 표시할 때마다 보기를 랜덤하게 섞음
+  const shuffleArray = (array: string[]): string[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // DEBUG: [주관식 보기] 현재 카드가 변경될 때 보기를 셔플
+  // 원인: 매번 같은 순서로 보기가 표시되는 것을 방지
+  // 해결: currentCard가 변경될 때마다 options를 셔플하여 shuffledOptions에 저장
+  useEffect(() => {
+    if (currentCard && currentCard.options && currentCard.options.length > 0) {
+      setShuffledOptions(shuffleArray(currentCard.options));
+    } else {
+      setShuffledOptions([]);
+    }
+    setSelectedOption(null);
+    setShowAnswer(false);
+  }, [currentCard?.id]);
 
   if (isLoading) {
     return (
@@ -301,16 +344,81 @@ export default function TheoryScreen() {
                           {/* frontText 카멜케이스 사용 */}
                           <Text style={[styles.definitionText, isDark && styles.textWhite]}>{currentCard.frontText}</Text>
                         </View>
-                        <TextInput
-                          style={[styles.answerInput, isDark && styles.inputDark]}
-                          placeholder="정답을 입력하세요"
-                          placeholderTextColor="#999"
-                          value={answer}
-                          onChangeText={setAnswer}
-                        />
-                        <TouchableOpacity style={[styles.checkButton, { backgroundColor: themeColor }]} onPress={handleCheckAnswer}>
-                          <Text style={styles.checkButtonText}>정답 확인</Text>
-                        </TouchableOpacity>
+
+                        {/* DEBUG: [주관식 보기] TextInput을 5개 보기 버튼으로 변경 */}
+                        {/* 원인: 사용자가 TextInput 대신 5개 보기 버튼 형태로 변경 요청 */}
+                        {/* 해결: options가 있으면 보기 버튼 표시, 없으면 기존 TextInput 유지 */}
+                        {shuffledOptions.length > 0 ? (
+                          <View style={styles.optionsContainer}>
+                            {shuffledOptions.map((option, index) => {
+                              const isSelected = selectedOption === option;
+                              const isCorrect = option.toLowerCase() === (currentCard.backText || '').toLowerCase();
+                              const showResult = showAnswer;
+
+                              let buttonStyle = [styles.optionButton, isDark && styles.optionButtonDark];
+                              let textStyle = [styles.optionText, isDark && styles.textWhite];
+
+                              if (showResult) {
+                                if (isCorrect) {
+                                  buttonStyle = [...buttonStyle, styles.optionButtonCorrect];
+                                  textStyle = [...textStyle, styles.optionTextCorrect];
+                                } else if (isSelected && !isCorrect) {
+                                  buttonStyle = [...buttonStyle, styles.optionButtonWrong];
+                                  textStyle = [...textStyle, styles.optionTextWrong];
+                                }
+                              } else if (isSelected) {
+                                buttonStyle = [...buttonStyle, styles.optionButtonSelected, { borderColor: themeColor }];
+                                textStyle = [...textStyle, { color: themeColor }];
+                              }
+
+                              return (
+                                <TouchableOpacity
+                                  key={index}
+                                  style={buttonStyle}
+                                  onPress={() => handleOptionSelect(option)}
+                                  disabled={showAnswer}
+                                >
+                                  <Text style={styles.optionNumber}>{index + 1}</Text>
+                                  <Text style={textStyle}>{option}</Text>
+                                </TouchableOpacity>
+                              );
+                            })}
+                          </View>
+                        ) : (
+                          <>
+                            <TextInput
+                              style={[styles.answerInput, isDark && styles.inputDark]}
+                              placeholder="정답을 입력하세요"
+                              placeholderTextColor="#999"
+                              value={answer}
+                              onChangeText={setAnswer}
+                            />
+                            <TouchableOpacity style={[styles.checkButton, { backgroundColor: themeColor }]} onPress={handleCheckAnswer}>
+                              <Text style={styles.checkButtonText}>정답 확인</Text>
+                            </TouchableOpacity>
+                          </>
+                        )}
+
+                        {/* DEBUG: [주관식 보기] 보기 선택 후 정답 확인 버튼 */}
+                        {/* 원인: 보기 버튼을 선택한 후 정답을 확인해야 함 */}
+                        {/* 해결: 선택된 보기와 정답을 비교하는 버튼 추가 */}
+                        {shuffledOptions.length > 0 && selectedOption && !showAnswer && (
+                          <TouchableOpacity
+                            style={[styles.checkButton, { backgroundColor: themeColor, marginTop: 16 }]}
+                            onPress={() => {
+                              const isCorrect = selectedOption.toLowerCase() === (currentCard.backText || '').toLowerCase();
+                              if (isCorrect) {
+                                showToast('정답입니다! 🎉', 'success');
+                              } else {
+                                showToast('오답입니다. ✍️', 'error');
+                              }
+                              setShowAnswer(true);
+                            }}
+                          >
+                            <Text style={styles.checkButtonText}>정답 확인</Text>
+                          </TouchableOpacity>
+                        )}
+
                         {showAnswer && (
                           <View style={styles.answerResult}>
                             {/* backText 카멜케이스 사용 */}
@@ -431,4 +539,62 @@ const styles = StyleSheet.create({
   sideNavRight: { marginLeft: -20 },
   sideNavText: { fontSize: 24, color: '#64748b', fontWeight: 'bold' },
   cardStage: { flex: 1 },
+  // DEBUG: [주관식 보기] 5개 보기 버튼 스타일 추가
+  // 원인: TextInput 대신 5개 보기 버튼 형태로 변경
+  // 해결: 보기 버튼, 선택 상태, 정답/오답 표시 스타일 정의
+  optionsContainer: { marginTop: 20, width: '100%' },
+  optionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 10,
+  },
+  optionButtonDark: {
+    backgroundColor: '#333',
+    borderColor: '#444',
+  },
+  optionButtonSelected: {
+    borderWidth: 2,
+    backgroundColor: 'rgba(74, 144, 226, 0.1)',
+  },
+  optionButtonCorrect: {
+    backgroundColor: 'rgba(72, 187, 120, 0.2)',
+    borderColor: '#48bb78',
+    borderWidth: 2,
+  },
+  optionButtonWrong: {
+    backgroundColor: 'rgba(245, 101, 101, 0.2)',
+    borderColor: '#f56565',
+    borderWidth: 2,
+  },
+  optionNumber: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#e2e8f0',
+    textAlign: 'center',
+    lineHeight: 28,
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#64748b',
+    marginRight: 12,
+  },
+  optionText: {
+    flex: 1,
+    fontSize: 15,
+    color: '#334155',
+    lineHeight: 22,
+  },
+  optionTextCorrect: {
+    color: '#22543d',
+    fontWeight: '600',
+  },
+  optionTextWrong: {
+    color: '#c53030',
+    fontWeight: '600',
+  },
 });
