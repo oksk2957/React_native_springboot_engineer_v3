@@ -27,8 +27,12 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date validity = new Date(now.getTime() + tokenValidityInSeconds * 1000);
 
+        // DEBUG: [2026-06-08] claim 키 불일치 수정
+        // 원인: subject()는 "sub" 클레임만 생성, 컨트롤러는 "username"을 찾음
+        // 해결: "username" claim 명시적 추가
         return Jwts.builder()
                 .subject(username)
+                .claim("username", username)
                 .issuedAt(now)
                 .expiration(validity)
                 .signWith(getSigningKey())

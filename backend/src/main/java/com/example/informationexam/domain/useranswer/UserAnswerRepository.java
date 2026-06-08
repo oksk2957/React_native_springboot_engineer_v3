@@ -42,7 +42,8 @@ public interface UserAnswerRepository extends JpaRepository<UserAnswer, Long> {
     // DEBUG: [오답삭제] 로그인 시 7일 이상 된 오답 기록 삭제
     // 원인: 무료/유료 구분 없이 모든 사용자 동일하게 7일 기준 적용
     // 해결: 순수 SQL 쿼리로 구현 (트리거, 인덱스 없이)
+    // 수정: DATEADD(MySQL/SQL Server) → INTERVAL '7 days'(PostgreSQL) 함수 변경 (2026-06-09)
     @Modifying
-    @Query(value = "DELETE FROM user_answer WHERE user_id = :userId AND submitted_at < DATEADD('DAY', -7, CURRENT_TIMESTAMP)", nativeQuery = true)
+    @Query(value = "DELETE FROM user_answer WHERE user_id = :userId AND submitted_at < CURRENT_TIMESTAMP - INTERVAL '7 days'", nativeQuery = true)
     int deleteOldWrongAnswers(@Param("userId") Long userId);
 }

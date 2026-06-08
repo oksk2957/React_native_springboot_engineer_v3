@@ -31,7 +31,8 @@ public class StudySession {
     private LocalDateTime updatedAt;
 
     @Builder
-    public StudySession(String googleId, Long userId) {
+    public StudySession(String sessionKey, String googleId, Long userId) {
+        this.sessionKey = sessionKey;
         this.googleId = googleId;
         this.userId = userId;
         this.createdAt = LocalDateTime.now();

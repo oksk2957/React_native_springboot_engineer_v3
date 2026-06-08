@@ -20,12 +20,21 @@ public class StatisticsController {
     private final com.example.informationexam.config.JwtTokenProvider jwtTokenProvider;
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getStatistics(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.replace("Bearer ", "");
-        String username = jwtTokenProvider.getUsername(token);
-        User user = userService.getUserByUsername(username);
-        
-        return ResponseEntity.ok(statisticsService.getOverallStatistics(user.getId()));
+    public ResponseEntity<Map<String, Object>> getStatistics(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        Long userId = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            try {
+                String token = authHeader.replace("Bearer ", "");
+                String username = jwtTokenProvider.getUsername(token);
+                User user = userService.getUserByUsername(username);
+                userId = user.getId();
+            } catch (Exception e) {
+                // 토큰이 유효하지 않아도 전체 통계는 반환하도록 예외 처리
+            }
+        }
+
+        return ResponseEntity.ok(statisticsService.getOverallStatistics(userId));
     }
 
     @GetMapping("/subjective-count")
@@ -46,5 +55,30 @@ public class StatisticsController {
         
         response.put("count", statisticsService.getSubjectiveRemainingCount(userId));
         return ResponseEntity.ok(response);
+    }
+
+    // DEBUG: [2026-06-07] 과목별 시도 횟수 랭킹 조회
+    @GetMapping("/subject-ranking")
+    public ResponseEntity<?> getSubjectRanking(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        Long userId = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            try {
+                String token = authHeader.replace("Bearer ", "");
+                String username = jwtTokenProvider.getUsername(token);
+                User user = userService.getUserByUsername(username);
+                userId = user.getId();
+            } catch (Exception e) {
+                // 토큰이 유효하지 않아도 빈 결과 반환
+                return ResponseEntity.ok(new java.util.ArrayList<>());
+            }
+        }
+
+        // userId가 없으면 빈 결과 반환 (로그인 필요 없음)
+        if (userId == null) {
+            return ResponseEntity.ok(new java.util.ArrayList<>());
+        }
+
+        return ResponseEntity.ok(statisticsService.getSubjectRanking(userId));
     }
 }

@@ -5,6 +5,10 @@ import com.example.informationexam.domain.problem.Problem;
 import com.example.informationexam.domain.problem.ProblemRepository;
 import com.example.informationexam.domain.user.User;
 import com.example.informationexam.domain.user.UserRepository;
+import com.example.informationexam.domain.useranswer.StudySession;
+import com.example.informationexam.domain.useranswer.StudySessionItem;
+import com.example.informationexam.domain.useranswer.StudySessionItemRepository;
+import com.example.informationexam.domain.useranswer.StudySessionRepository;
 import com.example.informationexam.domain.useranswer.UserAnswer;
 import com.example.informationexam.domain.useranswer.UserAnswerRepository;
 import com.example.informationexam.domain.useranswer.WrongAnswerBookmark;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,6 +37,11 @@ public class AnswerService {
     private final WrongAnswerBookmarkRepository wrongAnswerBookmarkRepository;
     private final UserStatisticsRepository userStatisticsRepository;
     private final ProblemQueryMapper problemQueryMapper;
+    // DEBUG: [2026-06-07] study_session/study_session_item 저장 추가
+    // 원인: 문제 풀이 시 user_answer만 저장되어 통계 랭킹 쿼리가 빈 결과를 반환
+    // 해결: submitAnswer에서 StudySessionItem도 함께 저장
+    private final StudySessionRepository studySessionRepository;
+    private final StudySessionItemRepository studySessionItemRepository;
 
     @Transactional
     public Map<String, Object> submitAnswer(AnswerRequest request, String username) {
@@ -61,57 +71,108 @@ public class AnswerService {
         // 정답 판정
         boolean isCorrect = correctAnswer.trim().equalsIgnoreCase(submittedAnswer.trim());
         log.info("[AnswerService] 정답 판정 완료 - problemId: {}, isCorrect: {}", problemId, isCorrect);
-        
-        // 사용자가 명시된 경우 DB에 저장
-        if (username != null) {
-            Optional<User> userOptional = userRepository.findByUsername(username);
-            if (userOptional.isEmpty()) {
-                userOptional = userRepository.findByEmail(username);
-            }
 
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                log.info("[AnswerService] 사용자 저장 처리 시작 - userId: {}, problemId: {}, problemType: {}, isCorrect: {}", user.getId(), problemId, problemType, isCorrect);
-                
+        // DEBUG: [2026-06-08] username null 체크 로그
+        if (username == null || username.isEmpty()) {
+            log.warn("[AnswerService] username이 null 또는 비어있음 - DB 저장 생략 (로그인 필요)");
+            log.warn("[AnswerService] 현재 응답은 정답 판정만 반환: isCorrect={}, question={}", isCorrect, question);
+            Map<String, Object> resultWithoutUser = new HashMap<>();
+            resultWithoutUser.put("isCorrect", isCorrect);
+            resultWithoutUser.put("correctAnswer", correctAnswer);
+            resultWithoutUser.put("explanation", explanation);
+            resultWithoutUser.put("question", question);
+            return resultWithoutUser;
+        }
+
+        // 사용자가 명시된 경우 DB에 저장
+        // DEBUG: [2026-06-09] 미완료12 수정 - 중복 null 체크 제거
+        // 원인: 라인 76에서 username null이면 이미 return됨 → 여기선 항상 null이 아님
+        // 해결: 불필요한 if (username != null) 제거로 코드 가독성 향상
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            userOptional = userRepository.findByEmail(username);
+        }
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            log.info("[AnswerService] 사용자 저장 처리 시작 - userId: {}, problemId: {}, problemType: {}, isCorrect: {}", user.getId(), problemId, problemType, isCorrect);
+
+            try {
+                // DEBUG: [2026-06-07] sessionId 자동 생성
+                // 원인: sessionId가 null이면 @PrePersist에서 IllegalStateException 발생
+                // 해결: UUID로 자동 생성하여 저장
+                UserAnswer userAnswer = UserAnswer.builder()
+                        .userId(user.getId())
+                        .sessionId(UUID.randomUUID().toString())
+                        .itemType(problemType)
+                        .referenceId(problemId)
+                        .submittedAnswer(submittedAnswer)
+                        .isCorrect(isCorrect)
+                        .build();
+                userAnswerRepository.save(userAnswer);
+                log.info("[AnswerService] UserAnswer 저장 성공 - userId: {}, problemId: {}, problemType: {}", user.getId(), problemId, problemType);
+
+                // DEBUG: [2026-06-07] StudySessionItem 저장 추가
+                // 원인: 통계 랭킹 쿼리(selectSubjectRanking)가 study_session_item 기반으로
+                //       작성되어 있으나, submitAnswer에서는 user_answer만 저장하여
+                //       통계/랭킹 데이터가 비어 있음
+                // 해결: StudySession을 find-or-create 하고 StudySessionItem을 저장
                 try {
-                    UserAnswer userAnswer = UserAnswer.builder()
-                            .userId(user.getId())
-                            .sessionId(null)
+                    StudySession session = studySessionRepository.findByUserId(user.getId())
+                            .orElseGet(() -> {
+                                String sessionKey = "sess-" + user.getId() + "-" + System.currentTimeMillis();
+                                log.info("[AnswerService] 새 StudySession 생성 - userId: {}, sessionKey: {}", user.getId(), sessionKey);
+                                StudySession newSession = new StudySession(sessionKey, user.getEmail(), user.getId());
+                                return studySessionRepository.save(newSession);
+                            });
+                    session.touch();
+                    studySessionRepository.save(session);
+
+                    Long subjectId = resolveSubjectId(problemType, problemId);
+                    StudySessionItem sessionItem = StudySessionItem.builder()
+                            .sessionId(session.getId())
                             .itemType(problemType)
                             .referenceId(problemId)
-                            .submittedAnswer(submittedAnswer)
+                            .subjectId(subjectId != null ? subjectId : 0L)
+                            .itemOrder(0)
+                            .isAnswered(true)
                             .isCorrect(isCorrect)
+                            .userSubmittedAnswer(submittedAnswer)
+                            .bookmarkedWrong(!isCorrect)
                             .build();
-                    userAnswerRepository.save(userAnswer);
-                    log.info("[AnswerService] UserAnswer 저장 성공 - userId: {}, problemId: {}, problemType: {}", user.getId(), problemId, problemType);
-                } catch (Exception e) {
-                    log.error("[AnswerService] UserAnswer 저장 실패 - userId: {}, problemId: {}, problemType: {}, submittedAnswer: {}, 오류: {}", user.getId(), problemId, problemType, submittedAnswer, e.getMessage(), e);
-                    throw new RuntimeException("답안 저장 중 오류가 발생했습니다.", e);
+                    studySessionItemRepository.save(sessionItem);
+                    log.info("[AnswerService] StudySessionItem 저장 성공 - sessionId: {}, userId: {}, problemId: {}, problemType: {}", session.getId(), user.getId(), problemId, problemType);
+                } catch (Exception ex) {
+                    log.error("[AnswerService] StudySessionItem 저장 실패 (비치명적) - userId: {}, problemId: {}, 오류: {}", user.getId(), problemId, ex.getMessage(), ex);
+                    // StudySessionItem 저장 실패는 user_answer 저장을 막지 않음
                 }
-
-                if (!isCorrect) {
-                    log.info("[AnswerService] WrongAnswerBookmark 저장 시도 - userId: {}, problemId: {}, problemType: {}", user.getId(), problemId, problemType);
-                    try {
-                        log.debug("[AnswerService] WrongAnswerBookmark insert 준비 - userId: {}, problemId: {}, problemType: {}", user.getId(), problemId, problemType);
-                        upsertWrongAnswerBookmarkIfAbsent(user.getId(), problemType, problemId);
-                        log.info("[AnswerService] WrongAnswerBookmark 저장 성공 - userId: {}, problemId: {}", user.getId(), problemId);
-                    } catch (Exception e) {
-                        log.error("[AnswerService] WrongAnswerBookmark 저장 실패 - userId: {}, problemId: {}, problemType: {}, 오류: {}", user.getId(), problemId, problemType, e.getMessage(), e);
-                        throw new RuntimeException("오답 북마크 저장 중 오류가 발생했습니다.", e);
-                    }
-                }
-
-                log.info("[AnswerService] UserStatistics 저장 시도 - userId: {}, problemId: {}, problemType: {}, isCorrect: {}", user.getId(), problemId, problemType, isCorrect);
-                try {
-                    upsertUserStatistics(user.getId(), problemType, problemId, isCorrect);
-                    log.info("[AnswerService] UserStatistics 저장 성공 - userId: {}, problemId: {}, problemType: {}", user.getId(), problemId, problemType);
-                } catch (Exception e) {
-                    log.error("[AnswerService] UserStatistics 저장 실패 - userId: {}, problemId: {}, problemType: {}, 오류: {}", user.getId(), problemId, problemType, e.getMessage(), e);
-                    throw new RuntimeException("통계 저장 중 오류가 발생했습니다.", e);
-                }
-            } else {
-                log.warn("[AnswerService] 사용자 식별 실패로 저장 생략 - username: {}", username);
+            } catch (Exception e) {
+                log.error("[AnswerService] UserAnswer 저장 실패 - userId: {}, problemId: {}, problemType: {}, submittedAnswer: {}, 오류: {}", user.getId(), problemId, problemType, submittedAnswer, e.getMessage(), e);
+                throw new RuntimeException("답안 저장 중 오류가 발생했습니다.", e);
             }
+
+            if (!isCorrect) {
+                log.info("[AnswerService] WrongAnswerBookmark 저장 시도 - userId: {}, problemId: {}, problemType: {}", user.getId(), problemId, problemType);
+                try {
+                    log.debug("[AnswerService] WrongAnswerBookmark insert 준비 - userId: {}, problemId: {}, problemType: {}", user.getId(), problemId, problemType);
+                    upsertWrongAnswerBookmarkIfAbsent(user.getId(), problemType, problemId);
+                    log.info("[AnswerService] WrongAnswerBookmark 저장 성공 - userId: {}, problemId: {}", user.getId(), problemId);
+                } catch (Exception e) {
+                    log.error("[AnswerService] WrongAnswerBookmark 저장 실패 - userId: {}, problemId: {}, problemType: {}, 오류: {}", user.getId(), problemId, problemType, e.getMessage(), e);
+                    throw new RuntimeException("오답 북마크 저장 중 오류가 발생했습니다.", e);
+                }
+            }
+
+            log.info("[AnswerService] UserStatistics 저장 시도 - userId: {}, problemId: {}, problemType: {}, isCorrect: {}", user.getId(), problemId, problemType, isCorrect);
+            try {
+                upsertUserStatistics(user.getId(), problemType, problemId, isCorrect);
+                log.info("[AnswerService] UserStatistics 저장 성공 - userId: {}, problemId: {}, problemType: {}", user.getId(), problemId, problemType);
+            } catch (Exception e) {
+                log.error("[AnswerService] UserStatistics 저장 실패 - userId: {}, problemId: {}, problemType: {}, 오류: {}", user.getId(), problemId, problemType, e.getMessage(), e);
+                throw new RuntimeException("통계 저장 중 오류가 발생했습니다.", e);
+            }
+        } else {
+            log.warn("[AnswerService] 사용자 식별 실패로 저장 생략 - username: {}", username);
         }
         
         log.info("[AnswerService] 답안 제출 완료 - problemId: {}, isCorrect: {}", problemId, isCorrect);

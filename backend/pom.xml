@@ -110,6 +110,12 @@
             <artifactId>spring-security-oauth2-jose</artifactId>
         </dependency>
 
+        <!-- DEBUG: [Auth-Fix-2026-06-07] Supabase REST API 검증을 위한 WebClient -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
         <!-- QueryDSL (Spring Boot 3.x + Jakarta) -->
         <dependency>
             <groupId>com.querydsl</groupId>

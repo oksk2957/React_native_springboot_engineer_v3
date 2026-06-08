@@ -75,4 +75,81 @@
           AND ua.is_correct = false
         ORDER BY submittedAt DESC, id DESC
     </select>
+    <!-- DEBUG: [2026-06-07] 과목별 시도 횟수 랭킹 조회 - COUNT(ssi.id) 원본 숫자 그대로 반환 -->
+    <select id="selectSubjectRanking" resultType="map">
+        SELECT COALESCE(
+                CASE WHEN ua.item_type = 'OBJECTIVE' THEN p.subject_id END,
+                CASE WHEN ua.item_type = 'SUBJECTIVE' THEN sp.subject_id END,
+                CASE WHEN ua.item_type = 'PROGRAMMING_LANGUAGE' THEN plp.subject_id END
+               ) AS subjectId,
+               COALESCE(
+                CASE WHEN ua.item_type = 'OBJECTIVE' THEN TRIM(s.name) END,
+                CASE WHEN ua.item_type = 'SUBJECTIVE' THEN TRIM(ss.name) END,
+                CASE WHEN ua.item_type = 'PROGRAMMING_LANGUAGE' THEN TRIM(sls.name) END
+               ) AS subjectName,
+               COUNT(*) AS attemptedCount
+        FROM user_answer ua
+        LEFT JOIN problem p ON ua.item_type = 'OBJECTIVE' AND ua.reference_id = p.id
+        LEFT JOIN subject s ON ua.item_type = 'OBJECTIVE' AND p.subject_id = s.id
+        LEFT JOIN subjective_problems sp ON ua.item_type = 'SUBJECTIVE' AND ua.reference_id = sp.id
+        LEFT JOIN subject ss ON ua.item_type = 'SUBJECTIVE' AND sp.subject_id = ss.id
+        LEFT JOIN programming_language_problems plp ON ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.reference_id = plp.id
+        LEFT JOIN subject sls ON ua.item_type = 'PROGRAMMING_LANGUAGE' AND plp.subject_id = sls.id
+        WHERE ua.user_id = #{userId}
+        GROUP BY COALESCE(
+                    CASE WHEN ua.item_type = 'OBJECTIVE' THEN p.subject_id END,
+                    CASE WHEN ua.item_type = 'SUBJECTIVE' THEN sp.subject_id END,
+                    CASE WHEN ua.item_type = 'PROGRAMMING_LANGUAGE' THEN plp.subject_id END
+                 ),
+                 COALESCE(
+                    CASE WHEN ua.item_type = 'OBJECTIVE' THEN TRIM(s.name) END,
+                    CASE WHEN ua.item_type = 'SUBJECTIVE' THEN TRIM(ss.name) END,
+                    CASE WHEN ua.item_type = 'PROGRAMMING_LANGUAGE' THEN TRIM(sls.name) END
+                 )
+        ORDER BY attemptedCount DESC
+    </select>
+
+    <!-- DEBUG: [2026-06-07] 날짜별 오답 조회 (Optional Auth 패턴 동기화) -->
+    <select id="selectWrongAnswersByDate" resultType="com.example.informationexam.dto.statistics.WrongAnswerListRow">
+        SELECT ua.id,
+               ua.item_type AS problemType,
+               ua.reference_id AS referenceId,
+               p.question,
+               p.answer AS correctAnswer,
+               ua.submitted_answer AS submittedAnswer,
+               ua.submitted_at AS submittedAt
+        FROM user_answer ua
+        INNER JOIN problem p ON ua.item_type = 'OBJECTIVE' AND ua.reference_id = p.id
+        WHERE ua.user_id = #{userId}
+          AND ua.is_correct = false
+          AND DATE(ua.submitted_at) = #{date}
+        UNION ALL
+        SELECT ua.id,
+               ua.item_type AS problemType,
+               ua.reference_id AS referenceId,
+               sp.question,
+               sp.answer AS correctAnswer,
+               ua.submitted_answer AS submittedAnswer,
+               ua.submitted_at AS submittedAt
+        FROM user_answer ua
+        INNER JOIN subjective_problems sp ON ua.item_type = 'SUBJECTIVE' AND ua.reference_id = sp.id
+        WHERE ua.user_id = #{userId}
+          AND ua.is_correct = false
+          AND DATE(ua.submitted_at) = #{date}
+        UNION ALL
+        SELECT ua.id,
+               ua.item_type AS problemType,
+               ua.reference_id AS referenceId,
+               plp.question,
+               plp.answer AS correctAnswer,
+               ua.submitted_answer AS submittedAnswer,
+               ua.submitted_at AS submittedAt
+        FROM user_answer ua
+        INNER JOIN programming_language_problems plp ON ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.reference_id = plp.id
+        WHERE ua.user_id = #{userId}
+          AND ua.is_correct = false
+          AND DATE(ua.submitted_at) = #{date}
+        ORDER BY submittedAt DESC, id DESC
+    </select>
+
 </mapper>

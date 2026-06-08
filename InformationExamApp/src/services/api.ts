@@ -23,32 +23,46 @@ const getApiBaseUrl = () => {
     // 환경변수가 설정된 경우 우선 사용
     host = envHost;
     port = envPort;
-    console.log('[API Config] Using env vars:', { host, port });
+    if (__DEV__) {
+      console.log('[API Config] Using env vars:', { host, port });
+    }
   } else if (Platform.OS === 'android' && !envHost) {
     // Android 에뮬레이터 기본값
     host = '10.0.2.2';
     port = '9001';
-    console.log('[API Config] Android emulator detected, using 10.0.2.2');
+    if (__DEV__) {
+      console.log('[API Config] Android emulator detected, using 10.0.2.2');
+    }
   } else if (Platform.OS === 'ios' && !envHost) {
     // iOS 에뮬레이터 기본값
     host = 'localhost';
     port = '9001';
-    console.log('[API Config] iOS emulator detected, using localhost');
+    if (__DEV__) {
+      console.log('[API Config] iOS emulator detected, using localhost');
+    }
   } else {
-    // 기본값: OCI 서버 IP
-    host = '158.180.78.125';
+    // DEBUG: [2026-06-07] 로컬 개발 환경 기본값 사용
+    // 원인: OCI 서버(158.180.78.125)가 현재 비활성화되어 연결 실패
+    // 해결: Web 환경에서도 localhost 사용 (백엔드 로컬 실행 전제)
+    host = 'localhost';
     port = '9001';
-    console.log('[API Config] Using default OCI server IP');
+    if (__DEV__) {
+      console.log('[API Config] Using localhost for local development');
+    }
   }
 
-  // DEBUG: 현재 환경 로깅
-  console.log('[API Config] __DEV__:', __DEV__);
-  console.log('[API Config] Platform:', Platform.OS);
-  console.log('[API Config] Host:', host);
-  console.log('[API Config] Port:', port);
+  // DEBUG: 현재 환경 로깅 (__DEV__ 환경에서만)
+  if (__DEV__) {
+    console.log('[API Config] __DEV__:', __DEV__);
+    console.log('[API Config] Platform:', Platform.OS);
+    console.log('[API Config] Host:', host);
+    console.log('[API Config] Port:', port);
+
+    const apiUrl = `http://${host}:${port}/api`;
+    console.log('[API Config] Using API URL:', apiUrl);
+  }
 
   const apiUrl = `http://${host}:${port}/api`;
-  console.log('[API Config] Using API URL:', apiUrl);
   return apiUrl;
 };
 
@@ -76,11 +90,10 @@ api.interceptors.request.use(async (config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, {
-    headers: config.headers,
-    params: config.params,
-    data: config.data,
-  });
+  // DEBUG: [2026-06-09] 미완료14 - 요청 로그 __DEV__ 환경에서만 출력
+  if (__DEV__) {
+    console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`);
+  }
 
   return config;
 }, (error) => {
@@ -88,16 +101,31 @@ api.interceptors.request.use(async (config) => {
   return Promise.reject(error);
 });
 
-// 응답 인터셉터: 응답 로그
+// 응답 인터셉터: 응답 로그 + 401 자동 로그아웃
 api.interceptors.response.use((response) => {
-  console.log(`[API Response] ${response.status} ${response.config.url}`, response.data);
+  // DEBUG: [2026-06-09] 미완료14 - 성공 응답 로그 __DEV__ 환경에서만 출력
+  if (__DEV__) {
+    console.log(`[API Response] ${response.status} ${response.config.url}`);
+  }
   return response;
-}, (error) => {
+}, async (error) => {
   if (error.response) {
-    // 서버가 2xx 외의 상태로 응답한 경우
-    console.error('[API Response Error] Data:', error.response.data);
-    console.error('[API Response Error] Status:', error.response.status);
-    console.error('[API Response Error] Headers:', error.response.headers);
+    // DEBUG: [2026-06-07] 401 자동 로그아웃 (재귀 호출 방지: /auth/ 경로 제외)
+    if (error.response.status === 401 && !error.config?.url?.includes('/auth/')) {
+      console.warn('[API 401] 세션 만료 - 자동 로그아웃:', error.config?.url);
+      try {
+        await AsyncStorage.removeItem('authToken');
+        await AsyncStorage.removeItem('tokenExpiryTime');
+        // 동적 import로 순환 참조 방지
+        const { useAuthStore } = await import('../stores/authStore');
+        useAuthStore.getState().setUser(null);
+        console.log('[API 401] 자동 로그아웃 완료');
+      } catch (cleanupError) {
+        console.error('[API 401] 자동 로그아웃 실패:', cleanupError);
+      }
+    }
+    // DEBUG: [2026-06-09] 미완료14 - 에러 로그는 프로덕션에서도 출력 (디버깅 필수)
+    console.error(`[API Response Error] ${error.response.status} ${error.config?.url}`);
   } else if (error.request) {
     // 요청이 전송되었으나 응답을 받지 못한 경우 (CORS, 서버 다운 등)
     console.error('[API Network Error] No response received. Possible CORS or connection refused.', error.request);
@@ -381,6 +409,15 @@ export const statisticsService = {
         ? { userId: typeof userId === 'string' ? userId : String(userId) }
         : undefined;
     const response = await api.get('/statistics', { params });
+    return response.data;
+  },
+
+  // DEBUG: [2026-06-07] 과목별 시도 횟수 랭킹 조회 (원본 숫자 그대로)
+  // DEBUG: [2026-06-09] 미완료36 수정 - URL 경로 오류 수정
+  // 원인: baseURL이 이미 /api를 포함하므로 중복 제거
+  // 해결: /statistics/subject-ranking → /statistics/subject-ranking (baseURL=/api이므로 최종 /api/statistics/subject-ranking)
+  getSubjectRanking: async (): Promise<Array<{subjectId: number, subjectName: string, attemptedCount: number}>> => {
+    const response = await api.get('/statistics/subject-ranking');
     return response.data;
   },
 

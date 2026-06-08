@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
@@ -149,8 +150,12 @@ export default function WrongAnswerScreen() {
         data = data.filter((w) => w.problemType === selectedType);
       }
       setWrongProblems(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch wrong answers:', error);
+      // DEBUG: [2026-06-07] 401 감지 시 세션 만료 Alert + 빈 화면 초기화
+      if (error.response?.status === 401) {
+        Alert.alert('세션 만료', '다시 로그인해주세요.', [{ text: '확인' }]);
+      }
       setWrongProblems([]);
       setHeatmap([]);
     } finally {

@@ -28,18 +28,25 @@ public class StatisticsService {
 
     /**
      * 전체 통계 조회 (세 가지 문제 유형 포함)
+     * DEBUG: NPE 수정 - userId가 null이면 사용자별 통계를 0으로 처리
      */
     public Map<String, Object> getOverallStatistics(Long userId) {
         Map<String, Object> stats = new HashMap<>();
-        Map<String, Object> overall = mypageStatisticsMapper.selectUserAnswerOverall(userId);
 
         long totalObjective = problemRepository.countByType(ProblemType.OBJECTIVE.name());
         long totalSubjective = subjectiveProblemRepository.count();
         long totalProgramming = programmingLanguageProblemRepository.count();
         long totalProblems = totalObjective + totalSubjective + totalProgramming;
 
-        long solvedProblems = toLong(overall.get("attempted"));
-        long correctCount = toLong(overall.get("correct"));
+        long solvedProblems = 0;
+        long correctCount = 0;
+
+        if (userId != null) {
+            Map<String, Object> overall = mypageStatisticsMapper.selectUserAnswerOverall(userId);
+            solvedProblems = toLong(overall.get("attempted"));
+            correctCount = toLong(overall.get("correct"));
+        }
+
         long wrongCount = Math.max(0, solvedProblems - correctCount);
 
         stats.put("totalProblems", totalProblems);
@@ -48,33 +55,42 @@ public class StatisticsService {
         stats.put("wrongCount", wrongCount);
 
         List<Map<String, Object>> branchStats = new ArrayList<>();
-        mypageStatisticsMapper.selectBranchStats(userId).forEach(row -> {
-            Map<String, Object> branchStat = new HashMap<>();
-            long attempted = row.getAttempted();
-            long correct = row.getCorrect();
-            branchStat.put("problemType", row.getProblemType());
-            branchStat.put("totalProblems", resolveTotalByType(row.getProblemType(), totalObjective, totalSubjective, totalProgramming));
-            branchStat.put("solvedProblems", attempted);
-            branchStat.put("correctCount", correct);
-            branchStat.put("accuracyRate", attempted > 0 ? Math.round((double) correct / attempted * 100 * 10) / 10.0 : 0);
-            branchStats.add(branchStat);
-        });
+        if (userId != null) {
+            mypageStatisticsMapper.selectBranchStats(userId).forEach(row -> {
+                Map<String, Object> branchStat = new HashMap<>();
+                long attempted = row.getAttempted();
+                long correct = row.getCorrect();
+                branchStat.put("problemType", row.getProblemType());
+                branchStat.put("totalProblems", resolveTotalByType(row.getProblemType(), totalObjective, totalSubjective, totalProgramming));
+                branchStat.put("solvedProblems", attempted);
+                branchStat.put("correctCount", correct);
+                branchStat.put("accuracyRate", attempted > 0 ? Math.round((double) correct / attempted * 100 * 10) / 10.0 : 0);
+                branchStats.add(branchStat);
+            });
+        }
         stats.put("branchStats", branchStats);
 
         List<Map<String, Object>> categoryStats = new ArrayList<>();
-        mypageStatisticsMapper.selectObjectiveCategoryStats(userId).forEach(row -> {
-            Map<String, Object> categoryStat = new HashMap<>();
-            long total = row.getTotal();
-            long correct = row.getCorrect();
-            categoryStat.put("category", row.getCategory());
-            categoryStat.put("total", total);
-            categoryStat.put("correct", correct);
-            categoryStat.put("accuracyRate", total > 0 ? Math.round((double) correct / total * 100 * 10) / 10.0 : 0);
-            categoryStats.add(categoryStat);
-        });
+        if (userId != null) {
+            mypageStatisticsMapper.selectObjectiveCategoryStats(userId).forEach(row -> {
+                Map<String, Object> categoryStat = new HashMap<>();
+                long total = row.getTotal();
+                long correct = row.getCorrect();
+                categoryStat.put("category", row.getCategory());
+                categoryStat.put("total", total);
+                categoryStat.put("correct", correct);
+                categoryStat.put("accuracyRate", total > 0 ? Math.round((double) correct / total * 100 * 10) / 10.0 : 0);
+                categoryStats.add(categoryStat);
+            });
+        }
 
         stats.put("categoryStats", categoryStats);
         return stats;
+    }
+
+    // DEBUG: [2026-06-07] 과목별 시도 횟수 랭킹 조회
+    public List<Map<String, Object>> getSubjectRanking(Long userId) {
+        return mypageStatisticsMapper.selectSubjectRanking(userId);
     }
 
     public long getSubjectiveRemainingCount(Long userId) {

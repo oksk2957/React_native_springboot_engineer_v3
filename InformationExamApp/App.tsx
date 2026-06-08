@@ -226,6 +226,14 @@ function AppNavigator() {
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('[App] Supabase auth 상태 변경:', event, session?.user?.email ?? 'no user');
 
+      // DEBUG: [Auth-Fix-2026-06-07] INITIAL_SESSION 이벤트 무시
+      // 원인: INITIAL_SESSION에서 loginWithGoogle 호출 → 400 에러 (토큰 없음)
+      // 해결: INITIAL_SESSION은 restoreSessionFromJWT가 처리하므로 무시
+      if (event === 'INITIAL_SESSION') {
+        console.log('[App] INITIAL_SESSION 무시 - restoreSessionFromJWT가 처리');
+        return;
+      }
+
       if (event === 'SIGNED_IN' && session?.access_token) {
         console.log('[App] SIGNED_IN 이벤트 감지 - 백엔드 JWT 교환 시작');
         try {

@@ -1,26 +1,16 @@
+import api from '../services/api';
 import { TheoryCard } from '../types/theory';
 
-// DEBUG: [OCI-Prod-2026-05-27] OCI 서버 IP 업데이트
-// 원인: OCI 서버 IP 변경 (168.110.119.132 → 158.180.78.125)
-// 해결: 환경변수로 OCI IP 관리, 하드코딩 제거
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://158.180.78.125:9001';
-
-// DEBUG: API Base URL 로깅 (개발/배포 환경 확인용)
-console.log('[TheoryAPI] Base URL:', API_BASE_URL);
-console.log('[TheoryAPI] Environment:', process.env.NODE_ENV);
+// DEBUG: [2026-06-07] 하드코딩된 OCI IP 제거
+// 원인: 이론 API만 별도로 하드코딩된 IP를 사용하여 CORS/네트워크 오류 발생
+// 해결: api.ts의 axios 인스턴스를 공유받아 사용 (인터셉터, 타임아웃, baseURL 일관성)
 
 export const fetchTheoryCards = async (category: string): Promise<TheoryCard[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/problems/theory?category=${encodeURIComponent(category)}`);
-
-    if (!response.ok) {
-      throw new Error(`이론 카드 불러오기 실패: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return Array.isArray(data) ? (data as TheoryCard[]) : [];
+    const response = await api.get('/problems/theory', { params: { category } });
+    return Array.isArray(response.data) ? (response.data as TheoryCard[]) : [];
   } catch (error) {
-    console.error('이론 카드 조회 중 오류 발생:', error);
+    console.error('[TheoryAPI] 이론 카드 조회 실패:', error);
     throw error;
   }
 };

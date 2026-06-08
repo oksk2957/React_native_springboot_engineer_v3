@@ -21,7 +21,13 @@ public class AnswerApiController {
     public ResponseEntity<Map<String, Object>> submitAnswer(
             @RequestBody AnswerRequest request,
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        // DEBUG: [2026-06-08] JWT 토큰 진단 로그
+        boolean hasAuthHeader = (authHeader != null && authHeader.startsWith("Bearer "));
+        System.out.println("[AnswerApiController] Authorization 헤더 유무: " + hasAuthHeader);
+
         String username = resolveUsername(authHeader);
+        System.out.println("[AnswerApiController] 추출된 username: " + username);
+
         return ResponseEntity.ok(answerService.submitAnswer(request, username));
     }
 

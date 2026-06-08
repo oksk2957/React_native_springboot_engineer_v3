@@ -33,7 +33,10 @@ public interface ProblemQueryMapper {
 
     // 과목별 문제 개수 조회
     List<Map<String, Object>> countProblemsBySubject();
-    
+
+    // 전체 과목 목록 조회
+    List<Map<String, Object>> selectAllSubjects();
+
     // 전체 문제 개수 조회
     Long countAll();
 }
