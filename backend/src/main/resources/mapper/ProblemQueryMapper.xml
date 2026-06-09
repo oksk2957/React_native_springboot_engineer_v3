@@ -60,7 +60,7 @@
 
             UNION ALL
 
-            -- DEBUG: [2026-06-09 수정계획안18] option1~5 NULL → 실제 컬럼 조회로 변경
+            -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL로 되돌림
             SELECT
                 pp.id,
                 pp.question,
@@ -70,11 +70,11 @@
                 s.name AS category,
                 'PROGRAMMING_LANGUAGE' AS type,
                 pp.difficulty,
-                pp.option1,
-                pp.option2,
-                pp.option3,
-                pp.option4,
-                pp.option5,
+                NULL AS option1,
+                NULL AS option2,
+                NULL AS option3,
+                NULL AS option4,
+                NULL AS option5,
                 FALSE AS is_ai_generated,
                 pp.prog_language AS programming_language
             FROM programming_language_problems pp
@@ -120,11 +120,11 @@
                     prog_language AS category,
                     &apos;PROGRAMMING_LANGUAGE&apos; AS type,
                     difficulty,
-                    option1,
-                    option2,
-                    option3,
-                    option4,
-                    option5,
+                    NULL AS option1,
+                    NULL AS option2,
+                    NULL AS option3,
+                    NULL AS option4,
+                    NULL AS option5,
                     is_ai_generated,
                     prog_language AS programming_language
                 FROM programming_language_problems
@@ -202,23 +202,23 @@
 
         UNION ALL
 
-        -- DEBUG: [2026-06-09 수정계획안18] 'FLASHCARD' 하드코딩 + NULL option1~5 → 동적 card_type + 실제 option1~5 조회
+        -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL, card_type FLASHCARD 하드코딩
         SELECT
-            CASE WHEN pp.option1 IS NOT NULL THEN 'SUBJECTIVE' ELSE 'FLASHCARD' END AS card_type,
+            &apos;FLASHCARD&apos; AS card_type,
             pp.id,
             pp.subject_id,
             pp.question AS front_text,
             pp.answer AS back_text,
             pp.explanation,
             COALESCE(pp.difficulty, 0) AS difficulty,
-            pp.option1,
-            pp.option2,
-            pp.option3,
-            pp.option4,
-            pp.option5
+            NULL AS option1,
+            NULL AS option2,
+            NULL AS option3,
+            NULL AS option4,
+            NULL AS option5
         FROM programming_language_problems pp
         WHERE
-            (#{category} = '프로그래밍언어')
+            (#{category} = &apos;프로그래밍언어&apos;)
             OR LOWER(pp.prog_language) = LOWER(#{category})
 
         ORDER BY card_type, id

@@ -195,7 +195,7 @@
                 'PROGRAMMING_LANGUAGE' AS item_type,
                 plp.id AS reference_id,
                 TRIM(sls.name) AS subject,
-                COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.language, '')) AS question_text,
+                COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text,
                 COUNT(*) AS wrong_count
             FROM user_answer ua
             INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id
@@ -203,7 +203,7 @@
             WHERE ua.user_id = #{userId}
               AND ua.item_type = 'PROGRAMMING_LANGUAGE'
               AND ua.is_correct = false
-            GROUP BY plp.id, plp.question, plp.language, TRIM(sls.name)
+            GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name)
         ) combined
         ORDER BY wrong_count DESC
         LIMIT #{limit} OFFSET #{offset}
