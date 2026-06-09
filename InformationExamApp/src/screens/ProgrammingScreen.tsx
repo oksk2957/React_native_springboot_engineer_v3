@@ -13,10 +13,9 @@ import {
 } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useAuthStore } from '../stores/authStore';
-import { problemService, statisticsService } from '../services/api';
-import { fetchTheoryCards } from '../api/theoryApi';
+import { problemService } from '../services/api';
+import { fetchTheoryCards, fetchProgrammingCards } from '../api/theoryApi';
 import { TheoryCard } from '../types/theory';
-import type { WrongAnswer } from '../types';
 
 const languageIcons: Record<string, string> = {
   'C언어': '🅒',
@@ -178,16 +177,29 @@ export default function ProgrammingScreen() {
     }
 
     try {
-      console.log(`[ProgrammingScreen] fetchTheoryCards 호출 - category: 프로그래밍언어`);
-      const data = await fetchTheoryCards('프로그래밍언어');
+      // DEBUG: [2026-06-09] 수정계획안14 - 모든 언어별 카드 가져오기
+      console.log(`[ProgrammingScreen] fetchProgrammingCards 호출 - 모든 언어`);
+      const languages = ['C언어', 'Java', 'Python', '공통개념'];
+      const allProgrammingCards: TheoryCard[] = [];
+
+      for (const lang of languages) {
+        const data = await fetchProgrammingCards(lang);
+        if (isMountedRef.current) {
+          console.log(`[ProgrammingScreen] ${lang} loaded cards: ${data?.length ?? 0}`);
+          if (data && data.length > 0) {
+            allProgrammingCards.push(...data);
+          }
+        }
+      }
+
       if (isMountedRef.current) {
-        console.log(`[ProgrammingScreen] loaded cards: ${data?.length ?? 0}`);
-        if (data && data.length > 0) {
-          const subjectiveCount = data.filter(c => c.cardType === 'SUBJECTIVE').length;
-          const flashcardCount = data.filter(c => c.cardType === 'FLASHCARD').length;
+        console.log(`[ProgrammingScreen] total loaded cards: ${allProgrammingCards.length}`);
+        if (allProgrammingCards.length > 0) {
+          const subjectiveCount = allProgrammingCards.filter(c => c.cardType === 'SUBJECTIVE').length;
+          const flashcardCount = allProgrammingCards.filter(c => c.cardType === 'FLASHCARD').length;
           console.log(`[ProgrammingScreen] 카드 유형별 개수 - SUBJECTIVE: ${subjectiveCount}, FLASHCARD: ${flashcardCount}`);
         }
-        setAllCards(data || []);
+        setAllCards(allProgrammingCards || []);
       }
     } catch (error) {
       console.error('Error loading programming data:', error);
@@ -501,43 +513,6 @@ export default function ProgrammingScreen() {
                 ))}
               </View>
             </>
-          )}
-
-          {/* 오답노트 탭 콘텐츠 */}
-          {activeTab === 'wrongNote' && (
-            <View style={styles.content}>
-              {isWrongLoading ? (
-                <View style={styles.contentLoadingContainer}>
-                  <ActivityIndicator size="large" color={themeColor} />
-                  <Text style={[styles.loadingText, isDark && styles.textWhite]}>오답 노트를 불러오는 중...</Text>
-                </View>
-              ) : wrongAnswers.length > 0 ? (
-                wrongAnswers.map((wa) => (
-                  <TouchableOpacity
-                    key={wa.id}
-                    style={[styles.wrongAnswerCard, isDark && styles.flashCardDark]}
-                    onPress={() => handleWrongAnswerPress(wa)}
-                  >
-                    <Text style={[styles.wrongAnswerTitle, isDark && styles.textWhite]} numberOfLines={2}>
-                      {wa.problemTitle}
-                    </Text>
-                    <View style={styles.wrongAnswerRow}>
-                      <Text style={styles.wrongAnswerLabel}>내 답안</Text>
-                      <Text style={[styles.wrongAnswerValue, styles.wrongAnswerRed]} numberOfLines={2}>{wa.submittedAnswer}</Text>
-                    </View>
-                    <View style={styles.wrongAnswerRow}>
-                      <Text style={styles.wrongAnswerLabel}>정답</Text>
-                      <Text style={[styles.wrongAnswerValue, styles.wrongAnswerGreen]} numberOfLines={2}>{wa.correctAnswer}</Text>
-                    </View>
-                    <Text style={styles.wrongAnswerDate}>{new Date(wa.submittedAt).toLocaleDateString('ko-KR')}</Text>
-                  </TouchableOpacity>
-                ))
-              ) : (
-                <View style={styles.emptyContainer}>
-                  <Text style={[styles.emptyText, isDark && styles.textWhite]}>프로그래밍 오답 기록이 없습니다.</Text>
-                </View>
-              )}
-            </View>
           )}
 
           <View style={{ height: 40 }} />

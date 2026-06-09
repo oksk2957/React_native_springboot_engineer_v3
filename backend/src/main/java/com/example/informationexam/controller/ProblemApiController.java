@@ -71,6 +71,21 @@ public class ProblemApiController {
         return ResponseEntity.ok(new TheoryProblemMetaDto((long) ids.size(), ids));
     }
 
+    // DEBUG: [2026-06-09] 수정계획안14 - 프로그래밍 언어별 카드 조회 API
+    @GetMapping("/programming-theory")
+    public ResponseEntity<List<TheoryCardDto>> getProgrammingCards(@RequestParam String language) {
+        log.info("[MVC2] 프로그래밍 카드 조회 요청 - language: {}", language);
+        List<Map<String, Object>> maps = problemQueryMapper.selectProgrammingCardsByLanguage(language);
+        log.info("[MVC2] 프로그래밍 카드 쿼리 결과 - language: {}, 결과 수: {}", language, maps.size());
+
+        List<TheoryCardDto> cardDtos = maps.stream()
+            .map(TheoryCardDto::fromMap)
+            .collect(Collectors.toList());
+
+        log.info("[MVC2] 프로그래밍 카드 응답 - language: {}, DTO 수: {}", language, cardDtos.size());
+        return ResponseEntity.ok(cardDtos);
+    }
+
     @GetMapping("/study/meta")
     public ResponseEntity<TheoryProblemMetaDto> getStudyProblemMeta(
             @RequestParam(defaultValue = "false") boolean randomSample,

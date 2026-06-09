@@ -14,3 +14,14 @@ export const fetchTheoryCards = async (category: string): Promise<TheoryCard[]> 
     throw error;
   }
 };
+
+// DEBUG: [2026-06-09] 수정계획안14 - 프로그래밍 언어별 카드 조회
+export const fetchProgrammingCards = async (language: string): Promise<TheoryCard[]> => {
+  try {
+    const response = await api.get('/problems/programming-theory', { params: { language } });
+    return Array.isArray(response.data) ? (response.data as TheoryCard[]) : [];
+  } catch (error) {
+    console.error('[TheoryAPI] 프로그래밍 카드 조회 실패:', error);
+    throw error;
+  }
+};
