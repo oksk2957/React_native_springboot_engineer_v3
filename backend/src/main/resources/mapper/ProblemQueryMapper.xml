@@ -450,14 +450,15 @@
     <!-- DEBUG: [2026-06-09] 수정계획안14 - card_type 동적 판별 -->
     <!-- 원인: 하드코딩 'FLASHCARD' → 주관식 탭에 문제 안 나타남 -->
     <!-- 해결: option1 존재 시 'SUBJECTIVE', 없으면 'FLASHCARD' -->
+    <!-- DEBUG: [2026-06-09 수정18] migration 005 미적용 → option1~5 NULL, card_type FLASHCARD 하드코딩 -->
     <select id="selectProgrammingCardsByLanguage" resultType="map">
         SELECT
             id,
-            CASE WHEN option1 IS NOT NULL AND option1 != '' THEN 'SUBJECTIVE' ELSE 'FLASHCARD' END AS card_type,
+            'FLASHCARD' AS card_type,
             question AS front_text,
             answer AS back_text,
             explanation,
-            option1, option2, option3, option4, option5,
+            NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5,
             prog_language AS category,
             difficulty
         FROM programming_language_problems
