@@ -55,8 +55,11 @@ public class SupabaseTokenVerifierService {
      */
     public String getEmail(String token) {
         try {
-            // 1. Supabase Auth API로 토큰 검증 및 사용자 정보 조회
-            log.debug("[SupabaseTokenVerifier] REST API로 토큰 검증 시작");
+            // DEBUG: [AI-AUTHOR-20260609-P0] Google 로그인 400 디버깅 — 요청 상세 로깅
+            String tokenPreview = token != null && token.length() > 20
+                    ? token.substring(0, 20) + "..." : (token != null ? token : "null");
+            log.info("[AUTH][DEBUG-P0] Supabase /auth/v1/user 요청 시작 - token: {}, anonKey loaded: {}",
+                    tokenPreview, anonKey != null && !anonKey.isEmpty());
 
             @SuppressWarnings("unchecked")
             Map<String, Object> response = webClient.get()
@@ -80,6 +83,9 @@ public class SupabaseTokenVerifierService {
             return email;
 
         } catch (WebClientResponseException e) {
+            // DEBUG: [AI-AUTHOR-20260609-P0] 400 에러 상세 — 응답 본문 전체 로깅
+            log.error("[AUTH][DEBUG-P0] Supabase /auth/v1/user 실패 — status: {}, body: {}",
+                    e.getStatusCode(), e.getResponseBodyAsString());
             log.error("[SupabaseTokenVerifier] Supabase 토큰 검증 실패 (HTTP {}): {}",
                     e.getStatusCode(), e.getResponseBodyAsString());
             throw new IllegalArgumentException("유효하지 않은 Supabase 토큰입니다.", e);

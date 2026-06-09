@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,10 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useAuthStore } from '../stores/authStore';
-import { useRoute } from '@react-navigation/native';
-import { problemService } from '../services/api';
-import type { Problem } from '../types';
+import { problemService, statisticsService } from '../services/api';
+import type { Problem, WrongAnswer } from '../types';
 
 
 const languageIcons: Record<string, string> = {
@@ -43,6 +43,7 @@ const LANGUAGE_KEYWORDS: Record<string, string[]> = {
 
 export default function ProgrammingScreen() {
   const route = useRoute() as any;
+  const navigation = useNavigation();
   const { darkMode, sessionId: storedSessionId } = useAuthStore();
   const targetProblemId = route?.params?.problemId;
   const sessionId = route?.params?.sessionId ?? route?.params?.studySessionId ?? storedSessionId ?? null;
@@ -53,10 +54,15 @@ export default function ProgrammingScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [isContentLoading, setIsContentLoading] = useState(false);
 
+  // DEBUG: [2026-06-09] #46 오답노트 탭 구현
+  const [activeTab, setActiveTab] = useState<'card' | 'wrongNote'>('card');
+  const [wrongAnswers, setWrongAnswers] = useState<WrongAnswer[]>([]);
+  const [isWrongLoading, setIsWrongLoading] = useState(false);
+
   const [toastVisible, setToastVisible] = useState(false);
   const [toastConfig, setToastConfig] = useState({ message: '', type: 'success' });
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
-  
+
   // 무한 루프 방지: isMounted 플래그
   const isMountedRef = useRef(true);
 
@@ -202,6 +208,82 @@ export default function ProgrammingScreen() {
     }
   };
 
+  // DEBUG: [2026-06-09] #46 오답노트 탭 데이터 로드
+  const loadWrongAnswers = useCallback(async () => {
+    if (!isMountedRef.current) return;
+    setIsWrongLoading(true);
+    try {
+      const data = await statisticsService.getWrongAnswersByType('PROGRAMMING_LANGUAGE');
+      if (isMountedRef.current) {
+        setWrongAnswers(data || []);
+      }
+    } catch (error) {
+      console.error('[ProgrammingScreen] Failed to load wrong answers:', error);
+      if (isMountedRef.current) {
+        setWrongAnswers([]);
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setIsWrongLoading(false);
+      }
+    }
+  }, []);
+
+  // 오답노트 탭 활성화 시 데이터 로드
+  useEffect(() => {
+    if (activeTab === 'wrongNote') {
+      loadWrongAnswers();
+    }
+  }, [activeTab, loadWrongAnswers]);
+
+  // 화면 포커스 시 오답노트 새로고침
+  useFocusEffect(
+    useCallback(() => {
+      if (activeTab === 'wrongNote') {
+        loadWrongAnswers();
+      }
+    }, [activeTab, loadWrongAnswers])
+  );
+
+  // 오답 노트 항목 터치 시 해당 문제로 이동
+  const handleWrongAnswerPress = useCallback((wrongAnswer: WrongAnswer) => {
+    if (!isMountedRef.current) return;
+
+    // 카드 탭으로 전환
+    setActiveTab('card');
+
+    // 해당 문제 찾기
+    const targetId = wrongAnswer.referenceId;
+    const targetProblem = allProblems.find(p => p.id === targetId);
+
+    if (targetProblem) {
+      // 언어 감지
+      const questionText = (targetProblem.question || '').toLowerCase();
+      let matchedLang = '공통개념';
+      for (const [lang, keywords] of Object.entries(LANGUAGE_KEYWORDS)) {
+        if (keywords.some(k => questionText.includes(k.toLowerCase()))) {
+          matchedLang = lang;
+          break;
+        }
+      }
+
+      // 언어 변경 및 문제 인덱스 설정
+      setCurrentLanguage(matchedLang);
+
+      setTimeout(() => {
+        const filteredItems = allProblems.filter(p => {
+          const q = (p.question || '').toLowerCase();
+          return LANGUAGE_KEYWORDS[matchedLang].some(k => q.includes(k.toLowerCase()));
+        });
+        const idx = filteredItems.findIndex(p => p.id === targetId);
+        if (idx !== -1) {
+          setCurrentIndex(idx);
+          setIsFlipped(false);
+        }
+      }, 100);
+    }
+  }, [allProblems]);
+
   const showToast = (message: string, type: 'success' | 'error') => {
     setToastConfig({ message, type });
     setToastVisible(true);
@@ -303,93 +385,150 @@ export default function ProgrammingScreen() {
             </View>
           </View>
 
-          {/* 학습 영역 */}
-          <View style={styles.content}>
-            {isContentLoading ? (
-              <View style={styles.contentLoadingContainer}>
-                <ActivityIndicator size="large" color={themeColor} />
-                <Text style={[styles.loadingText, isDark && styles.textWhite]}>언어 변경 중...</Text>
-              </View>
-            ) : problems.length > 0 ? (
-              <>
-                <Text style={[styles.progressText, isDark && styles.progressTextDark]}>
-                  {currentIndex + 1} / {problems.length}
-                </Text>
+          {/* DEBUG: [2026-06-09] #46 탭 바 */}
+          <View style={[styles.tabBar, isDark && styles.tabBarDark]}>
+            <TouchableOpacity
+              style={[styles.tabButton, activeTab === 'card' && styles.activeTab]}
+              onPress={() => setActiveTab('card')}
+            >
+              <Text style={[styles.tabText, activeTab === 'card' && { color: themeColor, fontWeight: 'bold' }]}>플래시카드</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.tabButton, activeTab === 'wrongNote' && styles.activeTab]}
+              onPress={() => setActiveTab('wrongNote')}
+            >
+              <Text style={[styles.tabText, activeTab === 'wrongNote' && { color: themeColor, fontWeight: 'bold' }]}>
+                오답노트{wrongAnswers.length > 0 ? ` (${wrongAnswers.length})` : ''}
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-                <View style={styles.cardWrapper}>
-                  <TouchableOpacity style={[styles.sideNavButton, styles.sideNavLeft]} onPress={handlePrev}>
-                    <Text style={styles.sideNavText}>{"<"}</Text>
-                  </TouchableOpacity>
+          {activeTab === 'card' ? (
+            <>
+              {/* 학습 영역 */}
+              <View style={styles.content}>
+                {isContentLoading ? (
+                  <View style={styles.contentLoadingContainer}>
+                    <ActivityIndicator size="large" color={themeColor} />
+                    <Text style={[styles.loadingText, isDark && styles.textWhite]}>언어 변경 중...</Text>
+                  </View>
+                ) : problems.length > 0 ? (
+                  <>
+                    <Text style={[styles.progressText, isDark && styles.progressTextDark]}>
+                      {currentIndex + 1} / {problems.length}
+                    </Text>
 
-                  <View style={styles.flashContainer}>
-                    <TouchableOpacity
-                      activeOpacity={0.9}
-                      style={[styles.flashCard, isDark && styles.flashCardDark, { borderColor: themeColor }]}
-                      onPress={handleFlipCard}
-                    >
-                      {isFlipped ? (
-                        <View style={styles.cardContent}>
-                          <Text style={[styles.termTitle, { color: themeColor }]}>출력 결과 / 정답</Text>
-                          <Text style={[styles.termText, isDark && styles.textWhite]}>{problems[currentIndex].correctAnswer}</Text>
-                          {problems[currentIndex].explanation ? (
-                            <View style={styles.explanationBox}>
-                              <Text style={[styles.explanationText, isDark && styles.textWhite]}>
-                                {problems[currentIndex].explanation}
+                    <View style={styles.cardWrapper}>
+                      <TouchableOpacity style={[styles.sideNavButton, styles.sideNavLeft]} onPress={handlePrev}>
+                        <Text style={styles.sideNavText}>{"<"}</Text>
+                      </TouchableOpacity>
+
+                      <View style={styles.flashContainer}>
+                        <TouchableOpacity
+                          activeOpacity={0.9}
+                          style={[styles.flashCard, isDark && styles.flashCardDark, { borderColor: themeColor }]}
+                          onPress={handleFlipCard}
+                        >
+                          {isFlipped ? (
+                            <View style={styles.cardContent}>
+                              <Text style={[styles.termTitle, { color: themeColor }]}>출력 결과 / 정답</Text>
+                              <Text style={[styles.termText, isDark && styles.textWhite]}>{problems[currentIndex].correctAnswer}</Text>
+                              {problems[currentIndex].explanation ? (
+                                <View style={styles.explanationBox}>
+                                  <Text style={[styles.explanationText, isDark && styles.textWhite]}>
+                                    {problems[currentIndex].explanation}
+                                  </Text>
+                                </View>
+                              ) : null}
+                            </View>
+                          ) : (
+                            <View style={styles.cardContent}>
+                              <Text style={styles.hintTitle}>코드 / 문제</Text>
+                              <Text style={[styles.definitionText, isDark && styles.textWhite, { fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace' }]}>
+                                {problems[currentIndex].question}
                               </Text>
                             </View>
-                          ) : null}
-                        </View>
-                      ) : (
-                        <View style={styles.cardContent}>
-                          <Text style={styles.hintTitle}>코드 / 문제</Text>
-                          <Text style={[styles.definitionText, isDark && styles.textWhite, { fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace' }]}>
-                            {problems[currentIndex].question}
-                          </Text>
-                        </View>
-                      )}
-                      <Text style={styles.flipGuide}>Tap to reveal answer 🔄</Text>
-                    </TouchableOpacity>
+                          )}
+                          <Text style={styles.flipGuide}>Tap to reveal answer 🔄</Text>
+                        </TouchableOpacity>
 
-                    <View style={styles.actionRow}>
-                      <TouchableOpacity style={[styles.actionButton, styles.knowButton]} onPress={handleKnow}>
-                        <Text style={styles.actionButtonText}>Know (1)</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity style={[styles.actionButton, styles.dontKnowButton]} onPress={handleDontKnow}>
-                        <Text style={styles.actionButtonText}>Don't know (2)</Text>
+                        <View style={styles.actionRow}>
+                          <TouchableOpacity style={[styles.actionButton, styles.knowButton]} onPress={handleKnow}>
+                            <Text style={styles.actionButtonText}>Know (1)</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={[styles.actionButton, styles.dontKnowButton]} onPress={handleDontKnow}>
+                            <Text style={styles.actionButtonText}>Don't know (2)</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+
+                      <TouchableOpacity style={[styles.sideNavButton, styles.sideNavRight]} onPress={handleNext}>
+                        <Text style={styles.sideNavText}>{">"}</Text>
                       </TouchableOpacity>
                     </View>
+                  </>
+                ) : (
+                  <View style={styles.emptyContainer}>
+                    <Text style={[styles.emptyText, isDark && styles.textWhite]}>등록된 프로그래밍 문제가 없습니다.</Text>
                   </View>
-
-                  <TouchableOpacity style={[styles.sideNavButton, styles.sideNavRight]} onPress={handleNext}>
-                    <Text style={styles.sideNavText}>{">"}</Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            ) : (
-              <View style={styles.emptyContainer}>
-                <Text style={[styles.emptyText, isDark && styles.textWhite]}>등록된 프로그래밍 문제가 없습니다.</Text>
+                )}
               </View>
-            )}
-          </View>
 
-          {/* 언어 선택 그리드 */}
-          <View style={[styles.categoryGrid, isDark && styles.categoryGridDark]}>
-            {languages.map((lang) => (
-              <TouchableOpacity
-                key={lang}
-                style={[
-                  styles.categoryTab,
-                  currentLanguage === lang && { backgroundColor: themeColor + '20', borderColor: themeColor }
-                ]}
-                onPress={() => setCurrentLanguage(lang)}
-              >
-                <Text style={styles.catTabIcon}>{languageIcons[lang]}</Text>
-                <Text style={[styles.catTabText, isDark && styles.textWhite, currentLanguage === lang && { color: themeColor, fontWeight: 'bold' }]}>
-                  {lang}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+              {/* 언어 선택 그리드 */}
+              <View style={[styles.categoryGrid, isDark && styles.categoryGridDark]}>
+                {languages.map((lang) => (
+                  <TouchableOpacity
+                    key={lang}
+                    style={[
+                      styles.categoryTab,
+                      currentLanguage === lang && { backgroundColor: themeColor + '20', borderColor: themeColor }
+                    ]}
+                    onPress={() => setCurrentLanguage(lang)}
+                  >
+                    <Text style={styles.catTabIcon}>{languageIcons[lang]}</Text>
+                    <Text style={[styles.catTabText, isDark && styles.textWhite, currentLanguage === lang && { color: themeColor, fontWeight: 'bold' }]}>
+                      {lang}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </>
+          ) : (
+            /* DEBUG: [2026-06-09] #46 오답노트 탭 콘텐츠 */
+            <View style={styles.content}>
+              {isWrongLoading ? (
+                <View style={styles.contentLoadingContainer}>
+                  <ActivityIndicator size="large" color={themeColor} />
+                  <Text style={[styles.loadingText, isDark && styles.textWhite]}>오답 노트를 불러오는 중...</Text>
+                </View>
+              ) : wrongAnswers.length > 0 ? (
+                wrongAnswers.map((wa) => (
+                  <TouchableOpacity
+                    key={wa.id}
+                    style={[styles.wrongAnswerCard, isDark && styles.flashCardDark]}
+                    onPress={() => handleWrongAnswerPress(wa)}
+                  >
+                    <Text style={[styles.wrongAnswerTitle, isDark && styles.textWhite]} numberOfLines={2}>
+                      {wa.problemTitle}
+                    </Text>
+                    <View style={styles.wrongAnswerRow}>
+                      <Text style={styles.wrongAnswerLabel}>내 답안</Text>
+                      <Text style={[styles.wrongAnswerValue, styles.wrongAnswerRed]} numberOfLines={2}>{wa.submittedAnswer}</Text>
+                    </View>
+                    <View style={styles.wrongAnswerRow}>
+                      <Text style={styles.wrongAnswerLabel}>정답</Text>
+                      <Text style={[styles.wrongAnswerValue, styles.wrongAnswerGreen]} numberOfLines={2}>{wa.correctAnswer}</Text>
+                    </View>
+                    <Text style={styles.wrongAnswerDate}>{new Date(wa.submittedAt).toLocaleDateString('ko-KR')}</Text>
+                  </TouchableOpacity>
+                ))
+              ) : (
+                <View style={styles.emptyContainer}>
+                  <Text style={[styles.emptyText, isDark && styles.textWhite]}>프로그래밍 오답 기록이 없습니다.</Text>
+                </View>
+              )}
+            </View>
+          )}
           <View style={{ height: 40 }} />
         </ScrollView>
       </KeyboardAvoidingView>
@@ -756,5 +895,50 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#64748b',
     fontWeight: 'bold',
+  },
+  wrongAnswerCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  wrongAnswerTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 12,
+    lineHeight: 20,
+  },
+  wrongAnswerRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 8,
+  },
+  wrongAnswerLabel: {
+    fontSize: 13,
+    color: '#64748b',
+    width: 60,
+    fontWeight: '500',
+  },
+  wrongAnswerValue: {
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  wrongAnswerRed: {
+    color: '#ef4444',
+  },
+  wrongAnswerGreen: {
+    color: '#22c55e',
+  },
+  wrongAnswerDate: {
+    fontSize: 11,
+    color: '#94a3b8',
+    marginTop: 8,
+    textAlign: 'right',
   },
 });

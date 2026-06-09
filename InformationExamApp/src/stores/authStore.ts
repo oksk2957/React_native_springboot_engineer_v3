@@ -6,6 +6,11 @@ import type { User } from '../types';
 import { authService } from '../services/api';
 import { supabase } from '../lib/supabase';
 
+// DEBUG: [Logout-Fix-2026-06-09] 로그아웃 진행 중 플래그
+// 원인: Web에서 signOut() 호출 후 SIGNED_IN 이벤트가 다시 발생해 재로그인되는 레이스 컨디션
+// 해결: 로그아웃 시작 시 true, 완료 시 false → SIGNED_IN 이벤트 무시
+export let isLoggingOut = false;
+
 // DEBUG: [Supabase-OAuth-2026-05-27] AuthStore - Supabase OAuth 통합
 // 원인: Google ID Token 직접 전달 → Supabase OAuth + JWT 검증으로 전환
 // 해결: Supabase signInWithOAuth 사용 후 access_token을 백엔드로 전달
@@ -172,7 +177,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         throw new Error('Supabase access_token을 획득하지 못했습니다.');
       }
 
-      console.log('[AuthStore] access_token 획득 완료');
+      // DEBUG: [AI-AUTHOR-20260609-P0] access_token 상세 정보 로깅 (Google 400 디버깅)
+      const tokenPreview = accessToken.length > 20
+        ? accessToken.substring(0, 20) + '...' : accessToken;
+      console.log('[AuthStore][DEBUG-P0] access_token detail:', {
+        length: accessToken.length,
+        preview: tokenPreview,
+        hasDot: accessToken.includes('.'),
+        startsWith: accessToken.substring(0, 10),
+      });
 
       // 4. 백엔드로 access_token 전달
       console.log('[AuthStore] 백엔드 /api/auth/google로 access_token 전달');
@@ -275,15 +288,52 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: async () => {
+<<<<<<< HEAD
+    // DEBUG: [Logout-Fix-2026-06-09] Supabase 세션도 함께 정리
+    // 원인: authToken만 삭제하고 supabase.auth.signOut()을 호출하지 않아
+    //       Supabase 세션이 AsyncStorage에 남아있어 앱 재시작 시 자동 재로그인됨
+    // 해결: Zustand 상태 리셋 후 supabase.auth.signOut() 호출
+
+    // 1. Zustand 상태 먼저 리셋 (Web 레이스 컨디션 방지)
+=======
+    // DEBUG: [2026-06-08] Supabase 세션도 함께 해제
+    // 원인: supabase.auth.signOut() 미호출로 Supabase 세션이 유지됨
+    //       → 앱 재시작 시 onAuthStateChange가 SIGNED_IN 발화 → isAuthenticated 복구
+    // 해결: logout 시 Supabase 세션도 명시적으로 signOut
+    try {
+      const { error: signOutError } = await supabase.auth.signOut();
+      if (signOutError) {
+        console.warn('[AuthStore] Supabase signOut 경고:', signOutError.message);
+      } else {
+        console.log('[AuthStore] Supabase 세션 해제 완료');
+      }
+    } catch (e: any) {
+      console.warn('[AuthStore] Supabase signOut 예외 (무시):', e.message);
+    }
+
     await authService.logout();
     await AsyncStorage.removeItem('darkMode');
     await AsyncStorage.removeItem('authToken');
     await AsyncStorage.removeItem('tokenExpiryTime'); // DEBUG: [JWT-2026-05-28] 토큰 만료 시간 삭제
+>>>>>>> 43760fffb3f86ddae8c084db5d2d5157f10f1853
     set({
       user: null,
       isAuthenticated: false,
       darkMode: false,
     });
+
+    // 2. AsyncStorage 정리
+    await authService.logout();
+    await AsyncStorage.removeItem('darkMode');
+    await AsyncStorage.removeItem('authToken');
+    await AsyncStorage.removeItem('tokenExpiryTime');
+
+    // 3. Supabase 세션 정리 (SIGNED_OUT 이벤트 발생 → App.tsx에서 추가 정리)
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('[AuthStore] Supabase signOut 실패:', error.message);
+    }
+
     console.log('[AuthStore] 로그아웃 완료');
   },
 

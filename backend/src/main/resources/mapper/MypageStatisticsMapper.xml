@@ -152,4 +152,66 @@
         ORDER BY submittedAt DESC, id DESC
     </select>
 
+    <!-- DEBUG: [2026-06-09-수정계획안09] 개인 오답 통계 - 문제별 오답 횟수 (3가지 문제타입 UNION, 페이지네이션) -->
+    <select id="selectWrongAnswerRanking" resultType="com.example.informationexam.dto.statistics.WrongAnswerRankingRow">
+        SELECT * FROM (
+            SELECT
+                p.id AS problemId,
+                TRIM(s.name) AS subject,
+                SUBSTRING(p.question, 1, 60) AS questionText,
+                COUNT(*) AS wrongCount
+            FROM user_answer ua
+            INNER JOIN problem p ON ua.reference_id = p.id
+            INNER JOIN subject s ON p.subject_id = s.id
+            WHERE ua.user_id = #{userId}
+              AND ua.item_type = 'OBJECTIVE'
+              AND ua.is_correct = false
+            GROUP BY p.id, s.name, p.question
+
+            UNION ALL
+
+            SELECT
+                sp.id AS problemId,
+                TRIM(ss.name) AS subject,
+                SUBSTRING(sp.question, 1, 60) AS questionText,
+                COUNT(*) AS wrongCount
+            FROM user_answer ua
+            INNER JOIN subjective_problems sp ON ua.reference_id = sp.id
+            INNER JOIN subject ss ON sp.subject_id = ss.id
+            WHERE ua.user_id = #{userId}
+              AND ua.item_type = 'SUBJECTIVE'
+              AND ua.is_correct = false
+            GROUP BY sp.id, ss.name, sp.question
+
+            UNION ALL
+
+            SELECT
+                plp.id AS problemId,
+                TRIM(sls.name) AS subject,
+                SUBSTRING(plp.question, 1, 60) AS questionText,
+                COUNT(*) AS wrongCount
+            FROM user_answer ua
+            INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id
+            INNER JOIN subject sls ON plp.subject_id = sls.id
+            WHERE ua.user_id = #{userId}
+              AND ua.item_type = 'PROGRAMMING_LANGUAGE'
+              AND ua.is_correct = false
+            GROUP BY plp.id, sls.name, plp.question
+        ) combined
+        ORDER BY wrongCount DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- DEBUG: [AI-AUTHOR-2026-06-09] 오답 달력 - 날짜별 오답 개수 조회 (wrong_answer_bookmark 기반) -->
+    <select id="selectWrongAnswerCountByDateRange" resultType="map">
+        SELECT DATE(bookmarked_at) AS date,
+               COUNT(*) AS count
+        FROM wrong_answer_bookmark
+        WHERE user_id = #{userId}
+          AND bookmarked_at >= #{startDate}
+          AND bookmarked_at &lt; #{endDate}
+        GROUP BY DATE(bookmarked_at)
+        ORDER BY date
+    </select>
+
 </mapper>

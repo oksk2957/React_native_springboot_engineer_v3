@@ -449,6 +449,26 @@ export const statisticsService = {
     });
     return response.data;
   },
+
+  // DEBUG: [AI-AUTHOR-2026-06-09] 오답 달력 - 월별 날짜별 오답 개수 조회
+  // 백엔드: GET /wrong-answers/calendar?year=2026&month=6
+  // 응답: [{date: "2026-06-09", count: 3}, ...]
+  getWrongAnswerCalendar: async (year: number, month: number): Promise<Array<{date: string, count: number}>> => {
+    const response = await api.get('/wrong-answers/calendar', {
+      params: { year, month },
+    });
+    return response.data;
+  },
+
+  // DEBUG: [AI-AUTHOR-2026-06-09-수정계획안08] 오답 카운트 랭킹 조회 (페이징)
+  // 백엔드: GET /statistics/wrong-answer-ranking?offset=0&limit=30
+  // 응답: { userId, username, nickname, wrongCount }[]
+  getWrongAnswerRanking: async (offset: number, limit: number): Promise<Array<{userId: number, username: string, nickname: string, wrongCount: number}>> => {
+    const response = await api.get('/statistics/wrong-answer-ranking', {
+      params: { offset, limit },
+    });
+    return response.data;
+  },
 };
 
 export default api;

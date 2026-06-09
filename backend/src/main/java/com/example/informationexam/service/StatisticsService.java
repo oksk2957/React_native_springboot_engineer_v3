@@ -126,4 +126,9 @@ public class StatisticsService {
         }
         return 0;
     }
+
+    // DEBUG: [2026-06-09-수정계획안09] 개인 오답 통계 - 문제별 오답 횟수 (userId 필터링)
+    public List<com.example.informationexam.dto.statistics.WrongAnswerRankingRow> getWrongAnswerRanking(Long userId, int offset, int limit) {
+        return mypageStatisticsMapper.selectWrongAnswerRanking(userId, offset, limit);
+    }
 }

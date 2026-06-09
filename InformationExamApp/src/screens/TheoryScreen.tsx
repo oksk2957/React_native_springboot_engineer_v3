@@ -373,7 +373,7 @@ export default function TheoryScreen() {
 
                               return (
                                 <TouchableOpacity
-                                  key={index}
+                                  key={option}
                                   style={buttonStyle}
                                   onPress={() => handleOptionSelect(option)}
                                   disabled={showAnswer}

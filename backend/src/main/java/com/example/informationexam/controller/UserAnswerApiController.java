@@ -85,6 +85,26 @@ public class UserAnswerApiController {
         return ResponseEntity.ok(response);
     }
 
+    // DEBUG: [AI-AUTHOR-2026-06-09] 오답 달력 - 월별 날짜별 오답 개수 조회
+    // wrong_answer_bookmark 테이블의 bookmarked_at 기준 날짜별 오답 카운트 반환
+    // 응답: [{date: "2026-06-09", count: 3}, ...]
+    @GetMapping("/calendar")
+    public ResponseEntity<List<Map<String, Object>>> getWrongAnswerCalendar(
+            @RequestParam("year") int year,
+            @RequestParam("month") int month,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        Long userId = extractUserId(authHeader);
+        if (userId == null) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.plusMonths(1);
+
+        List<Map<String, Object>> result = mypageStatisticsMapper.selectWrongAnswerCountByDateRange(userId, startDate, endDate);
+        return ResponseEntity.ok(result);
+    }
+
     // DEBUG: [2026-06-08] IDOR 취약점 수정 - 토큰 기반 userId 추출만 허용
     // 원인: 기존 extractUserId는 토큰 실패 시 userIdParam fallback → IDOR 취약점
     // 해결: 토큰 없거나 실패하면 null 반환, userIdParam 파라미터 제거

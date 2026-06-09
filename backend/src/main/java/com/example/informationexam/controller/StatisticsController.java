@@ -81,4 +81,31 @@ public class StatisticsController {
 
         return ResponseEntity.ok(statisticsService.getSubjectRanking(userId));
     }
+
+    // DEBUG: [2026-06-09-수정계획안09] 개인 오답 통계 - 문제별 오답 횟수 (userId 필터링, 페이지네이션)
+    @GetMapping("/wrong-answer-ranking")
+    public ResponseEntity<?> getWrongAnswerRanking(
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "30") int limit) {
+        Long userId = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            try {
+                String token = authHeader.replace("Bearer ", "");
+                String username = jwtTokenProvider.getUsername(token);
+                User user = userService.getUserByUsername(username);
+                userId = user.getId();
+            } catch (Exception e) {
+                // 토큰이 유효하지 않으면 빈 결과 반환
+                return ResponseEntity.ok(new java.util.ArrayList<>());
+            }
+        }
+
+        if (userId == null) {
+            return ResponseEntity.ok(new java.util.ArrayList<>());
+        }
+
+        return ResponseEntity.ok(statisticsService.getWrongAnswerRanking(userId, offset, limit));
+    }
 }
