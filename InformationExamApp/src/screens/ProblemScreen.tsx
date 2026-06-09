@@ -146,9 +146,46 @@ export default function ProblemScreen() {
         console.log(`[ProblemScreen] first problem selected - id: ${first.id}, type: ${first.type}`);
         setCurrentProblem(first);
       }
-    } catch (error) {
-      console.error('Error loading problems:', error);
-      Alert.alert('오류', '문제를 불러오지 못했습니다.');
+    } catch (error: any) {
+      // DEBUG: [수정계획안12] 에러 타입별 상세 처리 — 네트워크/타임아웃/HTTP 상태코드 구분
+      const err = error as any;
+      let title = '오류';
+      let message = '문제를 불러오지 못했습니다.';
+
+      if (!err?.response) {
+        // 응답 없음 = 네트워크 연결 불가 또는 타임아웃
+        if (err?.code === 'ECONNABORTED' || err?.message?.includes('timeout')) {
+          title = '시간 초과';
+          message = '서버 응답이 지연되고 있습니다.\n네트워크 상태를 확인하고 다시 시도해주세요.';
+        } else if (err?.code === 'ERR_NETWORK' || err?.message?.includes('Network Error')) {
+          title = '네트워크 오류';
+          message = '서버에 연결할 수 없습니다.\n인터넷 연결을 확인하고 다시 시도해주세요.';
+        } else {
+          title = '연결 오류';
+          message = `서버에 연결하지 못했습니다.\n${err?.message ?? '원인을 알 수 없습니다.'}`;
+        }
+      } else {
+        // HTTP 응답 있음 — 상태코드별 처리
+        const status = err.response.status;
+        if (status === 401) {
+          title = '인증 만료';
+          message = '로그인이 만료되었습니다.\n다시 로그인해주세요.';
+        } else if (status === 404) {
+          title = '데이터 없음';
+          message = '요청한 문제를 찾을 수 없습니다.';
+        } else if (status === 500 || status >= 500) {
+          title = '서버 오류';
+          message = '서버에 문제가 발생했습니다.\n잠시 후 다시 시도해주세요.';
+        } else {
+          message = `문제를 불러오지 못했습니다. (코드: ${status})`;
+        }
+      }
+
+      console.error(`[ProblemScreen] loadProblems error - type: ${err?.code ?? 'http'}, status: ${err?.response?.status ?? 'N/A'}, message: ${err?.message}`);
+      Alert.alert(title, message, [
+        { text: '확인', style: 'cancel' },
+        { text: '다시 시도', onPress: () => void loadProblems() },
+      ]);
     } finally {
       if (seq === loadSeqRef.current) {
         setIsLoading(false);
@@ -177,8 +214,37 @@ export default function ProblemScreen() {
       } else {
         Alert.alert('틀렸습니다. ✍️', `정답: ${result.correctAnswer}\n\n${result.explanation}`);
       }
-    } catch (error) {
-      setShowResult(true);
+    } catch (error: any) {
+      // DEBUG: [2026-06-09] handleSubmit 에러 핸들링 개선
+      // 원인: 네트워크 에러 시 조용히 삼켜서 사용자가 답안 제출 실패를 인지 못함
+      // 해결: 에러 타입별 메시지 + 재시도 옵션 제공
+      console.error('[ProblemScreen] handleSubmit error:', error?.message || error);
+      const err = error as any;
+      let title = '답안 제출 실패';
+      let message = '답안 제출 중 오류가 발생했습니다.';
+
+      if (!err?.response) {
+        if (err?.code === 'ECONNABORTED' || err?.message?.includes('timeout')) {
+          message = '서버 응답이 지연되고 있습니다.\n네트워크 상태를 확인하고 다시 시도해주세요.';
+        } else {
+          message = '서버에 연결할 수 없습니다.\n인터넷 연결을 확인해주세요.';
+        }
+      } else {
+        const status = err.response.status;
+        if (status === 401) {
+          title = '인증 만료';
+          message = '로그인이 만료되었습니다.\n다시 로그인해주세요.';
+        } else if (status === 500) {
+          message = '서버 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.';
+        } else {
+          message = `답안 제출 실패 (코드: ${status})`;
+        }
+      }
+
+      Alert.alert(title, message, [
+        { text: '확인', style: 'cancel' },
+        { text: '다시 제출', onPress: () => void handleSubmit() },
+      ]);
     }
   };
 
@@ -203,9 +269,24 @@ export default function ProblemScreen() {
       setCurrentIndex(nextIndex);
       setCurrentProblem(p);
       console.log(`[ProblemScreen] goToProblemIndex success - problemId: ${p.id}, index: ${nextIndex}`);
-    } catch (e) {
-      console.error(e);
-      Alert.alert('오류', '문제를 불러오지 못했습니다.');
+    } catch (e: any) {
+      // DEBUG: [수정계획안12] 에러 타입별 상세 처리
+      const err = e as any;
+      let msg = '문제를 불러오지 못했습니다.';
+      if (!err?.response) {
+        if (err?.code === 'ECONNABORTED' || err?.message?.includes('timeout')) {
+          msg = '서버 응답이 지연됩니다. 잠시 후 다시 시도해주세요.';
+        } else {
+          msg = '네트워크 연결을 확인해주세요.';
+        }
+      } else if (err.response.status === 404) {
+        msg = '문제를 찾을 수 없습니다.';
+      }
+      console.error(`[ProblemScreen] goToProblemIndex error - status: ${err?.response?.status ?? 'N/A'}`);
+      Alert.alert('오류', msg, [
+        { text: '확인', style: 'cancel' },
+        { text: '다시 시도', onPress: () => void goToProblemIndex(nextIndex) },
+      ]);
     } finally {
       setIsNavLoading(false);
     }

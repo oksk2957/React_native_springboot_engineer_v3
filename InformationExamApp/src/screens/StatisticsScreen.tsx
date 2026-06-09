@@ -8,6 +8,7 @@ import {
   Switch,
   Alert,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { CommonActions } from '@react-navigation/native';
@@ -16,13 +17,18 @@ import { useAuthStore } from '../stores/authStore';
 import { statisticsService } from '../services/api';
 import type { MainTabParamList } from '../navigation/AppNavigator';
 
+// DEBUG: [AI-AUTHOR-2026-06-09-출석이미지] 달력에 표시할 출석 스탬프 이미지
+const ATTENDANCE_STAMP = require('../../assets/출석_이미지.png');
+
 type TabNav = BottomTabNavigationProp<MainTabParamList, 'Statistics'>;
 
-// DEBUG: [AI-AUTHOR-2026-06-09-수정계획안08] 오답 카운트 랭킹 타입
+// DEBUG: [AI-AUTHOR-2026-06-09-수정계획안11] 문제별 오답 랭킹 타입 (사용자가 가장 많이 틀린 문제 순위)
 interface WrongAnswerRankingItem {
-  userId: number;
-  username: string;
-  nickname: string;
+  problemId: number;
+  itemType: string;      // OBJECTIVE, SUBJECTIVE, PROGRAMMING_LANGUAGE
+  referenceId: number;
+  subject: string;
+  questionText: string;
   wrongCount: number;
 }
 
@@ -244,6 +250,87 @@ export default function StatisticsScreen() {
           ) : null}
         </View>
 
+
+
+        {/* Wrong Answer Ranking */}
+        <View style={[styles.rankingSection, isDark && styles.sectionDark]}>
+          <Text style={[styles.sectionTitle, isDark && styles.sectionTitleDark]}>
+             랭킹
+          </Text>
+          <Text style={[styles.hint, isDark && styles.chartLabelDark]}>
+            문제별 오답 수 (메달 TOP3, 4~30위 번호, 31위+ 게시판)
+          </Text>
+
+          {wrongAnswerRanking.length === 0 ? (
+            <View style={styles.emptyContainer}>
+              <Text style={[styles.emptyText, isDark && styles.chartLabelDark]}>
+                오답 데이터가 없습니다
+              </Text>
+            </View>
+          ) : (
+            <>
+              {wrongAnswerRanking.map((item, index) => {
+                const rank = index + 1;
+                const medal = MEDAL[rank];
+                const typeLabel = item.itemType === 'OBJECTIVE' ? '객관식'
+                  : item.itemType === 'SUBJECTIVE' ? '주관식' : '프로그래밍';
+                return (
+                  <TouchableOpacity
+                    key={item.problemId}
+                    style={[styles.rankingItem, isDark && styles.rankingItemDark, rank <= 3 && styles.rankingItemTop3]}
+                    onPress={() => navigation.navigate('Problem', { problemId: item.referenceId, mode: 'normal' })}
+                  >
+                    <View style={styles.rankContainer}>
+                      {medal ? (
+                        <Text style={styles.medalText}>{medal}</Text>
+                      ) : (
+                        <Text style={[styles.rankNumber, isDark && styles.chartLabelDark]}>
+                          {rank}
+                        </Text>
+                      )}
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text
+                        style={[
+                          styles.subjectName,
+                          isDark && styles.titleDark,
+                          rank <= 3 && styles.subjectNameBold,
+                        ]}
+                        numberOfLines={2}
+                      >
+                        {/* DEBUG: [2026-06-09] 문제: {substring} 과목: {subject} 형식으로 변경 */}
+                        문제: {item.questionText || `#${item.problemId}`} 과목: {item.subject}
+                      </Text>
+                    </View>
+                    <Text style={[styles.attemptedCount, isDark && styles.titleDark]}>
+                      {item.wrongCount}회
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+              {hasMore && (
+                <TouchableOpacity
+                  style={[styles.loadMoreButton, isLoadingMore && styles.loadMoreButtonDisabled]}
+                  onPress={handleLoadMore}
+                  disabled={isLoadingMore}
+                >
+                  {isLoadingMore ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text style={styles.loadMoreText}>더보기 (다음 30건)</Text>
+                  )}
+                </TouchableOpacity>
+              )}
+            </>
+          )}
+        </View>
+
+
+
+
+
+
+
         {/* DEBUG: [AI-AUTHOR-2026-06-09] 이번 주 오답 대시보드 */}
         <View style={[styles.section, isDark && styles.sectionDark]}>
           <Text style={[styles.sectionTitle, isDark && styles.sectionTitleDark]}>
@@ -335,16 +422,31 @@ export default function StatisticsScreen() {
                     isToday && styles.calendarCellToday
                   ]}
                 >
-                  <Text
-                    style={[
-                      styles.calendarDateText,
-                      count > 0 ? styles.calendarDateTextWhite : isDark && styles.textDark
-                    ]}
-                  >
-                    {date.getDate()}
-                  </Text>
+                  {/* DEBUG: [AI-AUTHOR-2026-06-09-출석이미지] 날짜 + 출석이미지 + 카운트 */}
+                  {/* DEBUG: [2026-06-09-fix] RN Web에서 Image-Text 형제 금지 → 각 Text를 View로 래핑 */}
+                  <View>
+                    <Text
+                      style={[
+                        styles.calendarDateText,
+                        count > 0 ? styles.calendarDateTextWhite : isDark && styles.textDark
+                      ]}
+                    >
+                      {date.getDate()}
+                    </Text>
+                  </View>
                   {count > 0 && (
-                    <Text style={styles.calendarCountText}>{count}</Text>
+                    <View>
+                      <Image
+                        source={ATTENDANCE_STAMP}
+                        style={styles.calendarAttendanceImage}
+                        resizeMode="contain"
+                      />
+                    </View>
+                  )}
+                  {count > 0 && (
+                    <View>
+                      <Text style={styles.calendarCountText}>{count}</Text>
+                    </View>
                   )}
                 </View>
               );
@@ -386,160 +488,7 @@ export default function StatisticsScreen() {
           </View>
         </View>
 
-        {/* DEBUG: [AI-AUTHOR-2026-06-09] 오답 이력 달력 섹션 */}
-        <View style={[styles.calendarSection, isDark && styles.sectionDark]}>
-          {/* 달력 헤더 (월 이동) */}
-          <View style={styles.calendarHeader}>
-            <TouchableOpacity onPress={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}>
-              <Text style={[styles.calendarNavBtn, isDark && styles.chartLabelDark]}>{'<'}</Text>
-            </TouchableOpacity>
-            <Text style={[styles.calendarMonthText, isDark && styles.titleDark]}>
-              {currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월
-            </Text>
-            <TouchableOpacity onPress={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}>
-              <Text style={[styles.calendarNavBtn, isDark && styles.chartLabelDark]}>{'>'}</Text>
-            </TouchableOpacity>
-          </View>
 
-          {/* 요일 헤더 */}
-          <View style={styles.weekdayRow}>
-            {['월', '화', '수', '목', '금', '토', '일'].map((d, i) => (
-              <Text key={d} style={[styles.weekdayText, isDark && styles.chartLabelDark, (i === 5 || i === 6) && styles.weekendText]}>
-                {d}
-              </Text>
-            ))}
-          </View>
-
-          {/* 달력 그리드 */}
-          <View style={styles.calendarGrid}>
-            {generateCalendarDays().map((date, i) => {
-              if (!date) return <View key={`empty-${i}`} style={styles.calendarCell} />;
-              const count = getCountForDate(date);
-              const color = getHeatmapColor(count);
-              return (
-                <View key={date.toISOString()} style={[styles.calendarCell, { backgroundColor: color }]}>
-                  <Text style={[styles.calendarDayText, count > 0 && styles.calendarDayTextWithCount]}>
-                    {date.getDate()}
-                  </Text>
-                  {count > 0 && (
-                    <Text style={styles.calendarCountText}>{count}</Text>
-                  )}
-                </View>
-              );
-            })}
-          </View>
-
-          {/* 범례 */}
-          <View style={styles.legendRow}>
-            {[
-              { label: '0', color: '#e2e8f0' },
-              { label: '1-5', color: '#4a90e2' },
-              { label: '6-10', color: '#4caf50' },
-              { label: '11-15', color: '#ffeb3b' },
-              { label: '16-20', color: '#ff9800' },
-              { label: '21-25', color: '#f57c00' },
-              { label: '26+', color: '#e53e3e' },
-            ].map(item => (
-              <View key={item.label} style={[styles.legendItem, { backgroundColor: item.color }]}>
-                <Text style={[styles.legendText, (item.label === '11-15' || item.label === '26+') && styles.legendTextDark]}>{item.label}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* DEBUG: [AI-AUTHOR-2026-06-09] 이번 주 오답 대시보드 */}
-        <View style={[styles.calendarSection, isDark && styles.sectionDark]}>
-          <Text style={[styles.sectionTitle, isDark && styles.sectionTitleDark]}>이번 주 오답 대시보드</Text>
-          <View style={styles.weekDashboardRow}>
-            {getWeekDates().map((date, i) => {
-              const count = getCountForDate(date);
-              const isToday = date.toDateString() === new Date().toDateString();
-              return (
-                <View key={i} style={[styles.weekDashboardItem, isToday && styles.weekDashboardToday]}>
-                  <Text style={[styles.weekDayLabel, isDark && styles.chartLabelDark]}>
-                    {['월', '화', '수', '목', '금', '토', '일'][i]}
-                  </Text>
-                  <Text style={[styles.weekDateText, isDark && styles.chartLabelDark]}>
-                    {date.getDate()}
-                  </Text>
-                  <View style={[styles.weekCountBadge, { backgroundColor: getHeatmapColor(count) }]}>
-                    <Text style={[styles.weekCountText, count > 15 && styles.weekCountTextDark]}>
-                      {count}
-                    </Text>
-                  </View>
-                </View>
-              );
-            })}
-          </View>
-        </View>
-
-        {/* Wrong Answer Ranking */}
-        <View style={[styles.rankingSection, isDark && styles.sectionDark]}>
-          <Text style={[styles.sectionTitle, isDark && styles.sectionTitleDark]}>
-            오답노트 랭킹
-          </Text>
-          <Text style={[styles.hint, isDark && styles.chartLabelDark]}>
-            사용자별 오답 카운트 (메달 TOP3, 4~30위 번호, 31위+ 게시판)
-          </Text>
-
-          {wrongAnswerRanking.length === 0 ? (
-            <View style={styles.emptyContainer}>
-              <Text style={[styles.emptyText, isDark && styles.chartLabelDark]}>
-                오답 데이터가 없습니다
-              </Text>
-            </View>
-          ) : (
-            <>
-              {wrongAnswerRanking.map((item, index) => {
-                const rank = index + 1;
-                const medal = MEDAL[rank];
-                const displayName = item.nickname || item.username || `사용자${item.userId}`;
-                return (
-                  <View
-                    key={item.userId}
-                    style={[styles.rankingItem, isDark && styles.rankingItemDark, rank <= 3 && styles.rankingItemTop3]}
-                  >
-                    <View style={styles.rankContainer}>
-                      {medal ? (
-                        <Text style={styles.medalText}>{medal}</Text>
-                      ) : (
-                        <Text style={[styles.rankNumber, isDark && styles.chartLabelDark]}>
-                          {rank}
-                        </Text>
-                      )}
-                    </View>
-                    <Text
-                      style={[
-                        styles.subjectName,
-                        isDark && styles.titleDark,
-                        rank <= 3 && styles.subjectNameBold,
-                      ]}
-                      numberOfLines={1}
-                    >
-                      {displayName}
-                    </Text>
-                    <Text style={[styles.attemptedCount, isDark && styles.titleDark]}>
-                      {item.wrongCount}개
-                    </Text>
-                  </View>
-                );
-              })}
-              {hasMore && (
-                <TouchableOpacity
-                  style={[styles.loadMoreButton, isLoadingMore && styles.loadMoreButtonDisabled]}
-                  onPress={handleLoadMore}
-                  disabled={isLoadingMore}
-                >
-                  {isLoadingMore ? (
-                    <ActivityIndicator size="small" color="#fff" />
-                  ) : (
-                    <Text style={styles.loadMoreText}>더보기 (다음 30건)</Text>
-                  )}
-                </TouchableOpacity>
-              )}
-            </>
-          )}
-        </View>
 
         {/* Settings */}
         <View style={[styles.settingsSection, isDark && styles.sectionDark]}>
@@ -654,6 +603,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#2d3748',
     marginHorizontal: 12,
+  },
+  typeLabel: {
+    fontSize: 12,
+    color: '#6b7280',
+    fontWeight: '500',
+    marginBottom: 2,
   },
   subjectNameBold: {
     fontWeight: '600',
@@ -772,11 +727,13 @@ const styles = StyleSheet.create({
   },
   calendarCell: {
     width: '14.28%',
-    aspectRatio: 1,
+    minHeight: 50,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
     marginVertical: 2,
+    overflow: 'visible',
+    paddingVertical: 4,
   },
   calendarDayText: {
     fontSize: 12,
@@ -934,11 +891,13 @@ const styles = StyleSheet.create({
   },
   calendarCell: {
     width: '14.28%',
-    aspectRatio: 1,
+    minHeight: 50,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 2,
     borderRadius: 6,
+    overflow: 'visible',
+    paddingVertical: 4,
   },
   calendarCellToday: {
     borderWidth: 2,
@@ -956,6 +915,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#fff',
     fontWeight: 'bold',
+    marginTop: 2,
+  },
+  // DEBUG: [AI-AUTHOR-2026-06-09-출석이미지] 출석 탬프 이미지 스타일 (크게)
+  calendarAttendanceImage: {
+    width: 28,
+    height: 28,
     marginTop: 2,
   },
   legendContainer: {

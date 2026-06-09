@@ -460,10 +460,10 @@ export const statisticsService = {
     return response.data;
   },
 
-  // DEBUG: [AI-AUTHOR-2026-06-09-수정계획안08] 오답 카운트 랭킹 조회 (페이징)
+  // DEBUG: [2026-06-09-수정계획안11] 문제별 오답 랭킹 조회 (페이징)
   // 백엔드: GET /statistics/wrong-answer-ranking?offset=0&limit=30
-  // 응답: { userId, username, nickname, wrongCount }[]
-  getWrongAnswerRanking: async (offset: number, limit: number): Promise<Array<{userId: number, username: string, nickname: string, wrongCount: number}>> => {
+  // 응답: { problemId, itemType, referenceId, subject, questionText, wrongCount }[]
+  getWrongAnswerRanking: async (offset: number, limit: number): Promise<Array<{problemId: number, itemType: string, referenceId: number, subject: string, questionText: string, wrongCount: number}>> => {
     const response = await api.get('/statistics/wrong-answer-ranking', {
       params: { offset, limit },
     });

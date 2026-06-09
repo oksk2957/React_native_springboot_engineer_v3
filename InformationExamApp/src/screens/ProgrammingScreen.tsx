@@ -14,8 +14,9 @@ import {
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useAuthStore } from '../stores/authStore';
 import { problemService, statisticsService } from '../services/api';
-import type { Problem, WrongAnswer } from '../types';
-
+import { fetchTheoryCards } from '../api/theoryApi';
+import { TheoryCard } from '../types/theory';
+import type { WrongAnswer } from '../types';
 
 const languageIcons: Record<string, string> = {
   'C언어': '🅒',
@@ -33,9 +34,10 @@ const languageColors: Record<string, string> = {
 
 const languages = Object.keys(languageIcons);
 
-// 언어별 문제 필터링 키워드
+// DEBUG: [2026-06-09] 수정계획안12 - TheoryScreen 패턴으로 재구현
+// 언어별 카드 필터링 키워드 (frontText/category 기준)
 const LANGUAGE_KEYWORDS: Record<string, string[]> = {
-  'C언어': ['[C]', '[c]', 'C언어', 'c언어'],
+  'C언어': ['[C]', '[c]', 'C언어', 'c언어', 'C ', 'c '],
   'Java': ['[Java]', '[java]', 'Java', 'java'],
   'Python': ['[Python]', '[python]', 'Python', 'python'],
   '공통개념': ['[공통]', '[common]', '공통개념'],
@@ -48,81 +50,99 @@ export default function ProgrammingScreen() {
   const targetProblemId = route?.params?.problemId;
   const sessionId = route?.params?.sessionId ?? route?.params?.studySessionId ?? storedSessionId ?? null;
   const [currentLanguage, setCurrentLanguage] = useState(route?.params?.language || 'C언어');
-  const [allProblems, setAllProblems] = useState<Problem[]>([]);
+
+  // DEBUG: [2026-06-09] TheoryCard 타입 사용 (TheoryScreen과 동일)
+  const [allCards, setAllCards] = useState<TheoryCard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isContentLoading, setIsContentLoading] = useState(false);
 
-  // DEBUG: [2026-06-09] #46 오답노트 탭 구현
-  const [activeTab, setActiveTab] = useState<'card' | 'wrongNote'>('card');
-  const [wrongAnswers, setWrongAnswers] = useState<WrongAnswer[]>([]);
-  const [isWrongLoading, setIsWrongLoading] = useState(false);
+  // DEBUG: [2026-06-09] 수정계획안13 - 2개 탭 (flash/subjective)
+  const [activeTab, setActiveTab] = useState<'flash' | 'subjective'>('flash');
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
+  const [showAnswer, setShowAnswer] = useState(false);
 
   const [toastVisible, setToastVisible] = useState(false);
   const [toastConfig, setToastConfig] = useState({ message: '', type: 'success' });
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
 
-  // 무한 루프 방지: isMounted 플래그
   const isMountedRef = useRef(true);
 
   const isDark = darkMode;
   const themeColor = languageColors[currentLanguage] || '#4a90e2';
 
+  // DEBUG: [2026-06-09] 현재 탭에 맞는 카드 필터링
+  const filteredCards = allCards.filter(card => {
+    // 탭 필터링
+    const tabMatch = activeTab === 'flash' ? card.cardType === 'FLASHCARD' : card.cardType === 'SUBJECTIVE';
+    if (!tabMatch) return false;
+
+    // DEBUG: [2026-06-09] 언어 필터링 개선
+    // 원인: card.category는 '프로그래밍언어'이고, front_text에 언어명이 없는 경우 필터링됨
+    // 해결: front_text에서 언어 패턴을 더 유연하게 검색
+    if (currentLanguage === '공통개념') {
+      // 공통개념은 모든 카드 포함 (언어별 카드가 아닌 것들)
+      const isLanguageSpecific = ['C언어', 'c언어', 'C ', 'Java', 'java', 'Python', 'python']
+        .some(kw => `${card.frontText} ${card.category}`.toLowerCase().includes(kw.toLowerCase()));
+      return !isLanguageSpecific;
+    }
+
+    const keywords = LANGUAGE_KEYWORDS[currentLanguage] || [];
+    const searchText = `${card.frontText} ${card.category} ${card.backText}`.toLowerCase();
+    return keywords.some(keyword => searchText.includes(keyword.toLowerCase()));
+  });
+
+  const currentCard = filteredCards[currentIndex] || null;
+  const totalInTab = filteredCards.length;
+
   // [지상 최고 개발자 조치] 오답 노트 연동: 특정 문제 포커싱 및 언어 자동 전환
   useEffect(() => {
-    if (route.params?.problemId && allProblems.length > 0) {
+    if (route.params?.problemId && allCards.length > 0) {
       const targetId = Number(route.params.problemId);
-      const targetProblem = allProblems.find(p => p.id === targetId);
-      
-      if (targetProblem) {
+      const targetCard = allCards.find(c => c.id === targetId);
+
+      if (targetCard) {
         // 1. 해당 문제가 속한 언어 찾기
-        const questionText = (targetProblem.question || '').toLowerCase();
+        const searchText = `${targetCard.frontText} ${targetCard.category}`.toLowerCase();
         let matchedLang = '공통개념';
         for (const [lang, keywords] of Object.entries(LANGUAGE_KEYWORDS)) {
-          if (keywords.some(k => questionText.includes(k.toLowerCase()))) {
+          if (keywords.some(k => searchText.includes(k.toLowerCase()))) {
             matchedLang = lang;
             break;
           }
         }
-        
-        // 2. 언어 변경 및 인덱스 설정
+
+        // 2. 탭 결정 (SUBJECTIVE면 subjective 탭으로)
+        const targetTab = targetCard.cardType === 'SUBJECTIVE' ? 'subjective' : 'flash';
+        setActiveTab(targetTab);
+
+        // 3. 언어 변경
         setCurrentLanguage(matchedLang);
-        
-        // 3. 필터링된 리스트에서의 인덱스 찾기는 다음 렌더링(problems useMemo) 후에 수행되도록 지연
+
+        // 4. 인덱스 설정 (다음 렌더링 후에)
         setTimeout(() => {
-          const filteredItems = allProblems.filter(p => {
-            const q = (p.question || '').toLowerCase();
-            return LANGUAGE_KEYWORDS[matchedLang].some(k => q.includes(k.toLowerCase()));
+          const filtered = allCards.filter(card => {
+            const tabMatch = targetTab === 'flash' ? card.cardType === 'FLASHCARD' : card.cardType === 'SUBJECTIVE';
+            if (!tabMatch) return false;
+            const keywords = LANGUAGE_KEYWORDS[matchedLang] || [];
+            const text = `${card.frontText} ${card.category}`.toLowerCase();
+            return keywords.some(k => text.includes(k.toLowerCase()));
           });
-          const idx = filteredItems.findIndex(p => p.id === targetId);
+          const idx = filtered.findIndex(c => c.id === targetId);
           if (idx !== -1) {
             setCurrentIndex(idx);
+            setIsFlipped(false);
+            setShowAnswer(false);
+            setSelectedOption(null);
           }
         }, 100);
 
-        // 파라미터 처리 완료 후 초기화
         navigation.setParams({ problemId: undefined } as any);
       }
     }
-  }, [route.params?.problemId, allProblems]);
-
-  // 언어별 문제 필터링
-  const problems = React.useMemo(() => {
-    const keywords = LANGUAGE_KEYWORDS[currentLanguage] || [];
-
-    return allProblems.filter((problem) => {
-      const questionText = typeof problem?.question === 'string' ? problem.question : '';
-      const normalizedQuestion = questionText.toLowerCase();
-
-      return keywords.some((keyword) => {
-        if (typeof keyword !== 'string' || keyword.length === 0) {
-          return false;
-        }
-        return normalizedQuestion.includes(keyword.toLowerCase());
-      });
-    });
-  }, [allProblems, currentLanguage]);
+  }, [route.params?.problemId, allCards]);
 
   useEffect(() => {
     if (!targetProblemId) return;
@@ -130,75 +150,50 @@ export default function ProgrammingScreen() {
   }, [targetProblemId]);
 
   useEffect(() => {
-    if (!targetProblemId || allProblems.length === 0) return;
-
-    const matchedProblem = allProblems.find((problem) => Number(problem.id) === Number(targetProblemId));
-    if (!matchedProblem) {
-      console.log(`[ProgrammingScreen] auto-focus miss - problemId: ${targetProblemId}`);
-      return;
-    }
-
-    const matchedLanguage = languages.find((language) => {
-      const keywords = LANGUAGE_KEYWORDS[language] || [];
-      const text = `${matchedProblem.question ?? ''} ${matchedProblem.explanation ?? ''}`.toLowerCase();
-      return keywords.some((keyword) => text.includes(keyword.toLowerCase()));
-    }) || '공통개념';
-
-    console.log(`[ProgrammingScreen] auto-focus candidate - problemId: ${targetProblemId}, matchedLanguage: ${matchedLanguage}, currentLanguage: ${currentLanguage}`);
-
-    if (matchedLanguage !== currentLanguage) {
-      console.log(`[ProgrammingScreen] switching language to ${matchedLanguage} before focusing problemId: ${targetProblemId}`);
-      setCurrentLanguage(matchedLanguage);
-      return;
-    }
-
-    const matchedIndex = problems.findIndex((problem) => Number(problem.id) === Number(targetProblemId));
-    console.log(`[ProgrammingScreen] matched index: ${matchedIndex}, language: ${currentLanguage}`);
-
-    if (matchedIndex >= 0 && currentIndex !== matchedIndex) {
-      console.log(`[ProgrammingScreen] syncing currentIndex after language filter - problemId: ${targetProblemId}, index: ${matchedIndex}, language: ${currentLanguage}`);
-      setCurrentIndex(matchedIndex);
-      setIsFlipped(false);
-      console.log(`[ProgrammingScreen] auto-focus success - problemId: ${targetProblemId}, index: ${matchedIndex}, language: ${currentLanguage}`);
-    }
-  }, [allProblems, currentIndex, currentLanguage, problems, targetProblemId]);
-
-  useEffect(() => {
     isMountedRef.current = true;
     loadProgrammingData();
-    
+
     return () => {
       isMountedRef.current = false;
     };
   }, []);
 
   useEffect(() => {
-    if (allProblems.length > 0 && isMountedRef.current) {
+    if (allCards.length > 0 && isMountedRef.current) {
       setCurrentIndex(0);
       setIsFlipped(false);
+      setShowAnswer(false);
+      setSelectedOption(null);
     }
-  }, [currentLanguage]);
+  }, [currentLanguage, activeTab]);
 
+  // DEBUG: [2026-06-09] TheoryScreen과 동일한 API 사용
   const loadProgrammingData = async () => {
     if (!isMountedRef.current) return;
-    
-    if (allProblems.length > 0) {
+
+    if (allCards.length > 0) {
       setIsContentLoading(true);
     } else {
       setIsLoading(true);
     }
-    
+
     try {
-      const data = await problemService.getTheoryProblems('프로그래밍언어');
+      console.log(`[ProgrammingScreen] fetchTheoryCards 호출 - category: 프로그래밍언어`);
+      const data = await fetchTheoryCards('프로그래밍언어');
       if (isMountedRef.current) {
-        console.log(`[ProgrammingScreen] loaded problems: ${data?.length ?? 0}`);
-        setAllProblems(data || []);
+        console.log(`[ProgrammingScreen] loaded cards: ${data?.length ?? 0}`);
+        if (data && data.length > 0) {
+          const subjectiveCount = data.filter(c => c.cardType === 'SUBJECTIVE').length;
+          const flashcardCount = data.filter(c => c.cardType === 'FLASHCARD').length;
+          console.log(`[ProgrammingScreen] 카드 유형별 개수 - SUBJECTIVE: ${subjectiveCount}, FLASHCARD: ${flashcardCount}`);
+        }
+        setAllCards(data || []);
       }
     } catch (error) {
       console.error('Error loading programming data:', error);
       Alert.alert('오류', '데이터베이스에서 프로그래밍 데이터를 불러오지 못했습니다.');
       if (isMountedRef.current) {
-        setAllProblems([]);
+        setAllCards([]);
       }
     } finally {
       if (isMountedRef.current) {
@@ -208,81 +203,7 @@ export default function ProgrammingScreen() {
     }
   };
 
-  // DEBUG: [2026-06-09] #46 오답노트 탭 데이터 로드
-  const loadWrongAnswers = useCallback(async () => {
-    if (!isMountedRef.current) return;
-    setIsWrongLoading(true);
-    try {
-      const data = await statisticsService.getWrongAnswersByType('PROGRAMMING_LANGUAGE');
-      if (isMountedRef.current) {
-        setWrongAnswers(data || []);
-      }
-    } catch (error) {
-      console.error('[ProgrammingScreen] Failed to load wrong answers:', error);
-      if (isMountedRef.current) {
-        setWrongAnswers([]);
-      }
-    } finally {
-      if (isMountedRef.current) {
-        setIsWrongLoading(false);
-      }
-    }
-  }, []);
-
-  // 오답노트 탭 활성화 시 데이터 로드
-  useEffect(() => {
-    if (activeTab === 'wrongNote') {
-      loadWrongAnswers();
-    }
-  }, [activeTab, loadWrongAnswers]);
-
-  // 화면 포커스 시 오답노트 새로고침
-  useFocusEffect(
-    useCallback(() => {
-      if (activeTab === 'wrongNote') {
-        loadWrongAnswers();
-      }
-    }, [activeTab, loadWrongAnswers])
-  );
-
-  // 오답 노트 항목 터치 시 해당 문제로 이동
-  const handleWrongAnswerPress = useCallback((wrongAnswer: WrongAnswer) => {
-    if (!isMountedRef.current) return;
-
-    // 카드 탭으로 전환
-    setActiveTab('card');
-
-    // 해당 문제 찾기
-    const targetId = wrongAnswer.referenceId;
-    const targetProblem = allProblems.find(p => p.id === targetId);
-
-    if (targetProblem) {
-      // 언어 감지
-      const questionText = (targetProblem.question || '').toLowerCase();
-      let matchedLang = '공통개념';
-      for (const [lang, keywords] of Object.entries(LANGUAGE_KEYWORDS)) {
-        if (keywords.some(k => questionText.includes(k.toLowerCase()))) {
-          matchedLang = lang;
-          break;
-        }
-      }
-
-      // 언어 변경 및 문제 인덱스 설정
-      setCurrentLanguage(matchedLang);
-
-      setTimeout(() => {
-        const filteredItems = allProblems.filter(p => {
-          const q = (p.question || '').toLowerCase();
-          return LANGUAGE_KEYWORDS[matchedLang].some(k => q.includes(k.toLowerCase()));
-        });
-        const idx = filteredItems.findIndex(p => p.id === targetId);
-        if (idx !== -1) {
-          setCurrentIndex(idx);
-          setIsFlipped(false);
-        }
-      }, 100);
-    }
-  }, [allProblems]);
+  // DEBUG: [2026-06-09] 수정계획안13 - 오답노트 탭 삭제 (사용자 요청)
 
   const showToast = (message: string, type: 'success' | 'error') => {
     setToastConfig({ message, type });
@@ -305,55 +226,48 @@ export default function ProgrammingScreen() {
     });
   };
 
-  const handleFlipCard = () => setIsFlipped(!isFlipped);
-
-  const handleKnow = async () => {
-    if (!problems[currentIndex]) return;
-
-    try {
-      await problemService.submitAnswer(
-        problems[currentIndex].id,
-        '1',
-        'PROGRAMMING_LANGUAGE',
-        sessionId ?? undefined
-      );
-      showToast('Saved as known (1)', 'success');
-      handleNext();
-    } catch (error) {
-      console.error('Failed to save known answer:', error);
-      showToast('Failed to save. Please try again.', 'error');
-    }
-  };
-
-  const handleDontKnow = async () => {
-    if (!problems[currentIndex]) return;
-
-    try {
-      await problemService.submitAnswer(
-        problems[currentIndex].id,
-        '2',
-        'PROGRAMMING_LANGUAGE',
-        sessionId ?? undefined
-      );
-      showToast('Saved as unknown (2)', 'success');
-      handleNext();
-    } catch (error) {
-      console.error('Failed to save unknown answer:', error);
-      showToast('Failed to save. Please try again.', 'error');
-    }
-  };
-
   const handleNext = () => {
-    if (problems.length === 0) return;
+    if (totalInTab === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % totalInTab);
     setIsFlipped(false);
-    setCurrentIndex((prev) => (prev + 1) % problems.length);
+    setShowAnswer(false);
+    setSelectedOption(null);
   };
 
   const handlePrev = () => {
-    if (problems.length === 0) return;
+    if (totalInTab === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + totalInTab) % totalInTab);
     setIsFlipped(false);
-    setCurrentIndex((prev) => (prev - 1 + problems.length) % problems.length);
+    setShowAnswer(false);
+    setSelectedOption(null);
   };
+
+  // DEBUG: [2026-06-09] 주관식 보기 선택 핸들러
+  const handleOptionSelect = (option: string) => {
+    if (showAnswer) return;
+    setSelectedOption(option);
+  };
+
+  // DEBUG: [2026-06-09] Fisher-Yates 셔플 알고리즘
+  const shuffleArray = (array: string[]): string[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // DEBUG: [2026-06-09] 현재 카드 변경 시 보기 셔플
+  useEffect(() => {
+    if (currentCard && currentCard.options && currentCard.options.length > 0) {
+      setShuffledOptions(shuffleArray(currentCard.options));
+    } else {
+      setShuffledOptions([]);
+    }
+    setSelectedOption(null);
+    setShowAnswer(false);
+  }, [currentCard?.id]);
 
   if (isLoading) {
     return (
@@ -366,11 +280,11 @@ export default function ProgrammingScreen() {
 
   return (
     <View style={styles.containerWrapper}>
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
       >
-        <ScrollView 
+        <ScrollView
           style={[styles.container, isDark && styles.containerDark]}
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
@@ -385,37 +299,39 @@ export default function ProgrammingScreen() {
             </View>
           </View>
 
-          {/* DEBUG: [2026-06-09] #46 탭 바 */}
+          {/* DEBUG: [2026-06-09] 수정계획안13 - 2개 탭 (flash/subjective) */}
           <View style={[styles.tabBar, isDark && styles.tabBarDark]}>
             <TouchableOpacity
-              style={[styles.tabButton, activeTab === 'card' && styles.activeTab]}
-              onPress={() => setActiveTab('card')}
+              style={[styles.tabButton, activeTab === 'flash' && styles.activeTab]}
+              onPress={() => setActiveTab('flash')}
             >
-              <Text style={[styles.tabText, activeTab === 'card' && { color: themeColor, fontWeight: 'bold' }]}>플래시카드</Text>
+              <Text style={[styles.tabText, activeTab === 'flash' && { color: themeColor, fontWeight: 'bold' }]}>
+                플래시카드{allCards.filter(c => c.cardType === 'FLASHCARD').length > 0 ? ` (${allCards.filter(c => c.cardType === 'FLASHCARD').length})` : ''}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.tabButton, activeTab === 'wrongNote' && styles.activeTab]}
-              onPress={() => setActiveTab('wrongNote')}
+              style={[styles.tabButton, activeTab === 'subjective' && styles.activeTab]}
+              onPress={() => setActiveTab('subjective')}
             >
-              <Text style={[styles.tabText, activeTab === 'wrongNote' && { color: themeColor, fontWeight: 'bold' }]}>
-                오답노트{wrongAnswers.length > 0 ? ` (${wrongAnswers.length})` : ''}
+              <Text style={[styles.tabText, activeTab === 'subjective' && { color: themeColor, fontWeight: 'bold' }]}>
+                주관식 퀴즈{allCards.filter(c => c.cardType === 'SUBJECTIVE').length > 0 ? ` (${allCards.filter(c => c.cardType === 'SUBJECTIVE').length})` : ''}
               </Text>
             </TouchableOpacity>
           </View>
 
-          {activeTab === 'card' ? (
+          {/* DEBUG: [2026-06-09] 플래시카드 & 주관식 탭 콘텐츠 (TheoryScreen 패턴) */}
+          {(activeTab === 'flash' || activeTab === 'subjective') && (
             <>
-              {/* 학습 영역 */}
               <View style={styles.content}>
                 {isContentLoading ? (
                   <View style={styles.contentLoadingContainer}>
                     <ActivityIndicator size="large" color={themeColor} />
                     <Text style={[styles.loadingText, isDark && styles.textWhite]}>언어 변경 중...</Text>
                   </View>
-                ) : problems.length > 0 ? (
+                ) : totalInTab > 0 ? (
                   <>
                     <Text style={[styles.progressText, isDark && styles.progressTextDark]}>
-                      {currentIndex + 1} / {problems.length}
+                      {currentIndex + 1} / {totalInTab}
                     </Text>
 
                     <View style={styles.cardWrapper}>
@@ -423,43 +339,124 @@ export default function ProgrammingScreen() {
                         <Text style={styles.sideNavText}>{"<"}</Text>
                       </TouchableOpacity>
 
-                      <View style={styles.flashContainer}>
-                        <TouchableOpacity
-                          activeOpacity={0.9}
-                          style={[styles.flashCard, isDark && styles.flashCardDark, { borderColor: themeColor }]}
-                          onPress={handleFlipCard}
-                        >
-                          {isFlipped ? (
-                            <View style={styles.cardContent}>
-                              <Text style={[styles.termTitle, { color: themeColor }]}>출력 결과 / 정답</Text>
-                              <Text style={[styles.termText, isDark && styles.textWhite]}>{problems[currentIndex].correctAnswer}</Text>
-                              {problems[currentIndex].explanation ? (
-                                <View style={styles.explanationBox}>
-                                  <Text style={[styles.explanationText, isDark && styles.textWhite]}>
-                                    {problems[currentIndex].explanation}
-                                  </Text>
-                                </View>
-                              ) : null}
+                      <View style={styles.cardStage}>
+                        {activeTab === 'flash' ? (
+                          // 플래시카드 (TheoryScreen과 동일)
+                          <TouchableOpacity
+                            activeOpacity={0.9}
+                            style={[styles.flashCard, isDark && styles.flashCardDark, { borderColor: themeColor }]}
+                            onPress={() => setIsFlipped(!isFlipped)}
+                          >
+                            {isFlipped ? (
+                              <View style={styles.cardContent}>
+                                <Text style={[styles.termTitle, { color: themeColor }]}>정답</Text>
+                                <Text style={[styles.termText, isDark && styles.textWhite]}>{currentCard.backText}</Text>
+                                {currentCard.explanation && (
+                                  <View style={styles.explanationBox}>
+                                    <Text style={[styles.explanationText, isDark && styles.textWhite]}>{currentCard.explanation}</Text>
+                                  </View>
+                                )}
+                              </View>
+                            ) : (
+                              <View style={styles.cardContent}>
+                                <Text style={styles.hintTitle}>문제</Text>
+                                <Text style={[styles.definitionText, isDark && styles.textWhite]}>{currentCard.frontText}</Text>
+                              </View>
+                            )}
+                            <Text style={styles.flipGuide}>탭하여 뒤집기 🔄</Text>
+                          </TouchableOpacity>
+                        ) : (
+                          // 주관식 퀴즈 (TheoryScreen과 동일 - 5개 보기 선택)
+                          <View style={[styles.subjectiveCard, isDark && styles.flashCardDark]}>
+                            <Text style={styles.hintTitle}>문제</Text>
+                            <View style={styles.definitionBox}>
+                              <Text style={[styles.definitionText, isDark && styles.textWhite]}>{currentCard.frontText}</Text>
                             </View>
-                          ) : (
-                            <View style={styles.cardContent}>
-                              <Text style={styles.hintTitle}>코드 / 문제</Text>
-                              <Text style={[styles.definitionText, isDark && styles.textWhite, { fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace' }]}>
-                                {problems[currentIndex].question}
-                              </Text>
-                            </View>
-                          )}
-                          <Text style={styles.flipGuide}>Tap to reveal answer 🔄</Text>
-                        </TouchableOpacity>
 
-                        <View style={styles.actionRow}>
-                          <TouchableOpacity style={[styles.actionButton, styles.knowButton]} onPress={handleKnow}>
-                            <Text style={styles.actionButtonText}>Know (1)</Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity style={[styles.actionButton, styles.dontKnowButton]} onPress={handleDontKnow}>
-                            <Text style={styles.actionButtonText}>Don't know (2)</Text>
-                          </TouchableOpacity>
-                        </View>
+                            {/* DEBUG: [2026-06-09] 5개 보기 버튼 (TheoryScreen 패턴) */}
+                            {shuffledOptions.length > 0 ? (
+                              <View style={styles.optionsContainer}>
+                                {shuffledOptions.map((option, index) => {
+                                  const isSelected = selectedOption === option;
+                                  const isCorrect = option.toLowerCase() === (currentCard.backText || '').toLowerCase();
+                                  const showResult = showAnswer;
+
+                                  let buttonStyle = [styles.optionButton, isDark && styles.optionButtonDark];
+                                  let textStyle = [styles.optionText, isDark && styles.textWhite];
+
+                                  if (showResult) {
+                                    if (isCorrect) {
+                                      buttonStyle = [...buttonStyle, styles.optionButtonCorrect];
+                                      textStyle = [...textStyle, styles.optionTextCorrect];
+                                    } else if (isSelected && !isCorrect) {
+                                      buttonStyle = [...buttonStyle, styles.optionButtonWrong];
+                                      textStyle = [...textStyle, styles.optionTextWrong];
+                                    }
+                                  } else if (isSelected) {
+                                    buttonStyle = [...buttonStyle, styles.optionButtonSelected, { borderColor: themeColor }];
+                                    textStyle = [...textStyle, { color: themeColor }];
+                                  }
+
+                                  return (
+                                    <TouchableOpacity
+                                      key={option}
+                                      style={buttonStyle}
+                                      onPress={() => handleOptionSelect(option)}
+                                      disabled={showAnswer}
+                                    >
+                                      <Text style={styles.optionNumber}>{index + 1}</Text>
+                                      <Text style={textStyle}>{option}</Text>
+                                    </TouchableOpacity>
+                                  );
+                                })}
+                              </View>
+                            ) : (
+                              <View style={styles.noOptionsContainer}>
+                                <Text style={[styles.noOptionsText, isDark && styles.textWhite]}>
+                                  보기 정보가 없는 문제입니다.
+                                </Text>
+                              </View>
+                            )}
+
+                            {/* 정답 확인 버튼 */}
+                            {shuffledOptions.length > 0 && selectedOption && !showAnswer && (
+                              <TouchableOpacity
+                                style={[styles.checkButton, { backgroundColor: themeColor, marginTop: 16 }]}
+                                onPress={() => {
+                                  const isCorrect = selectedOption.toLowerCase() === (currentCard.backText || '').toLowerCase();
+                                  if (isCorrect) {
+                                    showToast('정답입니다! 🎉', 'success');
+                                  } else {
+                                    showToast('오답입니다. ✍️', 'error');
+                                  }
+                                  setShowAnswer(true);
+
+                                  // DEBUG: [2026-06-09] 답안 제출 (TheoryScreen과 동일)
+                                  problemService.submitAnswer(
+                                    currentCard.id,
+                                    selectedOption,
+                                    'PROGRAMMING_LANGUAGE',
+                                    sessionId ?? undefined
+                                  ).catch(err => {
+                                    console.error('[ProgrammingScreen] 답안 제출 실패:', err);
+                                  });
+                                }}
+                              >
+                                <Text style={styles.checkButtonText}>정답 확인</Text>
+                              </TouchableOpacity>
+                            )}
+
+                            {/* 정답 결과 표시 */}
+                            {showAnswer && (
+                              <View style={styles.answerResult}>
+                                <Text style={[styles.answerLabel, { color: themeColor }]}>정답: {currentCard.backText}</Text>
+                                {currentCard.explanation && (
+                                  <Text style={[styles.resultExplanationText, isDark && styles.textWhite]}>{currentCard.explanation}</Text>
+                                )}
+                              </View>
+                            )}
+                          </View>
+                        )}
                       </View>
 
                       <TouchableOpacity style={[styles.sideNavButton, styles.sideNavRight]} onPress={handleNext}>
@@ -469,7 +466,18 @@ export default function ProgrammingScreen() {
                   </>
                 ) : (
                   <View style={styles.emptyContainer}>
-                    <Text style={[styles.emptyText, isDark && styles.textWhite]}>등록된 프로그래밍 문제가 없습니다.</Text>
+                    <Text style={[styles.emptyText, isDark && styles.textWhite]}>
+                      {activeTab === 'subjective' ? '주관식 문제' : '플래시카드'}가 없습니다.
+                    </Text>
+                    <Text style={[styles.emptySubText, isDark && styles.textWhite]}>
+                      언어: {currentLanguage}
+                    </Text>
+                    <TouchableOpacity
+                      style={[styles.retryButton, { backgroundColor: themeColor }]}
+                      onPress={() => loadProgrammingData()}
+                    >
+                      <Text style={styles.retryButtonText}>다시 불러오기</Text>
+                    </TouchableOpacity>
                   </View>
                 )}
               </View>
@@ -493,8 +501,10 @@ export default function ProgrammingScreen() {
                 ))}
               </View>
             </>
-          ) : (
-            /* DEBUG: [2026-06-09] #46 오답노트 탭 콘텐츠 */
+          )}
+
+          {/* 오답노트 탭 콘텐츠 */}
+          {activeTab === 'wrongNote' && (
             <View style={styles.content}>
               {isWrongLoading ? (
                 <View style={styles.contentLoadingContainer}>
@@ -529,13 +539,14 @@ export default function ProgrammingScreen() {
               )}
             </View>
           )}
+
           <View style={{ height: 40 }} />
         </ScrollView>
       </KeyboardAvoidingView>
 
       {toastVisible && (
         <Animated.View style={[
-          styles.toastContainer, 
+          styles.toastContainer,
           { opacity: fadeAnim },
           toastConfig.type === 'success' ? styles.toastSuccess : styles.toastError
         ]}>
@@ -657,7 +668,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.05)',
   },
   tabText: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#64748b',
   },
   content: {
@@ -673,36 +684,37 @@ const styles = StyleSheet.create({
   progressTextDark: {
     color: '#94a3b8',
   },
-  flashContainer: {
-    alignItems: 'center',
-  },
-  actionRow: {
-    width: '100%',
+  cardWrapper: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 16,
-    gap: 10,
-  },
-  actionButton: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 12,
     alignItems: 'center',
   },
-  knowButton: {
-    backgroundColor: '#38a169',
+  cardStage: {
+    flex: 1,
   },
-  dontKnowButton: {
-    backgroundColor: '#e53e3e',
+  sideNavButton: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+    elevation: 3,
   },
-  actionButtonText: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: 14,
+  sideNavLeft: {
+    marginRight: -20,
+  },
+  sideNavRight: {
+    marginLeft: -20,
+  },
+  sideNavText: {
+    fontSize: 24,
+    color: '#64748b',
+    fontWeight: 'bold',
   },
   flashCard: {
     width: '100%',
-    minHeight: 400,
+    minHeight: 450,
     backgroundColor: '#fff',
     borderRadius: 25,
     padding: 30,
@@ -718,6 +730,18 @@ const styles = StyleSheet.create({
   flashCardDark: {
     backgroundColor: '#222',
     borderColor: '#333',
+  },
+  subjectiveCard: {
+    width: '100%',
+    minHeight: 450,
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 5,
   },
   cardContent: {
     alignItems: 'center',
@@ -741,6 +765,19 @@ const styles = StyleSheet.create({
     color: '#1e293b',
     textAlign: 'center',
   },
+  definitionText: {
+    fontSize: 16,
+    color: '#334155',
+    textAlign: 'left',
+    lineHeight: 24,
+    width: '100%',
+  },
+  definitionBox: {
+    backgroundColor: '#f1f5f9',
+    padding: 20,
+    borderRadius: 15,
+    marginBottom: 20,
+  },
   explanationBox: {
     marginTop: 20,
     paddingTop: 20,
@@ -754,55 +791,84 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
   },
-  definitionText: {
-    fontSize: 16,
-    color: '#334155',
-    textAlign: 'left',
-    lineHeight: 24,
-    width: '100%',
-  },
   flipGuide: {
     position: 'absolute',
     bottom: 20,
     fontSize: 12,
     color: '#94a3b8',
   },
-  subjectiveCard: {
+  optionsContainer: {
+    marginTop: 20,
     width: '100%',
-    minHeight: 400,
-    backgroundColor: '#fff',
-    borderRadius: 25,
-    padding: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 5,
   },
-  definitionBox: {
-    backgroundColor: '#f1f5f9',
-    padding: 20,
-    borderRadius: 15,
-    marginBottom: 20,
-  },
-  answerInput: {
+  optionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#f8fafc',
     borderWidth: 1,
     borderColor: '#e2e8f0',
-    borderRadius: 15,
+    borderRadius: 12,
     padding: 16,
-    fontSize: 16,
-    marginBottom: 16,
+    marginBottom: 10,
   },
-  inputDark: {
+  optionButtonDark: {
     backgroundColor: '#333',
     borderColor: '#444',
-    color: '#fff',
+  },
+  optionButtonSelected: {
+    borderWidth: 2,
+    backgroundColor: 'rgba(74, 144, 226, 0.1)',
+  },
+  optionButtonCorrect: {
+    backgroundColor: 'rgba(72, 187, 120, 0.2)',
+    borderColor: '#48bb78',
+    borderWidth: 2,
+  },
+  optionButtonWrong: {
+    backgroundColor: 'rgba(245, 101, 101, 0.2)',
+    borderColor: '#f56565',
+    borderWidth: 2,
+  },
+  optionNumber: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#e2e8f0',
+    textAlign: 'center',
+    lineHeight: 28,
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#64748b',
+    marginRight: 12,
+  },
+  optionText: {
+    flex: 1,
+    fontSize: 15,
+    color: '#334155',
+    lineHeight: 22,
+  },
+  optionTextCorrect: {
+    color: '#22543d',
+    fontWeight: '600',
+  },
+  optionTextWrong: {
+    color: '#c53030',
+    fontWeight: '600',
+  },
+  noOptionsContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  noOptionsText: {
+    fontSize: 14,
+    color: '#94a3b8',
+    textAlign: 'center',
   },
   checkButton: {
     padding: 16,
     borderRadius: 15,
     alignItems: 'center',
+    width: '100%',
   },
   checkButtonText: {
     color: '#fff',
@@ -834,6 +900,22 @@ const styles = StyleSheet.create({
   emptyText: {
     color: '#64748b',
     fontSize: 16,
+    marginBottom: 8,
+  },
+  emptySubText: {
+    color: '#94a3b8',
+    fontSize: 14,
+    marginBottom: 20,
+  },
+  retryButton: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   textWhite: {
     color: '#fff',
@@ -865,36 +947,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  cardWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'relative',
-    marginHorizontal: -10,
-  },
-  sideNavButton: {
-    position: 'absolute',
-    top: '45%',
-    width: 40,
-    height: 40,
-    backgroundColor: 'rgba(255,255,255,0.8)',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
-    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
-  },
-  sideNavLeft: {
-    left: 5,
-  },
-  sideNavRight: {
-    right: 5,
-  },
-  sideNavText: {
-    fontSize: 24,
-    color: '#64748b',
-    fontWeight: 'bold',
   },
   wrongAnswerCard: {
     backgroundColor: '#fff',
