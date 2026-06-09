@@ -21,9 +21,6 @@ public class ProgrammingLanguageProblem {
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
-    @Column(name = "prog_language", nullable = false, length = 64)
-    private String programmingLanguage;
-
     @Column(nullable = false, length = 1000)
     private String question;
 
@@ -34,6 +31,9 @@ public class ProgrammingLanguageProblem {
     private String explanation;
 
     private Integer difficulty;
+
+    @Column(name = "prog_language", length = 64)
+    private String programmingLanguage;
 
     @Column(name = "option1", length = 500)
     private String option1;
