@@ -60,6 +60,7 @@
 
             UNION ALL
 
+            -- DEBUG: [2026-06-09 수정계획안18] option1~5 NULL → 실제 컬럼 조회로 변경
             SELECT
                 pp.id,
                 pp.question,
@@ -69,11 +70,11 @@
                 s.name AS category,
                 'PROGRAMMING_LANGUAGE' AS type,
                 pp.difficulty,
-                NULL AS option1,
-                NULL AS option2,
-                NULL AS option3,
-                NULL AS option4,
-                NULL AS option5,
+                pp.option1,
+                pp.option2,
+                pp.option3,
+                pp.option4,
+                pp.option5,
                 FALSE AS is_ai_generated,
                 pp.prog_language AS programming_language
             FROM programming_language_problems pp
@@ -109,8 +110,9 @@
     <!-- 유형별 랜덤 조회 -->
     <select id="selectRandomProblemsByType" resultType="map">
         <choose>
+            <!-- DEBUG: [2026-06-09 수정계획안18] option1~5 NULL → 실제 컬럼 조회로 변경 -->
             <when test="type == &quot;PROGRAMMING_LANGUAGE&quot;">
-                SELECT 
+                SELECT
                     id,
                     question,
                     answer AS correct_answer,
@@ -118,11 +120,11 @@
                     prog_language AS category,
                     &apos;PROGRAMMING_LANGUAGE&apos; AS type,
                     difficulty,
-                    NULL AS option1,
-                    NULL AS option2,
-                    NULL AS option3,
-                    NULL AS option4,
-                    NULL AS option5,
+                    option1,
+                    option2,
+                    option3,
+                    option4,
+                    option5,
                     is_ai_generated,
                     prog_language AS programming_language
                 FROM programming_language_problems
@@ -154,10 +156,13 @@
         </choose>
     </select>
 
-    <!-- 이론 카드 조회 (주관식 + 플래시카드 통합) -->
+    <!-- 이론 카드 조회 (주관식 + 플래시카드 + 프로그래밍 통합) -->
     <!-- DEBUG: [주관식 보기] 쿼리에 option1~5 컬럼 추가 -->
     <!-- 원인: 주관식 문제를 5개 보기 중 선택하는 형태로 변경 -->
     <!-- 해결: subjective_problems에서 option1~5를 조회하여 프론트엔드에 전달 -->
+    <!-- DEBUG: [2026-06-09] 프로그래밍 문제 UNION ALL 추가 -->
+    <!-- 원인: ProgrammingScreen이 fetchTheoryCards('프로그래밍언어') 호출하지만 programming_language_problems 누락 -->
+    <!-- 해결: programming_language_problems를 UNION ALL로 추가하여 프로그래밍 문제도 조회 -->
     <select id="selectTheoryCardsByCategory" resultType="map">
         SELECT
             'SUBJECTIVE' AS card_type,
@@ -194,6 +199,27 @@
         FROM learning_card lc
         INNER JOIN subject s ON lc.subject_id = s.id
         WHERE s.name = #{category}
+
+        UNION ALL
+
+        -- DEBUG: [2026-06-09 수정계획안18] 'FLASHCARD' 하드코딩 + NULL option1~5 → 동적 card_type + 실제 option1~5 조회
+        SELECT
+            CASE WHEN pp.option1 IS NOT NULL THEN 'SUBJECTIVE' ELSE 'FLASHCARD' END AS card_type,
+            pp.id,
+            pp.subject_id,
+            pp.question AS front_text,
+            pp.answer AS back_text,
+            pp.explanation,
+            COALESCE(pp.difficulty, 0) AS difficulty,
+            pp.option1,
+            pp.option2,
+            pp.option3,
+            pp.option4,
+            pp.option5
+        FROM programming_language_problems pp
+        WHERE
+            (#{category} = '프로그래밍언어')
+            OR LOWER(pp.prog_language) = LOWER(#{category})
 
         ORDER BY card_type, id
     </select>
@@ -416,6 +442,27 @@
         LEFT JOIN problem p ON s.id = p.subject_id AND p.type = &apos;OBJECTIVE&apos;
         GROUP BY s.id, s.name
         ORDER BY s.id
+    </select>
+
+    <!-- DEBUG: [2026-06-09] 수정계획안14 - 프로그래밍 언어별 카드 조회 -->
+    <!-- 원인: ProgrammingScreen이 fetchTheoryCards('프로그래밍언어') 호출하지만 빈 결과 -->
+    <!-- 해결: programming_language_problems 테이블을 직접 조회하는 쿼리 추가 -->
+    <!-- DEBUG: [2026-06-09] 수정계획안14 - card_type 동적 판별 -->
+    <!-- 원인: 하드코딩 'FLASHCARD' → 주관식 탭에 문제 안 나타남 -->
+    <!-- 해결: option1 존재 시 'SUBJECTIVE', 없으면 'FLASHCARD' -->
+    <select id="selectProgrammingCardsByLanguage" resultType="map">
+        SELECT
+            id,
+            CASE WHEN option1 IS NOT NULL AND option1 != '' THEN 'SUBJECTIVE' ELSE 'FLASHCARD' END AS card_type,
+            question AS front_text,
+            answer AS back_text,
+            explanation,
+            option1, option2, option3, option4, option5,
+            prog_language AS category,
+            difficulty
+        FROM programming_language_problems
+        WHERE LOWER(prog_language) = LOWER(#{language})
+        ORDER BY id
     </select>
 
     <!-- 전체 과목 목록 조회 -->

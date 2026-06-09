@@ -35,6 +35,21 @@ public class ProgrammingLanguageProblem {
 
     private Integer difficulty;
 
+    @Column(name = "option1", length = 500)
+    private String option1;
+
+    @Column(name = "option2", length = 500)
+    private String option2;
+
+    @Column(name = "option3", length = 500)
+    private String option3;
+
+    @Column(name = "option4", length = 500)
+    private String option4;
+
+    @Column(name = "option5", length = 500)
+    private String option5;
+
     @Column(nullable = false)
     private boolean isAiGenerated = false;
 
@@ -44,9 +59,11 @@ public class ProgrammingLanguageProblem {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    // DEBUG: [2026-06-09 수정계획안18] option1~5 필드 Builder 추가
     @Builder
     public ProgrammingLanguageProblem(Subject subject, String programmingLanguage, String question, String answer,
-                                     String explanation, Integer difficulty, boolean isAiGenerated) {
+                                     String explanation, Integer difficulty, boolean isAiGenerated,
+                                     String option1, String option2, String option3, String option4, String option5) {
         this.subject = subject;
         this.programmingLanguage = programmingLanguage;
         this.question = question;
@@ -54,6 +71,11 @@ public class ProgrammingLanguageProblem {
         this.explanation = explanation;
         this.difficulty = difficulty;
         this.isAiGenerated = isAiGenerated;
+        this.option1 = option1;
+        this.option2 = option2;
+        this.option3 = option3;
+        this.option4 = option4;
+        this.option5 = option5;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
