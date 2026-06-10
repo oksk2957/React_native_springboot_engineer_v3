@@ -440,19 +440,24 @@ const styles = StyleSheet.create({
   centerContent: { justifyContent: 'center', alignItems: 'center' },
   ajaxLoadingContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 12, gap: 8 },
   ajaxLoadingText: { fontSize: 13, color: '#666' },
-  header: { padding: 20, backgroundColor: '#4a90e2' },
+  //오답노트
+  header: { padding: 6, backgroundColor: '#4a90e2' },
   title: { fontSize: 24, fontWeight: 'bold', color: '#fff' },
   subtitle: { fontSize: 14, color: '#fff', opacity: 0.8, marginTop: 4 },
   navigationHint: { fontSize: 12, color: '#e2e8f0', marginTop: 8, lineHeight: 18 },
   navigationHintDark: { color: '#cbd5e0' },
-  miniTabs: { flexDirection: 'row', padding: 12, backgroundColor: '#fff', gap: 8 },
+  //문제 리스트 와 오답노트 가운데 간격 줄이기 css
+  miniTabs: { flexDirection: 'row', padding: 6, backgroundColor: '#fff', gap: 8 },
   miniTab: { flex: 1, paddingVertical: 10, borderRadius: 12, backgroundColor: '#e2e8f0', alignItems: 'center' },
   miniTabActive: { backgroundColor: '#4a90e2' },
   miniTabText: { color: '#4a5568', fontWeight: '700' },
   miniTabTextActive: { color: '#fff' },
   clearBanner: { backgroundColor: '#edf2f7', paddingVertical: 10, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: '#e2e8f0' },
   clearBannerText: { color: '#2b6cb0', fontWeight: '600', textAlign: 'center' },
-  categoryFilter: { padding: 16, backgroundColor: '#fff', flexDirection: 'row', flexWrap: 'wrap' },
+  // 전체 객관식 주관식 프로그래밍 가운데정렬
+  categoryFilter: { padding: 0, backgroundColor: '#fff', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' },
+  
+  //전체 객관식 주관식 프로그래밍 
   categoryButton: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: '#e2e8f0', marginRight: 8, marginBottom: 8 },
   categoryButtonActive: { backgroundColor: '#4a90e2' },
   categoryText: { fontSize: 14, color: '#666' },

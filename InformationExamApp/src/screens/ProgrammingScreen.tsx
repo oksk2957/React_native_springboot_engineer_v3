@@ -25,7 +25,7 @@ const languageIcons: Record<string, string> = {
 };
 
 const languageColors: Record<string, string> = {
-  'C언어': '#555555',
+  'C언어': '#bbaf0b',
   'Java': '#f89820',
   'Python': '#3776ab',
   '공통개념': '#4a90e2',
@@ -541,7 +541,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8fafc',
   },
   containerDark: {
-    backgroundColor: '#111',
+    backgroundColor: '#111111',
   },
   loadingContainer: {
     flex: 1,
@@ -552,9 +552,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: '#64748b',
   },
+  //c언어배경패딩
   header: {
-    padding: 24,
-    paddingTop: 60,
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomLeftRadius: 30,
@@ -563,7 +563,7 @@ const styles = StyleSheet.create({
   categoryIcon: {
     fontSize: 40,
     marginRight: 16,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     padding: 10,
     borderRadius: 20,
   },
@@ -597,7 +597,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   categoryGridDark: {
-    backgroundColor: '#222',
+    backgroundColor: '#222222',
   },
   categoryTab: {
     width: '48%',
@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     marginHorizontal: 20,
-    marginTop: -15,
+    marginTop: -5,
     borderRadius: 15,
     padding: 5,
     shadowColor: '#000',
@@ -631,7 +631,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   tabBarDark: {
-    backgroundColor: '#222',
+    backgroundColor: '#222222',
   },
   tabButton: {
     flex: 1,
@@ -902,7 +902,7 @@ const styles = StyleSheet.create({
   },
   toastContainer: {
     position: 'absolute',
-    top: 60,
+    // top: 60,
     left: 20,
     right: 20,
     padding: 16,

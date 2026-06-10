@@ -533,7 +533,7 @@ const styles = StyleSheet.create({
   containerDark: { backgroundColor: '#111' },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   loadingText: { marginTop: 10, color: '#64748b' },
-  header: { padding: 24, paddingTop: 40, flexDirection: 'row', alignItems: 'center' },
+  header: { padding: 24, paddingTop: 3, flexDirection: 'row', alignItems: 'center' },
   categoryIcon: { fontSize: 40, marginRight: 16, backgroundColor: 'rgba(255,255,255,0.2)', padding: 10, borderRadius: 20 },
   headerTitle: { fontSize: 24, fontWeight: 'bold', color: '#fff' },
   headerSubtitle: { fontSize: 14, color: 'rgba(255,255,255,0.8)', marginBottom: 2 },
