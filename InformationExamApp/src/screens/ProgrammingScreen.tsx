@@ -12,10 +12,12 @@ import {
   Platform,
 } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import type { NavigationProp } from '@react-navigation/native';
 import { useAuthStore } from '../stores/authStore';
 import { problemService } from '../services/api';
 import { fetchTheoryCards, fetchProgrammingCards } from '../api/theoryApi';
 import { TheoryCard } from '../types/theory';
+import type { MainTabParamList } from '../navigation/AppNavigator';
 
 const languageIcons: Record<string, string> = {
   'C언어': '🅒',
@@ -44,7 +46,7 @@ const LANGUAGE_KEYWORDS: Record<string, string[]> = {
 
 export default function ProgrammingScreen() {
   const route = useRoute() as any;
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<MainTabParamList, 'Programming'>>();
   const { darkMode, sessionId: storedSessionId } = useAuthStore();
   const targetProblemId = route?.params?.problemId;
   const sessionId = route?.params?.sessionId ?? route?.params?.studySessionId ?? storedSessionId ?? null;
@@ -405,7 +407,7 @@ export default function ProgrammingScreen() {
                                       textStyle = [...textStyle, styles.optionTextWrong];
                                     }
                                   } else if (isSelected) {
-                                    buttonStyle = [...buttonStyle, styles.optionButtonSelected, { borderColor: themeColor }];
+                                    buttonStyle = [...buttonStyle, styles.optionButtonSelected, { backgroundColor: 'transparent', borderColor: themeColor }];
                                     textStyle = [...textStyle, { color: themeColor }];
                                   }
 
@@ -635,7 +637,7 @@ const styles = StyleSheet.create({
   },
   tabButton: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 6,
     alignItems: 'center',
     borderRadius: 10,
   },
@@ -654,7 +656,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     color: '#64748b',
-    marginBottom: 20,
+    marginBottom: 0, // DEBUG: [2026-06-10] "1 / 4" 인디케이터 하단 마진 제거 (요청)
   },
   progressTextDark: {
     color: '#94a3b8',

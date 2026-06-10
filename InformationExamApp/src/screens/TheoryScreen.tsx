@@ -15,8 +15,10 @@ import {
 import { useAuthStore } from '../stores/authStore';
 import { useCategoryStore, getCategoryIcons, getCategoryColors, getCategoryNames, Category } from '../stores/categoryStore';
 import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
+import type { NavigationProp } from '@react-navigation/native';
 import { fetchTheoryCards } from '../api/theoryApi';
 import { TheoryCard } from '../types/theory';
+import type { MainTabParamList } from '../navigation/AppNavigator';
 // DEBUG: [오답 서버 저장] 이론탭 주관식 오답을 wrong_answer_bookmark에 저장
 // 원인: TheoryScreen은 클라이언트 측 비교만 수행 → 오답이 서버에 기록되지 않음
 // 해결: problemService.submitAnswer() 호출하여 오답 저장 (ProblemScreen과 동일 패턴)
@@ -32,7 +34,7 @@ const categories = getCategoryNames();
 
 export default function TheoryScreen() {
   const route = useRoute() as any;
-  const navigation = useNavigation() as any;
+  const navigation = useNavigation<NavigationProp<MainTabParamList, 'Theory'>>();
   const { darkMode } = useAuthStore();
   const targetProblemId = route?.params?.problemId;
   const [activeTab, setActiveTab] = useState<'flash' | 'subjective'>('flash');
@@ -313,26 +315,21 @@ export default function TheoryScreen() {
               style={[styles.tabButton, activeTab === 'flash' && styles.activeTab]}
               onPress={() => setActiveTab('flash')}
             >
-              <Text style={[styles.tabText, activeTab === 'flash' && { color: themeColor, fontWeight: 'bold' }]}>플래시 카드</Text>
+              <Text style={[styles.tabText, activeTab === 'flash' && { color: themeColor, fontWeight: 'bold' }]}>
+                플래시카드{cards.filter(c => c.cardType === 'FLASHCARD').length > 0 ? ` (${cards.filter(c => c.cardType === 'FLASHCARD').length})` : ''}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.tabButton, activeTab === 'subjective' && styles.activeTab]}
               onPress={() => setActiveTab('subjective')}
             >
-              <Text style={[styles.tabText, activeTab === 'subjective' && { color: themeColor, fontWeight: 'bold' }]}>주관식 퀴즈</Text>
+              <Text style={[styles.tabText, activeTab === 'subjective' && { color: themeColor, fontWeight: 'bold' }]}>
+                주관식 퀴즈{cards.filter(c => c.cardType === 'SUBJECTIVE').length > 0 ? ` (${cards.filter(c => c.cardType === 'SUBJECTIVE').length})` : ''}
+              </Text>
             </TouchableOpacity>
           </View>
 
-          <View style={styles.programmingCtaWrap}>
-            <TouchableOpacity
-              style={[styles.programmingCtaButton, { backgroundColor: themeColor }]}
-              onPress={() => navigation.navigate('Programming' as never)}
-            >
-              <Text style={styles.programmingCtaTitle}>실기 주관식 랜덤학습</Text>
-              <Text style={styles.programmingCtaSubtitle}>코드 학습 화면으로 이동</Text>
-            </TouchableOpacity>
-          </View>
-
+          {/* DEBUG: [수정28] 실기 주관식 랜덤학습 CTA 버튼 삭제 (사용자 요청) */}
           <View style={styles.content}>
             {totalInTab > 0 ? (
               <>
@@ -402,7 +399,7 @@ export default function TheoryScreen() {
                                   textStyle = [...textStyle, styles.optionTextWrong];
                                 }
                               } else if (isSelected) {
-                                buttonStyle = [...buttonStyle, styles.optionButtonSelected, { borderColor: themeColor }];
+                                buttonStyle = [...buttonStyle, styles.optionButtonSelected, { backgroundColor: 'transparent', borderColor: themeColor }];
                                 textStyle = [...textStyle, { color: themeColor }];
                               }
 
@@ -543,13 +540,25 @@ const styles = StyleSheet.create({
   categoryTab: { width: '31%', padding: 10, alignItems: 'center', borderRadius: 10, borderWidth: 1, borderColor: 'transparent', marginBottom: 8 },
   catTabIcon: { fontSize: 20, marginBottom: 4 },
   catTabText: { fontSize: 10, color: '#64748b', textAlign: 'center' },
-  tabBar: { flexDirection: 'row', backgroundColor: '#fff', marginHorizontal: 20, marginTop: -5, borderRadius: 15, padding: 5 },
+  tabBar: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    marginHorizontal: 20,
+    marginTop: -5,
+    borderRadius: 15,
+    padding: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+  },
   tabBarDark: { backgroundColor: '#222' },
-  tabButton: { flex: 1, paddingVertical: 12, alignItems: 'center', borderRadius: 10 },
+  tabButton: { flex: 1, paddingVertical: 6, alignItems: 'center', borderRadius: 10 },
   activeTab: { backgroundColor: 'rgba(0,0,0,0.05)' },
-  tabText: { fontSize: 14, color: '#64748b' },
-  content: { padding: 20 },
-  progressText: { textAlign: 'center', fontSize: 14, color: '#64748b', marginBottom: 20 },
+  tabText: { fontSize: 13, color: '#64748b' },
+  content: { padding: 0 },
+  progressText: { textAlign: 'center', fontSize: 14, color: '#64748b', marginBottom: 0 }, // DEBUG: [2026-06-10] "1 / 4" 인디케이터 하단 마진 제거 (요청)
   progressTextDark: { color: '#94a3b8' },
   flashCard: { width: '100%', minHeight: 450, backgroundColor: '#fff', borderRadius: 25, padding: 30, justifyContent: 'center', alignItems: 'center', borderWidth: 2 },
   flashCardDark: { backgroundColor: '#222', borderColor: '#333' },

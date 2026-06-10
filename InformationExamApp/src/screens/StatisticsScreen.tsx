@@ -278,7 +278,8 @@ export default function StatisticsScreen() {
                   <TouchableOpacity
                     key={item.problemId}
                     style={[styles.rankingItem, isDark && styles.rankingItemDark, rank <= 3 && styles.rankingItemTop3]}
-                    onPress={() => navigation.navigate('Problem', { problemId: item.referenceId, mode: 'normal' })}
+                    // DEBUG: [타입수정] mode 리터럴 타입 보존을 위해 as const 적용
+                    onPress={() => navigation.navigate('Problem', { problemId: item.referenceId, mode: 'normal' as const })}
                   >
                     <View style={styles.rankContainer}>
                       {medal ? (
@@ -536,7 +537,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   header: {
-    padding: 20,
+    padding: 10,
     backgroundColor: '#4a90e2',
   },
   subHeader: {

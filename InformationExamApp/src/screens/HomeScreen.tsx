@@ -8,8 +8,10 @@ import {
 } from 'react-native';
 import { useAuthStore } from '../stores/authStore';
 import { useNavigation } from '@react-navigation/native';
+import type { NavigationProp } from '@react-navigation/native';
 import { statisticsService } from '../services/api';
 import theoryApi from '../api/theoryApi';
+import type { MainTabParamList } from '../navigation/AppNavigator';
 
 const categories = [
   { id: 'os', name: '운영체제', icon: '💻' },
@@ -22,7 +24,8 @@ const categories = [
 ];
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
+  // DEBUG: [타입수정] useNavigation에 타입 파라미터 추가하여 'never' 에러 해결
+  const navigation = useNavigation<NavigationProp<MainTabParamList>>();
   const { user, darkMode } = useAuthStore();
   const [subjectiveCount, setSubjectiveCount] = useState<number>(0);
   const [totalObjectiveCount, setTotalObjectiveCount] = useState<number>(0);
@@ -74,12 +77,6 @@ export default function HomeScreen() {
       },
     },
     {
-      title: '이어서 풀기',
-      subtitle: '지난 문제부터',
-      icon: '▶️',
-      onPress: () => navigation.navigate('Problem'),
-    },
-    {
       title: '취약 과목',
       subtitle: '약점 분야 연습',
       icon: '⚠️',
@@ -89,7 +86,8 @@ export default function HomeScreen() {
       title: '객관식 랜덤학습',
       subtitle: `전체 과목 객관식 ${totalObjectiveCount}문제`,
       icon: '🎲',
-      onPress: () => navigation.navigate('Problem', { mode: 'random' }),
+      // DEBUG: [타입수정] mode 리터럴 타입 보존을 위해 as const 적용
+      onPress: () => navigation.navigate('Problem', { mode: 'random' as const }),
     },
   ];
 
@@ -97,7 +95,7 @@ export default function HomeScreen() {
     <ScrollView style={[styles.container, isDark && styles.containerDark]}>
       <View style={[styles.header, isDark && styles.headerDark]}>
         <Text style={[styles.greeting, isDark && styles.greetingDark]}>
-          안녕하세요, {user?.nickname || '사용자'}님! 합격을 기원합니다🎉
+          안녕하세요, {user?.nickname || '사용자'}님!{'\n'}합격을 기원합니다🎉
         </Text>
         <Text style={[styles.dDay, isDark && styles.dDayDark]}>
           {currentMonth}월 {weekNumber}번째 주
