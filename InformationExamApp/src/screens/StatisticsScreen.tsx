@@ -230,7 +230,7 @@ export default function StatisticsScreen() {
     return (
       <View style={[styles.loadingContainer, isDark && styles.containerDark]}>
         <Text style={[styles.errorText, isDark && styles.chartLabelDark]}>{errorMessage}</Text>
-        <TouchableOpacity style={styles.retryBtn} onPress={fetchRanking}>
+        <TouchableOpacity style={styles.retryBtn} onPress={() => fetchRanking()}>
           <Text style={styles.retryBtnText}>다시 시도</Text>
         </TouchableOpacity>
       </View>
@@ -683,129 +683,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-  // DEBUG: [AI-AUTHOR-2026-06-09] 오답 이력 달력 스타일
-  calendarSection: {
-    padding: 20,
-    backgroundColor: '#fff',
-    marginTop: 8,
-  },
-  calendarHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  calendarNavBtn: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#4a90e2',
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-  },
-  calendarMonthText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2d3748',
-  },
-  weekdayRow: {
-    flexDirection: 'row',
-    marginBottom: 8,
-  },
-  weekdayText: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#718096',
-  },
-  weekendText: {
-    color: '#e53e3e',
-  },
-  calendarGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  calendarCell: {
-    width: '14.28%',
-    minHeight: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    marginVertical: 2,
-    overflow: 'visible',
-    paddingVertical: 4,
-  },
-  calendarDayText: {
-    fontSize: 12,
-    color: '#2d3748',
-  },
-  calendarDayTextWithCount: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  calendarCountText: {
-    fontSize: 10,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  legendRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 12,
-    paddingHorizontal: 8,
-  },
-  legendItem: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-  },
-  legendText: {
-    fontSize: 10,
-    color: '#2d3748',
-    fontWeight: '600',
-  },
-  legendTextDark: {
-    color: '#2d3748',
-  },
-  weekDashboardRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  weekDashboardItem: {
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-    borderRadius: 8,
-  },
-  weekDashboardToday: {
-    backgroundColor: 'rgba(74, 144, 226, 0.1)',
-  },
-  weekDayLabel: {
-    fontSize: 12,
-    color: '#718096',
-    marginBottom: 4,
-  },
-  weekDateText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#2d3748',
-    marginBottom: 8,
-  },
-  weekCountBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  weekCountText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  weekCountTextDark: {
-    color: '#2d3748',
-  },
   // DEBUG: [AI-AUTHOR-2026-06-09] 주간 대시보드 스타일
   section: {
     padding: 20,
@@ -858,6 +735,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   textDark: {
+    color: '#fff',
+  },
+  titleDark: {
     color: '#fff',
   },
   // DEBUG: [AI-AUTHOR-2026-06-09] 달력 스타일

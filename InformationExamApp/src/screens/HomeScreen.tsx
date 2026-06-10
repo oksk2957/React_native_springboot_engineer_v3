@@ -9,7 +9,7 @@ import {
 import { useAuthStore } from '../stores/authStore';
 import { useNavigation } from '@react-navigation/native';
 import { statisticsService } from '../services/api';
-import { SAMPLE_PROBLEMS as problemsData } from '../data/problems';
+import theoryApi from '../api/theoryApi';
 
 const categories = [
   { id: 'os', name: '운영체제', icon: '💻' },
@@ -25,8 +25,8 @@ export default function HomeScreen() {
   const navigation = useNavigation();
   const { user, darkMode } = useAuthStore();
   const [subjectiveCount, setSubjectiveCount] = useState<number>(0);
-  const totalObjectiveCount = problemsData.length;
-  
+  const [totalObjectiveCount, setTotalObjectiveCount] = useState<number>(0);
+
   const today = new Date();
   const todayDate = today.getDate();
   const weekNumber = Math.ceil(todayDate / 7);
@@ -44,7 +44,22 @@ export default function HomeScreen() {
         console.error('Failed to fetch subjective count:', error);
       }
     };
+    const allCategories = ['운영체제', '네트워크', '데이터베이스', '소프트웨어공학', '정보보안', '애플리케이션테스트', '프로그래밍언어'];
+    const fetchObjectiveCount = async () => {
+      try {
+        const results = await Promise.all(
+          allCategories.map(cat => theoryApi.getTheoryCards(cat))
+        );
+        const total = results.reduce((sum, cards) =>
+          sum + cards.filter((c) => c.cardType === 'OBJECTIVE').length, 0
+        );
+        setTotalObjectiveCount(total);
+      } catch (error) {
+        console.error('Failed to fetch objective count:', error);
+      }
+    };
     fetchSubjectiveCount();
+    fetchObjectiveCount();
   }, []);
 
   const menuItems = [

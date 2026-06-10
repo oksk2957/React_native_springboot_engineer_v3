@@ -52,6 +52,10 @@ export default function TheoryScreen() {
   const [answer, setAnswer] = useState('');
   const [showAnswer, setShowAnswer] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  // DEBUG: [수정25] 빈 상태 AJAX 로딩 — 재로딩 시 콘텐츠 영역만 로딩 (전체 화면 덮기 방지)
+  // 원인: "다시 불러오기" 클릭 시 isLoading=true → 전체 화면 early return → 헤더/탭/카테고리 소실
+  // 해결: isContentLoading으로 콘텐츠 영역만 ActivityIndicator 표시
+  const [isContentLoading, setIsContentLoading] = useState(false);
 
   // Toast 애니메이션 상태
   const [toastVisible, setToastVisible] = useState(false);
@@ -128,7 +132,14 @@ export default function TheoryScreen() {
   }, [activeTab, cards, currentIndex, filteredCards, targetProblemId]);
 
   const loadTheoryCards = async () => {
-    setIsLoading(true);
+    // DEBUG: [수정25] 빈 상태 AJAX 로딩 — 첫 로딩만 전체 isLoading, 재로딩은 콘텐츠 영역만
+    // 원인: "다시 불러오기" 클릭 시 isLoading=true → 전체 화면 early return → 헤더/탭/카테고리 소실
+    // 해결: cards.length > 0이면 isContentLoading=true로 콘텐츠 영역만 로딩
+    if (cards.length > 0) {
+      setIsContentLoading(true);
+    } else {
+      setIsLoading(true);
+    }
     try {
       // DEBUG: [이론카드 로딩] API 호출 시작
       console.log(`[TheoryScreen] fetchTheoryCards 호출 - category: ${currentCategory}`);
@@ -164,6 +175,7 @@ export default function TheoryScreen() {
       );
     } finally {
       setIsLoading(false);
+      setIsContentLoading(false); // DEBUG: [수정25] 콘텐츠 로딩 완료
     }
   };
 
@@ -439,6 +451,15 @@ export default function TheoryScreen() {
               </>
             ) : (
               <View style={styles.emptyContainer}>
+                {/* DEBUG: [수정25] AJAX 로딩 인디케이터 — 콘텐츠 영역만 로딩, 헤더/탭 유지 */}
+                {isContentLoading && (
+                  <View style={{ marginBottom: 16, alignItems: 'center' }}>
+                    <ActivityIndicator size="small" color={themeColor} />
+                    <Text style={[styles.emptySubText, isDark && styles.textWhite, { marginTop: 8 }]}>
+                      카드를 불러오는 중...
+                    </Text>
+                  </View>
+                )}
                 {/* DEBUG: [빈 상태] 데이터가 없을 때 표시되는 메시지 */}
                 <Text style={[styles.emptyText, isDark && styles.textWhite]}>
                   {activeTab === 'subjective' ? '주관식 문제' : '플래시카드'}가 없습니다.
@@ -560,6 +581,7 @@ const styles = StyleSheet.create({
   optionButtonSelected: {
     borderWidth: 2,
     backgroundColor: 'rgba(74, 144, 226, 0.1)',
+    borderColor: '#e2e8f0',
   },
   optionButtonCorrect: {
     backgroundColor: 'rgba(72, 187, 120, 0.2)',

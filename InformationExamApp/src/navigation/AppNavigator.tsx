@@ -103,7 +103,7 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator id="MainStack" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator key={isAuthenticated ? 'main' : 'auth'} id="MainStack" screenOptions={{ headerShown: false }}>
         {!isAuthenticated ? (
           <Stack.Screen name="Auth" component={AuthScreen} />
         ) : (

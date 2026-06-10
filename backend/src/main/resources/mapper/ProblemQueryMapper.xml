@@ -221,6 +221,26 @@
             (#{category} = &apos;프로그래밍언어&apos;)
             OR LOWER(pp.prog_language) = LOWER(#{category})
 
+        UNION ALL
+
+        SELECT
+            &apos;OBJECTIVE&apos; AS card_type,
+            p.id,
+            p.subject_id,
+            p.question AS front_text,
+            p.answer AS back_text,
+            p.explanation,
+            COALESCE(p.difficulty, 0) AS difficulty,
+            p.option1,
+            p.option2,
+            p.option3,
+            p.option4,
+            p.option5
+        FROM problem p
+        INNER JOIN subject s ON p.subject_id = s.id
+        WHERE s.name = #{category}
+          AND p.type = &apos;OBJECTIVE&apos;
+
         ORDER BY card_type, id
     </select>
 
@@ -447,22 +467,24 @@
     <!-- DEBUG: [2026-06-09] 수정계획안14 - 프로그래밍 언어별 카드 조회 -->
     <!-- 원인: ProgrammingScreen이 fetchTheoryCards('프로그래밍언어') 호출하지만 빈 결과 -->
     <!-- 해결: programming_language_problems 테이블을 직접 조회하는 쿼리 추가 -->
-    <!-- DEBUG: [2026-06-09] 수정계획안14 - card_type 동적 판별 -->
+    <!-- DEBUG: [2026-06-10 수정계획안24] card_type 동적 판별 + '공통개념' 전체 조회 지원 -->
     <!-- 원인: 하드코딩 'FLASHCARD' → 주관식 탭에 문제 안 나타남 -->
     <!-- 해결: option1 존재 시 'SUBJECTIVE', 없으면 'FLASHCARD' -->
-    <!-- DEBUG: [2026-06-09 수정18] migration 005 미적용 → option1~5 NULL, card_type FLASHCARD 하드코딩 -->
+    <!-- 해결2: '공통개념' 언어 요청 시 전체 프로그래밍 문제 반환 -->
     <select id="selectProgrammingCardsByLanguage" resultType="map">
         SELECT
             id,
-            'FLASHCARD' AS card_type,
+            CASE WHEN option1 IS NOT NULL THEN 'SUBJECTIVE' ELSE 'FLASHCARD' END AS card_type,
             question AS front_text,
             answer AS back_text,
             explanation,
-            NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5,
+            option1, option2, option3, option4, option5,
             prog_language AS category,
             difficulty
         FROM programming_language_problems
-        WHERE LOWER(prog_language) = LOWER(#{language})
+        WHERE
+            (#{language} = '공통개념')
+            OR LOWER(prog_language) = LOWER(#{language})
         ORDER BY id
     </select>
 

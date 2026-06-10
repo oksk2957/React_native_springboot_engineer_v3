@@ -336,8 +336,10 @@ function AppNavigator() {
   }
 
   return (
-    // DEBUG: [2026-06-09] 로그아웃 시 Stack Navigator 강제 리마운트 — key 변경으로 MainTabs→AuthScreen 즉시 전환
-    <Stack.Navigator key={isAuthenticated ? 'auth' : 'main'} id="MainStack" screenOptions={{ headerShown: false }}>
+    // DEBUG: [수정24-2026-06-10] 로그아웃 시 Stack.Navigator 강제 리마운트 — key 반전 수정
+    // 원인: key={isAuthenticated ? 'auth' : 'main'} 반전 → true→'auth', false→'main' → 화면 전환 안 됨
+    // 수정: key={isAuthenticated ? 'main' : 'auth'} → true→'main', false→'auth' → 정상 전환
+    <Stack.Navigator key={isAuthenticated ? 'main' : 'auth'} id="MainStack" screenOptions={{ headerShown: false }}>
       {isAuthenticated ? (
         <Stack.Screen name="Main" component={MainTabs} />
       ) : (

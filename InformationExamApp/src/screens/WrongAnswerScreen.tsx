@@ -120,6 +120,7 @@ export default function WrongAnswerScreen() {
   const [wrongProblems, setWrongProblems] = useState<WrongAnswer[]>([]);
   const [heatmap, setHeatmap] = useState<StudyHeatmapCell[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true); // DEBUG: [2026-06-10] 초기 로딩만 전체 화면, 이후 AJAX 부분 로딩
 
   const isDark = darkMode;
 
@@ -160,6 +161,7 @@ export default function WrongAnswerScreen() {
       setHeatmap([]);
     } finally {
       setIsLoading(false);
+      setIsInitialLoad(false); // DEBUG: [2026-06-10] 최초 로딩 완료 → 이후 AJAX 모드
     }
   }, [bookmarkDate, selectedDate, selectedType, isAuthenticated, user?.id]);
 
@@ -316,7 +318,8 @@ export default function WrongAnswerScreen() {
     </ScrollView>
   );
 
-  if (isLoading) {
+  // DEBUG: [2026-06-10] 초기 로딩만 전체 화면 인디케이터, 이후 AJAX 부분 로딩
+  if (isInitialLoad && isLoading) {
     return (
       <View style={[styles.container, isDark && styles.containerDark, styles.centerContent]}>
         <ActivityIndicator size="large" color="#4a90e2" />
@@ -344,6 +347,14 @@ export default function WrongAnswerScreen() {
           <Text style={[styles.miniTabText, activeTab === 'calendar' && styles.miniTabTextActive]}>오답 이력 달력</Text>
         </TouchableOpacity>
       </View>
+
+      {/* DEBUG: [2026-06-10] AJAX 부분 로딩 — 콘텐츠 영역만 인디케이터 */}
+      {isLoading && !isInitialLoad && (
+        <View style={styles.ajaxLoadingContainer}>
+          <ActivityIndicator size="small" color="#4a90e2" />
+          <Text style={[styles.ajaxLoadingText, isDark && styles.answerLabelDark]}>불러오는 중...</Text>
+        </View>
+      )}
 
       {activeTab === 'calendar' ? renderCalendar() : (
         <>
@@ -389,6 +400,7 @@ export default function WrongAnswerScreen() {
             </View>
           ) : (
             <FlatList
+              style={{ flex: 1 }}
               data={wrongProblems}
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => (
