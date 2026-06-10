@@ -132,4 +132,11 @@ public class ProblemApiController {
             return ResponseEntity.status(500).body(result);
         }
     }
+
+    @GetMapping("/debug/programming-languages")
+    public ResponseEntity<List<Map<String, Object>>> getProgrammingLanguageDistribution() {
+        log.info("[DEBUG] 프로그래밍 언어 분포 조회");
+        List<Map<String, Object>> distribution = problemQueryMapper.selectProgrammingLanguageDistribution();
+        return ResponseEntity.ok(distribution);
+    }
 }

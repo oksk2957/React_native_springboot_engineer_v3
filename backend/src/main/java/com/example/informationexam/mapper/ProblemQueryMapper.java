@@ -40,6 +40,9 @@ public interface ProblemQueryMapper {
     // 전체 문제 개수 조회
     Long countAll();
 
+    // DEBUG: [2026-06-10] 수정27 - prog_language 분포 조회 (임시 디버그)
+    List<Map<String, Object>> selectProgrammingLanguageDistribution();
+
     // DEBUG: [2026-06-09] 수정계획안14 - 프로그래밍 언어별 카드 조회
     List<Map<String, Object>> selectProgrammingCardsByLanguage(@Param("language") String language);
 }

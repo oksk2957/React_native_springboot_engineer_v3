@@ -471,6 +471,9 @@
     <!-- 원인: 하드코딩 'FLASHCARD' → 주관식 탭에 문제 안 나타남 -->
     <!-- 해결: option1 존재 시 'SUBJECTIVE', 없으면 'FLASHCARD' -->
     <!-- 해결2: '공통개념' 언어 요청 시 전체 프로그래밍 문제 반환 -->
+    <!-- DEBUG: [2026-06-10 수정27] API 언어명 ↔ DB prog_language 매핑 -->
+    <!-- 원인: API는 'C언어'로 호출, DB는 'c'로 저장 → 불일치로 빈 결과 -->
+    <!-- 해결: CASE로 API 반환 시 언어명 복원 + WHERE에서 'C언어'→'c' 매칭 -->
     <select id="selectProgrammingCardsByLanguage" resultType="map">
         SELECT
             id,
@@ -479,13 +482,29 @@
             answer AS back_text,
             explanation,
             option1, option2, option3, option4, option5,
-            prog_language AS category,
+            CASE
+                WHEN LOWER(prog_language) = 'c' THEN 'C언어'
+                WHEN LOWER(prog_language) = 'java' THEN 'Java'
+                WHEN LOWER(prog_language) = 'python' THEN 'Python'
+                ELSE prog_language
+            END AS category,
             difficulty
         FROM programming_language_problems
         WHERE
             (#{language} = '공통개념')
+            OR (#{language} = 'C언어' AND LOWER(prog_language) = 'c')
+            OR (#{language} = 'Java' AND LOWER(prog_language) = 'java')
+            OR (#{language} = 'Python' AND LOWER(prog_language) = 'python')
             OR LOWER(prog_language) = LOWER(#{language})
         ORDER BY id
+    </select>
+
+    <!-- DEBUG: [2026-06-10] 수정27 - prog_language 분포 조회 (임시 디버그) -->
+    <select id="selectProgrammingLanguageDistribution" resultType="map">
+        SELECT prog_language, COUNT(*) as count
+        FROM programming_language_problems
+        GROUP BY prog_language
+        ORDER BY count DESC
     </select>
 
     <!-- 전체 과목 목록 조회 -->
