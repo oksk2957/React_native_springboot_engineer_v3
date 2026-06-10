@@ -15,7 +15,7 @@ import WrongAnswerScreen from './src/screens/WrongAnswerScreen';
 import TheoryScreen from './src/screens/TheoryScreen';
 import ProgrammingScreen from './src/screens/ProgrammingScreen';
 import StatisticsScreen from './src/screens/StatisticsScreen';
-import { useAuthStore } from './src/stores/authStore';
+import { useAuthStore, isLoggingOut } from './src/stores/authStore';
 import type { User } from './src/types';
 
 const Stack = createNativeStackNavigator();
@@ -234,6 +234,15 @@ function AppNavigator() {
         return;
       }
 
+      // DEBUG: [수정26-2026-06-10] 이미 로그인된 상태에서는 SIGNED_IN 이벤트 무시
+      // 원인: isAuthenticated=true여도 SIGNED_IN 발생 시 /api/auth/google 중복 호출
+      // 해결: 이미 인증된 상태면 early return
+      const { isAuthenticated } = useAuthStore.getState();
+      if (isAuthenticated) {
+        console.log('[App] 이미 로그인됨 - SIGNED_IN 이벤트 무시');
+        return;
+      }
+
       if (event === 'SIGNED_IN' && session?.access_token) {
         console.log('[App] SIGNED_IN 이벤트 감지 - 백엔드 JWT 교환 시작');
         try {
@@ -313,6 +322,13 @@ function AppNavigator() {
           setLoading(false);
         }
       } else if (event === 'SIGNED_OUT') {
+        // DEBUG: [수정26-2026-06-10] 로그아웃 중이 아닌 SIGNED_OUT은 무시
+        // 원인: Supabase 세션 갱신 실패 시 SIGNED_OUT이 비정상 발생 → AuthScreen으로 이동
+        // 해결: isLoggingOut 플래그가 true일 때만 처리
+        if (!isLoggingOut) {
+          console.warn('[App] 비정상 SIGNED_OUT 감지 (로그아웃 중 아님) - 무시');
+          return;
+        }
         console.log('[App] SIGNED_OUT 이벤트 감지 - 세션 초기화');
         await AsyncStorage.removeItem('authToken');
         await AsyncStorage.removeItem('tokenExpiryTime');

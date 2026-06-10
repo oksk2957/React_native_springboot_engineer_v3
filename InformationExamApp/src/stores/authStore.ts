@@ -293,6 +293,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     //       Supabase 세션이 AsyncStorage에 남아있어 앱 재시작 시 자동 재로그인됨
     // 해결: Zustand 상태 리셋 → AsyncStorage 정리 → Supabase signOut 순서
 
+    // DEBUG: [수정26-2026-06-10] 로그아웃 시작 플래그 설정
+    // 원인: SIGNED_OUT 이벤트가 로그아웃 중에도 비정상 처리됨
+    // 해결: 로그아웃 시작 시 true, 완료 시 false
+    isLoggingOut = true;
+
     // 1. Zustand 상태 먼저 리셋 (Web 레이스 컨디션 방지)
     set({
       user: null,
@@ -317,6 +322,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch (e: any) {
       console.warn('[AuthStore] Supabase signOut 예외 (무시):', e.message);
     }
+
+    // DEBUG: [수정26-2026-06-10] 로그아웃 완료 플래그 해제
+    isLoggingOut = false;
 
     console.log('[AuthStore] 로그아웃 완료');
   },

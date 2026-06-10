@@ -17,6 +17,10 @@ import { useCategoryStore, getCategoryIcons, getCategoryColors, getCategoryNames
 import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { fetchTheoryCards } from '../api/theoryApi';
 import { TheoryCard } from '../types/theory';
+// DEBUG: [오답 서버 저장] 이론탭 주관식 오답을 wrong_answer_bookmark에 저장
+// 원인: TheoryScreen은 클라이언트 측 비교만 수행 → 오답이 서버에 기록되지 않음
+// 해결: problemService.submitAnswer() 호출하여 오답 저장 (ProblemScreen과 동일 패턴)
+import { problemService } from '../services/api';
 
 // DEBUG: [카테고리 중앙화] 하드코딩 제거 - categoryStore에서 가져옴
 // 원인: HomeScreen과 TheoryScreen의 카테고리 불일치
@@ -210,6 +214,23 @@ export default function TheoryScreen() {
     setSelectedOption(null);
   };
 
+  // DEBUG: [오답 서버 저장] 주관식 오답을 wrong_answer_bookmark에 저장
+  // 원인: TheoryScreen은 클라이언트 측 문자열 비교만 수행 → 오답이 서버에 기록되지 않음
+  // 해결: problemService.submitAnswer() 호출하여 오답 저장 (ProblemScreen과 동일 패턴)
+  // 호출부: handleCheckAnswer (텍스트 입력) + 옵션 onPress (5지선다 선택)
+  const submitAnswerToServer = async (userAnswer: string) => {
+    try {
+      await problemService.submitAnswer(
+        currentCard.id,
+        userAnswer,
+        'SUBJECTIVE',
+      );
+    } catch (error) {
+      console.error('[TheoryScreen] submitAnswer 실패:', error);
+      // 서버 실패해도 로컬 UX는 유지
+    }
+  };
+
   const handleCheckAnswer = () => {
     if (!currentCard) return;
     const userAnswer = answer.trim().toLowerCase();
@@ -226,6 +247,8 @@ export default function TheoryScreen() {
       setShowAnswer(true);
     } else {
       showToast('오답입니다. ✍️', 'error');
+      // DEBUG: [오답 서버 저장] 틀린 답을 서버에 저장하여 오답노트에 표시
+      submitAnswerToServer(answer.trim());
     }
   };
 
@@ -414,6 +437,7 @@ export default function TheoryScreen() {
                         {/* DEBUG: [주관식 보기] 보기 선택 후 정답 확인 버튼 */}
                         {/* 원인: 보기 버튼을 선택한 후 정답을 확인해야 함 */}
                         {/* 해결: 선택된 보기와 정답을 비교하는 버튼 추가 */}
+                        {/* DEBUG: [오답 서버 저장] 옵션 선택 오답도 서버에 저장 */}
                         {shuffledOptions.length > 0 && selectedOption && !showAnswer && (
                           <TouchableOpacity
                             style={[styles.checkButton, { backgroundColor: themeColor, marginTop: 16 }]}
@@ -423,6 +447,8 @@ export default function TheoryScreen() {
                                 showToast('정답입니다! 🎉', 'success');
                               } else {
                                 showToast('오답입니다. ✍️', 'error');
+                                // DEBUG: [오답 서버 저장] 선택된 오답을 서버에 저장하여 오답노트에 표시
+                                submitAnswerToServer(selectedOption);
                               }
                               setShowAnswer(true);
                             }}

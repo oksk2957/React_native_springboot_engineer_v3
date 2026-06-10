@@ -438,6 +438,8 @@ export default function WrongAnswerScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f4f7f6' },
   centerContent: { justifyContent: 'center', alignItems: 'center' },
+  ajaxLoadingContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 12, gap: 8 },
+  ajaxLoadingText: { fontSize: 13, color: '#666' },
   header: { padding: 20, backgroundColor: '#4a90e2' },
   title: { fontSize: 24, fontWeight: 'bold', color: '#fff' },
   subtitle: { fontSize: 14, color: '#fff', opacity: 0.8, marginTop: 4 },

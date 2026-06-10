@@ -1,21 +1,21 @@
-# Plan Index (v92 — 2026-06-10 5-Step Memory 정리 ✅)
+# Plan Index (v93 — 2026-06-10 수정계획안20 ✅ 완료)
 
 **구조**: 개별 .md 파일 → archive/로 이동. 잔존 항목은 이 MEMORY.md에서만 추적.
 
-## 잔존 (1)
+## 잔존 (0)
 
-### ✅ 수정계획안20: 코드탭 전체 재설계 — DDL 블로커 해결됨 (2026-06-10)
-- **파일**: `수정계획안20_코드탭-전체-재설계.md`
-- **상태**: option1~5 컬럼 현재 존재 (migration 005 적용됨). 수정24에서 SQL 이미 실제 컬럼 참조 + card_type 동적 판별 완료
-- **해결**: `selectProgrammingCardsByLanguage` CASE WHEN option1 + 공통개념 전체조회 (2026-06-10 수정24)
+**plan_미완료 폴더 비어 있음 — 모든 항목 완료 또는 archive 이동**
 
 ## 🟡 기타 잔존
 - **wrong_answer_count FK 누락 (P1)**: `../project_프로젝트/project-wrong-answer-count-fk-missing-2026-06-10.md`
 
+## ✅ 최근 완료 (v93 — 수정24 코드탭 SQL 완료)
+- **수정계획안20 → archive/completed**: DDL 블로커 해결 (migration 005 적용됨), SQL 실제 컬럼 참조 + card_type 동적 판별 완료 (ProblemQueryMapper.xml:474-489)
+
 ## ✅ 최근 완료 (v92 5-Step 정리)
 - **수정계획안13 → archive**: 버그1 코드완료, 버그2/3 #20에 통합
 - **수정계획안23 → archive**: 이미 API 연동 완료 (UNION ALL + HomeScreen Promise.all)
-- **수정계획안24 → archive**: #23과 중복, 동일 작업
+- **수정계획안24 → archive**: #23과 중복, 동일 작업 → 수정24에서 SQL 구현 완료
 
 ## ✅ 최근 완료 (v90)
 - **🔴 수정24 로그아웃 4차 재발 (v90)**: App.tsx:340-342 key 반전 수정 완료, 사용자 런타임 검증 대기
