@@ -397,7 +397,9 @@ export const problemService = {
     if (params?.subjectId) qp.subjectId = params.subjectId;
     if (params?.language) qp.language = params.language;
     if (params?.limit) qp.limit = params.limit;
-    const response = await api.get('/problems/programming', { params: qp });
+    // DEBUG: [2026-06-10 수정39] /problems/programming → /problems/programming-theory로 수정
+    // 원인: /problems/programming이 백엔드 /{id} 라우트에 매칭되어 NumberFormatException 발생
+    const response = await api.get('/problems/programming-theory', { params: qp });
     return response.data;
   },
 };

@@ -10,7 +10,9 @@ import { useAuthStore } from '../stores/authStore';
 import { useNavigation } from '@react-navigation/native';
 import type { NavigationProp } from '@react-navigation/native';
 import { statisticsService } from '../services/api';
-import theoryApi from '../api/theoryApi';
+// DEBUG: [수정39-2026-06-10] default import → named import 변경
+// 원인: theoryApi.ts는 named export만 제공하므로 default import 시 undefined
+import { fetchTheoryCards } from '../api/theoryApi';
 import type { MainTabParamList } from '../navigation/AppNavigator';
 
 const categories = [
@@ -51,7 +53,7 @@ export default function HomeScreen() {
     const fetchObjectiveCount = async () => {
       try {
         const results = await Promise.all(
-          allCategories.map(cat => theoryApi.getTheoryCards(cat))
+          allCategories.map(cat => fetchTheoryCards(cat))
         );
         const total = results.reduce((sum, cards) =>
           sum + cards.filter((c) => c.cardType === 'OBJECTIVE').length, 0

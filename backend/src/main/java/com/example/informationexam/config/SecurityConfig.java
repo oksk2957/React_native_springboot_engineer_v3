@@ -1,6 +1,5 @@
 package com.example.informationexam.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,12 +25,6 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    // DEBUG: [OCI-2026-05-28] 프론트엔드 Origin을 환경변수 또는 기본값으로 설정
-    // 원인: 하드코딩된 IP로 인해 서버 IP 변경 시 재빌드 필요
-    // 해결: 환경변수 FRONTEND_ORIGIN 사용, 미설정시 localhost:9000 fallback
-    @Value("${frontend.origin:http://localhost:9000}")
-    private String frontendOrigin;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -66,83 +59,43 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // DEBUG: [C-2026-05-28] 와일드카드(*) 제거 - allowCredentials(true)와 충돌 방지
-        // 원인: "*"와 allowCredentials(true) 동시 사용 시 CORS 오류 발생
-        // 해결: 구체적인 Origin 패턴으로 대체
-        List<String> allowedOriginPatterns = Arrays.asList(
-            frontendOrigin,
-            "http://158.180.78.125:9000",   // OCI Public IP (React frontend)
-            "http://158.180.78.125:3000",   // OCI Public IP (React dev server)
-            "http://158.180.78.125:19000",  // OCI Public IP (Expo)
-            "http://158.180.78.125:19006",  // OCI Public IP (Expo web)
-            "http://158.180.78.125:*",      // OCI Public IP 모든 포트
-            "http://localhost:*",      // 모든 localhost 포트
-            "http://127.0.0.1:*",      // 모든 127.0.0.1 포트
-            "http://localhost:8081",   // React Native/Android 에뮬레이터
-            "http://localhost:3000",   // React Dev Server
-            "http://localhost:19000",  // Expo
-            "http://localhost:19006",  // Expo
-            "http://172.30.1.*:*",     // 개발 LAN
-            "http://192.168.*:*",      // 일반 사설망
-            "exp://*",               // Expo 개발 서버
-            "https://gmhznnwecujoafdisscl.supabase.co", // Supabase 도메인
-            "null"                   // DEBUG: [C-2026-05-28] React Native Origin이 null일 수 있음
+        // DEBUG: [CORS-Fix-2026-06-10] CORS 설정 단순화 + credentials=false로 변경
+        // 원인: 프론트엔드 api.ts에서 withCredentials 제거했지만 백엔드는 true로 설정 → 불일치
+        //       과도한 Origin 패턴("null", "exp://*", "172.30.1.*:*" 등)으로 preflight 실패
+        // 해결: allowCredentials(false) + 구체적인 Origin 목록만 허용
+        // DEBUG: [수정40-2026-06-10] localhost:9000, 127.0.0.1:9000 추가
+        // 원인: 프론트엔드가 포트 9000에서 실행되는데 CORS 목록에 localhost:9000이 없음
+        //       → OPTIONS preflight 403 → 브라우저가 실제 요청 차단 → Network Error
+        List<String> allowedOrigins = Arrays.asList(
+            "http://localhost:8081",
+            "http://localhost:3000",
+            "http://localhost:9000",
+            "http://localhost:19000",
+            "http://localhost:19006",
+            "http://127.0.0.1:8081",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:9000",
+            "http://158.180.78.125:9000",
+            "http://158.180.78.125:3000",
+            "https://gmhznnwecujoafdisscl.supabase.co"
         );
 
-        // DEBUG: [C-2026-05-28] 환경변수로 Origin 동적 설정
-        // 원인: 프로덕션 환경에서 특정 Origin만 허용해야 함
-        // 해결: ALLOWED_ORIGINS 환경변수로 동적 설정
-        // 사용법: export ALLOWED_ORIGINS="http://158.180.78.125:9000,http://localhost:3000"
-        String envOrigins = System.getenv("ALLOWED_ORIGINS");
-        if (envOrigins != null && !envOrigins.isEmpty()) {
-            allowedOriginPatterns = Arrays.asList(envOrigins.split(","));
-            // DEBUG: [C-2026-05-28] 환경변수로 설정된 Origin 로깅
-            System.out.println("[CORS] 환경변수 ALLOWED_ORIGINS 적용: " + envOrigins);
-        }
-
-        configuration.setAllowedOriginPatterns(allowedOriginPatterns);
-
-        // DEBUG: [C-2026-05-28] 허용 HTTP 메서드 설정
-        // 원인: CORS preflight 실패 시 메서드 불일치 가능성
-        // 해결: 모든 RESTful 메서드 명시적 허용
+        configuration.setAllowedOrigins(allowedOrigins);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
-
-        // DEBUG: [C-2026-05-28] 허용 헤더 설정
-        // 원인: React Native/Expo에서 추가 헤더 전송 시 CORS 차단
-        // 해결: Authorization, Content-Type 외 추가 헤더 허용
         configuration.setAllowedHeaders(Arrays.asList(
-            "Authorization",
-            "Content-Type",
-            "X-Requested-With",
-            "Accept",
-            "Origin",
-            "X-CSRF-Token",
-            "X-Api-Key"
+            "Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"
         ));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
 
-        // DEBUG: [C-2026-05-28] 노출 헤더 설정
-        // 원인: 프론트엔드에서 응답 헤더 접근 시 CORS 차단
-        // 해결: Authorization, Content-Type 외 추가 헤더 노출
-        configuration.setExposedHeaders(Arrays.asList(
-            "Authorization",
-            "Content-Type",
-            "X-Request-Id",
-            "X-Rate-Limit-Remaining"
-        ));
-
-        // 자격 증명 허용 설정 (프론트엔드 withCredentials=true와 일치)
-        configuration.setAllowCredentials(true);
-
-        // 프리플라이트 캐시 시간 (1시간)
+        // DEBUG: [CORS-Fix-2026-06-10] credentials=false (프론트엔드 withCredentials 제거와 일치)
+        configuration.setAllowCredentials(false);
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
-        // DEBUG: [CORS-Fix] 최종 CORS 설정 로그 출력
-        System.out.println("[CORS] Allowed Origin Patterns: " + allowedOriginPatterns);
-        System.out.println("[CORS] Allow Credentials: " + configuration.getAllowCredentials());
-        System.out.println("[CORS] Allowed Methods: " + configuration.getAllowedMethods());
+        System.out.println("[CORS] Allowed Origins: " + allowedOrigins);
+        System.out.println("[CORS] Allow Credentials: false");
 
         return source;
     }

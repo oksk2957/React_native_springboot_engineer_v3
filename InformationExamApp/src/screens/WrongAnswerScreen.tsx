@@ -248,8 +248,8 @@ const styles = StyleSheet.create({
   ajaxLoadingContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 12, gap: 8 },
   ajaxLoadingText: { fontSize: 13, color: '#666' },
   //오답노트
-  header: { padding: 6, backgroundColor: '#4a90e2' },
-  title: { fontSize: 24, fontWeight: 'bold', color: '#fff' },
+  header: { padding: 10, backgroundColor: '#4a90e2' },
+  title: { fontSize: 15, fontWeight: 'bold', color: '#fff' },
   //전체 오답 css 
   subtitle: { fontSize: 14, color: '#fff', opacity: 0.8, marginTop: 0 },
   navigationHint: { fontSize: 12, color: '#e2e8f0', marginTop: 0, lineHeight: 18 },

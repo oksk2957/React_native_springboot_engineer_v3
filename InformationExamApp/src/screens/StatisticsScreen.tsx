@@ -335,7 +335,7 @@ export default function StatisticsScreen() {
         {/* DEBUG: [AI-AUTHOR-2026-06-09] 이번 주 오답 대시보드 */}
         <View style={[styles.section, isDark && styles.sectionDark]}>
           <Text style={[styles.sectionTitle, isDark && styles.sectionTitleDark]}>
-            이번 주 오답
+            이번 주 오답 최대값
           </Text>
           <View style={styles.weeklyDashboard}>
             {getWeekDates().map((date, index) => {
@@ -537,32 +537,39 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   header: {
-    padding: 10,
+    padding: 5,
     backgroundColor: '#4a90e2',
   },
+  //가운데패딩10
   subHeader: {
-    marginTop: 6,
+    marginTop: 0,
     fontSize: 13,
+    marginLeft:10,
+   
     color: 'rgba(255,255,255,0.9)',
   },
   title: {
-    fontSize: 24,
+         marginLeft: 10,
+    fontSize: 15,
     fontWeight: 'bold',
     color: '#fff',
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+  
     color: '#2d3748',
-    marginBottom: 8,
+    marginBottom: 0,
   },
   hint: {
+      padding: 10,
     fontSize: 12,
     color: '#718096',
-    marginBottom: 12,
+    marginBottom: 0,
   },
+  //랭킹
   rankingSection: {
-    padding: 20,
+    padding: 10,
     backgroundColor: '#fff',
     marginTop: 8,
   },
@@ -600,6 +607,7 @@ const styles = StyleSheet.create({
     color: '#718096',
   },
   subjectName: {
+    
     flex: 1,
     fontSize: 14,
     color: '#2d3748',
@@ -619,7 +627,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#2d3748',
     minWidth: 60,
-    textAlign: 'right',
+    textAlign: 'center',
   },
   settingsSection: {
     padding: 20,

@@ -9,7 +9,7 @@
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ information-exam ---
 [INFO] Copying 1 resource from src\main\resources to target\classes
-[INFO] Copying 13 resources from src\main\resources to target\classes
+[INFO] Copying 14 resources from src\main\resources to target\classes
 [INFO] 
 [INFO] --- compiler:3.11.0:compile (default-compile) @ information-exam ---
 [INFO] Nothing to compile - all classes are up to date
@@ -18,9 +18,7 @@
 [INFO] Copying 1 resource from src\test\resources to target\test-classes
 [INFO] 
 [INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ information-exam ---
-[INFO] Changes detected - recompiling the module! :input tree
-[INFO] Compiling 1 source file with javac [debug release 17] to target\test-classes
-[WARNING] The following options were not recognized by any processor: '[querydsl.generatedAnnotationClass]'
+[INFO] Nothing to compile - all classes are up to date
 [INFO] 
 [INFO] <<< spring-boot:3.3.5:run (default-cli) < test-compile @ information-exam <<<
 [INFO] 
@@ -38,104 +36,125 @@ Standard Commons Logging discovery in action with spring-jcl: please remove comm
 
  :: Spring Boot ::                (v3.3.5)
 
-2026-06-09 16:57:26 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
-2026-06-09 16:57:26 [main] INFO  c.e.i.InformationExamBackendApplication - Starting InformationExamBackendApplication using Java 21.0.11 with PID 21540 (C:\project\React_native_springboot_engineer_v3\backend\target\classes started by SEOL in C:\project\React_native_springboot_engineer_v3\backend)
-2026-06-09 16:57:26 [main] INFO  c.e.i.InformationExamBackendApplication - No active profile set, falling back to 1 default profile: "default"
-2026-06-09 16:57:26 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-06-09 16:57:26 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 142 ms. Found 10 JPA repository interfaces.
-2026-06-09 16:57:27 [main] DEBUG o.apache.ibatis.logging.LogFactory - Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
-2026-06-09 16:57:27 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9001 (http)
-2026-06-09 16:57:27 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-9001"]
-2026-06-09 16:57:27 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-06-09 16:57:27 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.31]
-2026-06-09 16:57:27 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2026-06-09 16:57:27 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1307 ms
+2026-06-10 21:58:27 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2026-06-10 21:58:27 [main] INFO  c.e.i.InformationExamBackendApplication - Starting InformationExamBackendApplication using Java 21.0.11 with PID 9728 (C:\project\React_native_springboot_engineer_v3\backend\target\classes started by SEOL in C:\project\React_native_springboot_engineer_v3\backend)
+2026-06-10 21:58:27 [main] INFO  c.e.i.InformationExamBackendApplication - No active profile set, falling back to 1 default profile: "default"
+2026-06-10 21:58:28 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-10 21:58:28 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 212 ms. Found 10 JPA repository interfaces.
+2026-06-10 21:58:29 [main] DEBUG o.apache.ibatis.logging.LogFactory - Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
+2026-06-10 21:58:29 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9001 (http)
+2026-06-10 21:58:29 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-9001"]
+2026-06-10 21:58:29 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-06-10 21:58:29 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-06-10 21:58:29 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-06-10 21:58:29 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1973 ms
 Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - Driver class org.postgresql.Driver found in Thread context class loader jdk.internal.loader.ClassLoaders$AppClassLoader@6bc7c054
-2026-06-09 16:57:27 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-06-09 16:57:27 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
-2026-06-09 16:57:27 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2026-06-09 16:57:27 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - HikariPool-1 - configuration:
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - allowPoolSuspension.............false
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - autoCommit......................true
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - catalog.........................none
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - connectionInitSql...............none
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - connectionTestQuery.............none
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - connectionTimeout...............30000
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSource......................none
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSourceClassName.............none
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSourceJNDI..................none
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSourceProperties............{password=<masked>}
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - driverClassName................."org.postgresql.Driver"
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - exceptionOverrideClassName......none
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - healthCheckProperties...........{}
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - healthCheckRegistry.............none
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - idleTimeout.....................600000
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - initializationFailTimeout.......1
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - isolateInternalQueries..........false
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - jdbcUrl.........................jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?external_id=gmhznnwecujoafdisscl&prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - keepaliveTime...................0
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - leakDetectionThreshold..........0
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - maxLifetime.....................1800000
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - maximumPoolSize.................5
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - metricRegistry..................none
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - metricsTrackerFactory...........none
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - minimumIdle.....................1
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - password........................<masked>
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - poolName........................"HikariPool-1"
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - readOnly........................false
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - registerMbeans..................false
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - scheduledExecutor...............none
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - schema..........................none
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - threadFactory...................internal
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - transactionIsolation............default
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - username........................"postgres.gmhznnwecujoafdisscl"
-2026-06-09 16:57:27 [main] DEBUG com.zaxxer.hikari.HikariConfig - validationTimeout...............5000
-2026-06-09 16:57:27 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-06-09 16:57:28 [main] DEBUG org.postgresql.Driver - Loading driver configuration via classloader jdk.internal.loader.ClassLoaders$AppClassLoader@6bc7c054
-2026-06-09 16:57:28 [main] DEBUG org.postgresql.Driver - Connecting with URL: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?external_id=gmhznnwecujoafdisscl&prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
-2026-06-09 16:57:28 [main] DEBUG org.postgresql.jdbc.PgConnection - PostgreSQL JDBC Driver 42.7.4
-2026-06-09 16:57:28 [main] DEBUG org.postgresql.jdbc.PgConnection -   setDefaultFetchSize = 0
-2026-06-09 16:57:28 [main] DEBUG org.postgresql.jdbc.PgConnection -   setPrepareThreshold = 0
-2026-06-09 16:57:28 [main] DEBUG o.p.core.v3.ConnectionFactoryImpl - Trying to establish a protocol version 3 connection to aws-1-ap-south-1.pooler.supabase.com:6543
-2026-06-09 16:57:28 [main] DEBUG o.p.core.v3.ConnectionFactoryImpl - Receive Buffer Size is 65,536
-2026-06-09 16:57:28 [main] DEBUG o.p.core.v3.ConnectionFactoryImpl - Send Buffer Size is 65,536
-2026-06-09 16:57:28 [main] DEBUG org.postgresql.ssl.MakeSSL - converting regular socket connection to ssl
-2026-06-09 16:57:29 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@23c72128
-2026-06-09 16:57:29 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-06-09 16:57:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=1, active=1, idle=0, waiting=0)
-2026-06-09 16:57:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=1, active=1, idle=0, waiting=0)
-2026-06-09 16:57:29 [HikariPool-1 connection adder] DEBUG org.postgresql.Driver - Connecting with URL: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?external_id=gmhznnwecujoafdisscl&prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
-2026-06-09 16:57:29 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection - PostgreSQL JDBC Driver 42.7.4
-2026-06-09 16:57:29 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setDefaultFetchSize = 0
-2026-06-09 16:57:29 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setPrepareThreshold = 0
-2026-06-09 16:57:29 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Trying to establish a protocol version 3 connection to aws-1-ap-south-1.pooler.supabase.com:6543
-2026-06-09 16:57:29 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-06-09 16:57:29 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Receive Buffer Size is 65,536
-2026-06-09 16:57:29 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Send Buffer Size is 65,536
-2026-06-09 16:57:29 [HikariPool-1 connection adder] DEBUG org.postgresql.ssl.MakeSSL - converting regular socket connection to ssl
-2026-06-09 16:57:30 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@d184089
-2026-06-09 16:57:30 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After adding stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 16:57:30 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-06-09 16:57:30 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-06-09 16:57:31 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-06-09 16:57:32 [main] DEBUG o.apache.ibatis.logging.LogFactory - Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
-2026-06-09 16:57:32 [main] INFO  c.e.i.s.SupabaseTokenVerifierService - [SupabaseTokenVerifier] REST API 검증 방식 초기화 완료 - URL: https://gmhznnwecujoafdisscl.supabase.co
+2026-06-10 21:58:29 [main] DEBUG com.zaxxer.hikari.HikariConfig - Driver class org.postgresql.Driver found in Thread context class loader jdk.internal.loader.ClassLoaders$AppClassLoader@6bc7c054
+2026-06-10 21:58:29 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-10 21:58:29 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2026-06-10 21:58:29 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-06-10 21:58:30 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - HikariPool-1 - configuration:
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - allowPoolSuspension.............false
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - autoCommit......................true
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - catalog.........................none
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - connectionInitSql...............none
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - connectionTestQuery.............none
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - connectionTimeout...............30000
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSource......................none
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSourceClassName.............none
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSourceJNDI..................none
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - dataSourceProperties............{password=<masked>}
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - driverClassName................."org.postgresql.Driver"
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - exceptionOverrideClassName......none
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - healthCheckProperties...........{}
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - healthCheckRegistry.............none
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - idleTimeout.....................600000
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - initializationFailTimeout.......1
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - isolateInternalQueries..........false
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - jdbcUrl.........................jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?external_id=gmhznnwecujoafdisscl&prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - keepaliveTime...................0
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - leakDetectionThreshold..........0
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - maxLifetime.....................1800000
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - maximumPoolSize.................5
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - metricRegistry..................none
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - metricsTrackerFactory...........none
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - minimumIdle.....................1
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - password........................<masked>
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - poolName........................"HikariPool-1"
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - readOnly........................false
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - registerMbeans..................false
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - scheduledExecutor...............none
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - schema..........................none
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - threadFactory...................internal
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - transactionIsolation............default
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - username........................"postgres.gmhznnwecujoafdisscl"
+2026-06-10 21:58:30 [main] DEBUG com.zaxxer.hikari.HikariConfig - validationTimeout...............5000
+2026-06-10 21:58:30 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-06-10 21:58:30 [main] DEBUG org.postgresql.Driver - Loading driver configuration via classloader jdk.internal.loader.ClassLoaders$AppClassLoader@6bc7c054
+2026-06-10 21:58:30 [main] DEBUG org.postgresql.Driver - Connecting with URL: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?external_id=gmhznnwecujoafdisscl&prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
+2026-06-10 21:58:30 [main] DEBUG org.postgresql.jdbc.PgConnection - PostgreSQL JDBC Driver 42.7.4
+2026-06-10 21:58:30 [main] DEBUG org.postgresql.jdbc.PgConnection -   setDefaultFetchSize = 0
+2026-06-10 21:58:30 [main] DEBUG org.postgresql.jdbc.PgConnection -   setPrepareThreshold = 0
+2026-06-10 21:58:30 [main] DEBUG o.p.core.v3.ConnectionFactoryImpl - Trying to establish a protocol version 3 connection to aws-1-ap-south-1.pooler.supabase.com:6543
+2026-06-10 21:58:30 [main] DEBUG o.p.core.v3.ConnectionFactoryImpl - Receive Buffer Size is 65,536
+2026-06-10 21:58:30 [main] DEBUG o.p.core.v3.ConnectionFactoryImpl - Send Buffer Size is 65,536
+2026-06-10 21:58:30 [main] DEBUG org.postgresql.ssl.MakeSSL - converting regular socket connection to ssl
+2026-06-10 21:58:32 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5b64f771
+2026-06-10 21:58:32 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-06-10 21:58:32 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=1, active=1, idle=0, waiting=0)
+2026-06-10 21:58:32 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=1, active=1, idle=0, waiting=0)
+2026-06-10 21:58:32 [HikariPool-1 connection adder] DEBUG org.postgresql.Driver - Connecting with URL: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?external_id=gmhznnwecujoafdisscl&prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
+2026-06-10 21:58:32 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection - PostgreSQL JDBC Driver 42.7.4
+2026-06-10 21:58:32 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setDefaultFetchSize = 0
+2026-06-10 21:58:32 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setPrepareThreshold = 0
+2026-06-10 21:58:32 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Trying to establish a protocol version 3 connection to aws-1-ap-south-1.pooler.supabase.com:6543
+2026-06-10 21:58:32 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-10 21:58:32 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Receive Buffer Size is 65,536
+2026-06-10 21:58:32 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Send Buffer Size is 65,536
+2026-06-10 21:58:32 [HikariPool-1 connection adder] DEBUG org.postgresql.ssl.MakeSSL - converting regular socket connection to ssl
+2026-06-10 21:58:32 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@fc2d52
+2026-06-10 21:58:33 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After adding stats (total=2, active=0, idle=2, waiting=0)
+2026-06-10 21:58:33 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-10 21:58:33 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-10 21:58:33 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-10 21:58:34 [main] DEBUG o.apache.ibatis.logging.LogFactory - Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
+2026-06-10 21:58:34 [main] INFO  c.e.i.s.SupabaseTokenVerifierService - [SupabaseTokenVerifier] REST API 검증 방식 초기화 완료 - URL: https://gmhznnwecujoafdisscl.supabase.co
 [CORS] Allowed Origin Patterns: [http://158.180.78.125:9000, http://158.180.78.125:9000, http://158.180.78.125:3000, http://158.180.78.125:19000, http://158.180.78.125:19006, http://158.180.78.125:*, http://localhost:*, http://127.0.0.1:*, http://localhost:8081, http://localhost:3000, http://localhost:19000, http://localhost:19006, http://172.30.1.*:*, http://192.168.*:*, exp://*, https://gmhznnwecujoafdisscl.supabase.co, null]
 [CORS] Allow Credentials: true
 [CORS] Allowed Methods: [GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD]
-2026-06-09 16:57:33 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-9001"]
-2026-06-09 16:57:33 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 9001 (http) with context path '/'
-2026-06-09 16:57:33 [main] INFO  c.e.i.InformationExamBackendApplication - Started InformationExamBackendApplication in 7.687 seconds (process running for 8.079)
-2026-06-09 16:57:36 [http-nio-0.0.0.0-9001-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-06-09 16:57:36 [http-nio-0.0.0.0-9001-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-06-09 16:57:36 [http-nio-0.0.0.0-9001-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-[Backend Request] GET /actuator/health | Origin: null | Host: localhost:9001
-2026-06-09 16:57:36 [http-nio-0.0.0.0-9001-exec-1] ERROR c.e.i.e.GlobalExceptionHandler - [GLOBAL] Unhandled Exception: No static resource actuator/health.
-org.springframework.web.servlet.resource.NoResourceFoundException: No static resource actuator/health.
-	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:585)
-	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:52)
+2026-06-10 21:58:35 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-9001"]
+2026-06-10 21:58:35 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 9001 (http) with context path '/'
+2026-06-10 21:58:35 [main] INFO  c.e.i.InformationExamBackendApplication - Started InformationExamBackendApplication in 8.627 seconds (process running for 9.181)
+2026-06-10 21:59:00 [http-nio-0.0.0.0-9001-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-10 21:59:00 [http-nio-0.0.0.0-9001-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-06-10 21:59:00 [http-nio-0.0.0.0-9001-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+[Backend Request] GET /api/problems/theory | Origin: null | Host: localhost:9001
+2026-06-10 21:59:00 [http-nio-0.0.0.0-9001-exec-1] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 조회 요청 - category: 데이터베이스
+2026-06-10 21:59:00 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==>  Preparing: SELECT 'SUBJECTIVE' AS card_type, sp.id, sp.subject_id, sp.question AS front_text, sp.answer AS back_text, sp.explanation, sp.difficulty, sp.option1, sp.option2, sp.option3, sp.option4, sp.option5 FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE s.name = ? UNION ALL SELECT 'FLASHCARD' AS card_type, lc.id, lc.subject_id, lc.front_text, lc.back_text, lc.explanation, 0 AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM learning_card lc INNER JOIN subject s ON lc.subject_id = s.id WHERE s.name = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL, card_type FLASHCARD 하드코딩 SELECT 'FLASHCARD' AS card_type, pp.id, pp.subject_id, pp.question AS front_text, pp.answer AS back_text, pp.explanation, COALESCE(pp.difficulty, 0) AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM programming_language_problems pp WHERE (? = '프로그래밍언어') OR LOWER(pp.prog_language) = LOWER(?) UNION ALL SELECT 'OBJECTIVE' AS card_type, p.id, p.subject_id, p.question AS front_text, p.answer AS back_text, p.explanation, COALESCE(p.difficulty, 0) AS difficulty, p.option1, p.option2, p.option3, p.option4, p.option5 FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE s.name = ? AND p.type = 'OBJECTIVE' ORDER BY card_type, id
+2026-06-10 21:59:00 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==> Parameters: 데이터베이스(String), 데이터베이스(String), 데이터베이스(String), 데이터베이스(String), 데이터베이스(String)
+2026-06-10 21:59:00 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - <==      Total: 24
+2026-06-10 21:59:00 [http-nio-0.0.0.0-9001-exec-1] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 쿼리 결과 - category: 데이터베이스, 결과 수: 24
+2026-06-10 21:59:00 [http-nio-0.0.0.0-9001-exec-1] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 응답 - category: 데이터베이스, DTO 수: 24
+[Backend Request] GET /api/problems/theory | Origin: null | Host: localhost:9001
+2026-06-10 21:59:01 [http-nio-0.0.0.0-9001-exec-2] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 조회 요청 - category: 데이터베이스
+2026-06-10 21:59:01 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==>  Preparing: SELECT 'SUBJECTIVE' AS card_type, sp.id, sp.subject_id, sp.question AS front_text, sp.answer AS back_text, sp.explanation, sp.difficulty, sp.option1, sp.option2, sp.option3, sp.option4, sp.option5 FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE s.name = ? UNION ALL SELECT 'FLASHCARD' AS card_type, lc.id, lc.subject_id, lc.front_text, lc.back_text, lc.explanation, 0 AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM learning_card lc INNER JOIN subject s ON lc.subject_id = s.id WHERE s.name = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL, card_type FLASHCARD 하드코딩 SELECT 'FLASHCARD' AS card_type, pp.id, pp.subject_id, pp.question AS front_text, pp.answer AS back_text, pp.explanation, COALESCE(pp.difficulty, 0) AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM programming_language_problems pp WHERE (? = '프로그래밍언어') OR LOWER(pp.prog_language) = LOWER(?) UNION ALL SELECT 'OBJECTIVE' AS card_type, p.id, p.subject_id, p.question AS front_text, p.answer AS back_text, p.explanation, COALESCE(p.difficulty, 0) AS difficulty, p.option1, p.option2, p.option3, p.option4, p.option5 FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE s.name = ? AND p.type = 'OBJECTIVE' ORDER BY card_type, id
+2026-06-10 21:59:01 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==> Parameters: 데이터베이스(String), 데이터베이스(String), 데이터베이스(String), 데이터베이스(String), 데이터베이스(String)
+2026-06-10 21:59:01 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - <==      Total: 24
+2026-06-10 21:59:01 [http-nio-0.0.0.0-9001-exec-2] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 쿼리 결과 - category: 데이터베이스, 결과 수: 24
+2026-06-10 21:59:01 [http-nio-0.0.0.0-9001-exec-2] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 응답 - category: 데이터베이스, DTO 수: 24
+[Backend Request] GET /api/problems/programming | Origin: null | Host: localhost:9001
+2026-06-10 21:59:01 [http-nio-0.0.0.0-9001-exec-3] ERROR c.e.i.c.RestApiExceptionLoggingAdvice - [API 오류] GET /api/problems/programming?language=Java | org.springframework.web.method.annotation.MethodArgumentTypeMismatchException — Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: "programming"
+org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: "programming"
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:301)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:136)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:224)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:178)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
 	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
 	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
 	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
@@ -182,7 +201,7 @@ org.springframework.web.servlet.resource.NoResourceFoundException: No static res
 	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
 	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
-	at com.example.informationexam.config.SecurityConfig.lambda$2(SecurityConfig.java:46)
+	at com.example.informationexam.config.SecurityConfig.lambda$filterChain$1(SecurityConfig.java:46)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
 	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
@@ -229,27 +248,32 @@ org.springframework.web.servlet.resource.NoResourceFoundException: No static res
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
-[Backend Request] GET /api/problems/programming-theory | Origin: null | Host: localhost:9001
-2026-06-09 16:57:57 [http-nio-0.0.0.0-9001-exec-2] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: Java
-2026-06-09 16:57:57 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 16:57:57 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: Java(String)
-2026-06-09 16:57:57 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 16:57:57 [http-nio-0.0.0.0-9001-exec-2] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: Java, 결과 수: 0
-2026-06-09 16:57:57 [http-nio-0.0.0.0-9001-exec-2] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: Java, DTO 수: 0
-[Backend Request] GET /api/problems/4 | Origin: null | Host: localhost:9001
-2026-06-09 16:57:58 [http-nio-0.0.0.0-9001-exec-4] INFO  c.e.i.c.ProblemApiController - [MVC2] 단건 문제 조회: id=4
-2026-06-09 16:57:58 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectById - ==>  Preparing: SELECT id, question, correct_answer, explanation, subject_id, category, type, difficulty, option1, option2, option3, option4, option5, is_ai_generated, programming_language FROM ( SELECT p.id, p.question, p.answer AS correct_answer, p.explanation, s.id AS subject_id, s.name AS category, p.type, p.difficulty, p.option1, p.option2, p.option3, p.option4, p.option5, p.is_ai_generated, NULL AS programming_language FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE p.id = ? UNION ALL SELECT sp.id, sp.question, sp.answer AS correct_answer, sp.explanation, s.id AS subject_id, s.name AS category, 'SUBJECTIVE' AS type, sp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, NULL AS programming_language FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE sp.id = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL로 되돌림 SELECT pp.id, pp.question, pp.answer AS correct_answer, pp.explanation, s.id AS subject_id, s.name AS category, 'PROGRAMMING_LANGUAGE' AS type, pp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, pp.prog_language AS programming_language FROM programming_language_problems pp INNER JOIN subject s ON pp.subject_id = s.id WHERE pp.id = ? ) AS combined LIMIT 1
-2026-06-09 16:57:58 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectById - ==> Parameters: 4(Long), 4(Long), 4(Long)
-2026-06-09 16:57:58 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectById - <==      Total: 1
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: null | Host: localhost:9001
-2026-06-09 16:57:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 16:57:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 16:57:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-[Backend Request] GET /api/mypage/wrong-ranking | Origin: null | Host: localhost:9001
-2026-06-09 16:58:05 [http-nio-0.0.0.0-9001-exec-8] ERROR c.e.i.e.GlobalExceptionHandler - [GLOBAL] Unhandled Exception: No static resource api/mypage/wrong-ranking.
-org.springframework.web.servlet.resource.NoResourceFoundException: No static resource api/mypage/wrong-ranking.
-	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:585)
-	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:52)
+Caused by: java.lang.NumberFormatException: For input string: "programming"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Long.parseLong(Long.java:709)
+	at java.base/java.lang.Long.valueOf(Long.java:1157)
+	at org.springframework.util.NumberUtils.parseNumber(NumberUtils.java:206)
+	at org.springframework.beans.propertyeditors.CustomNumberEditor.setAsText(CustomNumberEditor.java:115)
+	at org.springframework.beans.TypeConverterDelegate.doConvertTextValue(TypeConverterDelegate.java:439)
+	at org.springframework.beans.TypeConverterDelegate.doConvertValue(TypeConverterDelegate.java:412)
+	at org.springframework.beans.TypeConverterDelegate.convertIfNecessary(TypeConverterDelegate.java:161)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:80)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:53)
+	at org.springframework.validation.DataBinder.convertIfNecessary(DataBinder.java:862)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:293)
+	... 101 common frames omitted
+[Backend Request] GET /api/problems/programming | Origin: null | Host: localhost:9001
+2026-06-10 21:59:01 [http-nio-0.0.0.0-9001-exec-4] ERROR c.e.i.c.RestApiExceptionLoggingAdvice - [API 오류] GET /api/problems/programming?language=Python | org.springframework.web.method.annotation.MethodArgumentTypeMismatchException — Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: "programming"
+org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: "programming"
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:301)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:136)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:224)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:178)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
 	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
 	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
 	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
@@ -296,7 +320,7 @@ org.springframework.web.servlet.resource.NoResourceFoundException: No static res
 	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
 	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
-	at com.example.informationexam.config.SecurityConfig.lambda$2(SecurityConfig.java:46)
+	at com.example.informationexam.config.SecurityConfig.lambda$filterChain$1(SecurityConfig.java:46)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
 	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
@@ -343,1573 +367,152 @@ org.springframework.web.servlet.resource.NoResourceFoundException: No static res
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
-[Backend Request] GET /api/problems/programming-theory | Origin: null | Host: localhost:9001
-2026-06-09 16:58:14 [http-nio-0.0.0.0-9001-exec-9] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: C언어
-2026-06-09 16:58:14 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 16:58:14 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: C언어(String)
-2026-06-09 16:58:15 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 16:58:15 [http-nio-0.0.0.0-9001-exec-9] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: C언어, 결과 수: 0
-2026-06-09 16:58:15 [http-nio-0.0.0.0-9001-exec-9] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: C언어, DTO 수: 0
-[Backend Request] GET /api/problems/4 | Origin: null | Host: localhost:9001
-2026-06-09 16:58:15 [http-nio-0.0.0.0-9001-exec-1] INFO  c.e.i.c.ProblemApiController - [MVC2] 단건 문제 조회: id=4
-2026-06-09 16:58:15 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectById - ==>  Preparing: SELECT id, question, correct_answer, explanation, subject_id, category, type, difficulty, option1, option2, option3, option4, option5, is_ai_generated, programming_language FROM ( SELECT p.id, p.question, p.answer AS correct_answer, p.explanation, s.id AS subject_id, s.name AS category, p.type, p.difficulty, p.option1, p.option2, p.option3, p.option4, p.option5, p.is_ai_generated, NULL AS programming_language FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE p.id = ? UNION ALL SELECT sp.id, sp.question, sp.answer AS correct_answer, sp.explanation, s.id AS subject_id, s.name AS category, 'SUBJECTIVE' AS type, sp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, NULL AS programming_language FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE sp.id = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL로 되돌림 SELECT pp.id, pp.question, pp.answer AS correct_answer, pp.explanation, s.id AS subject_id, s.name AS category, 'PROGRAMMING_LANGUAGE' AS type, pp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, pp.prog_language AS programming_language FROM programming_language_problems pp INNER JOIN subject s ON pp.subject_id = s.id WHERE pp.id = ? ) AS combined LIMIT 1
-2026-06-09 16:58:15 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectById - ==> Parameters: 4(Long), 4(Long), 4(Long)
-2026-06-09 16:58:15 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectById - <==      Total: 1
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: null | Host: localhost:9001
-2026-06-09 16:58:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 16:58:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 16:58:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-2026-06-09 16:58:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 16:58:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 16:58:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-2026-06-09 16:59:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 16:59:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 16:59:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-2026-06-09 16:59:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 16:59:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 16:59:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-2026-06-09 17:00:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 17:00:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 17:00:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: null | Host: localhost:9001
-[Backend Request] GET /api/problems/4 | Origin: null | Host: localhost:9001
-2026-06-09 17:00:41 [http-nio-0.0.0.0-9001-exec-7] INFO  c.e.i.c.ProblemApiController - [MVC2] 단건 문제 조회: id=4
-2026-06-09 17:00:41 [http-nio-0.0.0.0-9001-exec-7] DEBUG c.e.i.m.P.selectById - ==>  Preparing: SELECT id, question, correct_answer, explanation, subject_id, category, type, difficulty, option1, option2, option3, option4, option5, is_ai_generated, programming_language FROM ( SELECT p.id, p.question, p.answer AS correct_answer, p.explanation, s.id AS subject_id, s.name AS category, p.type, p.difficulty, p.option1, p.option2, p.option3, p.option4, p.option5, p.is_ai_generated, NULL AS programming_language FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE p.id = ? UNION ALL SELECT sp.id, sp.question, sp.answer AS correct_answer, sp.explanation, s.id AS subject_id, s.name AS category, 'SUBJECTIVE' AS type, sp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, NULL AS programming_language FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE sp.id = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL로 되돌림 SELECT pp.id, pp.question, pp.answer AS correct_answer, pp.explanation, s.id AS subject_id, s.name AS category, 'PROGRAMMING_LANGUAGE' AS type, pp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, pp.prog_language AS programming_language FROM programming_language_problems pp INNER JOIN subject s ON pp.subject_id = s.id WHERE pp.id = ? ) AS combined LIMIT 1
-2026-06-09 17:00:41 [http-nio-0.0.0.0-9001-exec-7] DEBUG c.e.i.m.P.selectById - ==> Parameters: 4(Long), 4(Long), 4(Long)
-2026-06-09 17:00:41 [http-nio-0.0.0.0-9001-exec-7] DEBUG c.e.i.m.P.selectById - <==      Total: 1
-[Backend Request] GET /api/problems/programming-theory | Origin: null | Host: localhost:9001
-2026-06-09 17:00:57 [http-nio-0.0.0.0-9001-exec-9] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: Java
-2026-06-09 17:00:57 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:00:57 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: Java(String)
-2026-06-09 17:00:57 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:00:57 [http-nio-0.0.0.0-9001-exec-9] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: Java, 결과 수: 0
-2026-06-09 17:00:57 [http-nio-0.0.0.0-9001-exec-9] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: Java, DTO 수: 0
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: null | Host: localhost:9001
-2026-06-09 17:00:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 17:00:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 17:00:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-2026-06-09 17:01:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 17:01:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 17:01:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-2026-06-09 17:01:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 17:01:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 17:01:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-2026-06-09 17:02:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 17:02:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 17:02:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-2026-06-09 17:02:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 17:02:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=2, active=0, idle=2, waiting=0)
-2026-06-09 17:02:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-[Backend Request] GET /api/health | Origin: http://localhost:9000 | Host: localhost:9001
-[HealthCheck] DB ���� ����: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?external_id=gmhznnwecujoafdisscl&prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
-[HealthCheck] ���� Ȯ�� �Ϸ�: UP
-[Backend Request] OPTIONS /api/auth/google | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] POST /api/auth/google | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:17 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.c.GoogleAuthController - [AUTH][4842748d][POST][START] Supabase OAuth login request received
-2026-06-09 17:03:17 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:03:17 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.service.UserService - [AUTH][4842748d][STEP1] Supabase JWT 검증 시작
-2026-06-09 17:03:17 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.s.SupabaseTokenVerifierService - [AUTH][DEBUG-P0] Supabase /auth/v1/user 요청 시작 - token: eyJhbGciOiJFUzI1NiIs..., anonKey loaded: true
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.service.UserService - [AUTH][4842748d][STEP1] Supabase JWT 검증 완료 - email: okskycar1@gmail.com
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.service.UserService - [AUTH][4842748d][STEP2] 사용자 조회 시작 - googleId: 03b88524-5214-4524-a6d4-b63cd8409a72
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."google_id"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."google_id"=?
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [03b88524-5214-4524-a6d4-b63cd8409a72]
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.service.UserService - [AUTH][4842748d][STEP2][EXISTING] 기존 사용자 - id: 38, email: okskycar1@gmail.com, username: okskycar1
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.hibernate.SQL - 
-    select
-        ss1_0."id",
-        ss1_0."created_at",
-        ss1_0."google_id",
-        ss1_0."session_key",
-        ss1_0."updated_at",
-        ss1_0."user_id" 
-    from
-        "study_session" ss1_0 
-    where
-        ss1_0."user_id"=?
-Hibernate: 
-    select
-        ss1_0."id",
-        ss1_0."created_at",
-        ss1_0."google_id",
-        ss1_0."session_key",
-        ss1_0."updated_at",
-        ss1_0."user_id" 
-    from
-        "study_session" ss1_0 
-    where
-        ss1_0."user_id"=?
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [38]
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.service.UserService - [AUTH][4842748d][STEP3] 7일 이상 된 오답 기록 삭제 시작
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.service.UserService - [WrongAnswerCleanup] userId=38 오답 삭제 시작
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.hibernate.SQL - 
-    DELETE 
-    FROM
-        user_answer 
-    WHERE
-        user_id = ? 
-        AND submitted_at < CURRENT_TIMESTAMP - INTERVAL '7 days'
-Hibernate: 
-    DELETE 
-    FROM
-        user_answer 
-    WHERE
-        user_id = ? 
-        AND submitted_at < CURRENT_TIMESTAMP - INTERVAL '7 days'
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [38]
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.service.UserService - [WrongAnswerCleanup] userId=38 오답 삭제 완료 - 삭제된 레코드 수: 0
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.service.UserService - [AUTH][4842748d][STEP3] 7일 이상 된 오답 기록 삭제 완료 - 삭제된 레코드 수: 0
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.service.UserService - [AUTH][4842748d][STEP4] JWT 토큰 생성
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.service.UserService - [AUTH][4842748d][STEP5] 트라이얼 상태 확인
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.service.UserService - [AUTH][4842748d][STEP6] 응답 생성 - isAdmin: false, trialExpired: false, canAccessApp: true
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:03:19 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.c.GoogleAuthController - [AUTH][4842748d][POST][END] Supabase OAuth login completed in 1972 ms
-[Backend Request] OPTIONS /api/statistics/subjective-count | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/statistics/subjective-count | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] OPTIONS /api/problems/study/meta | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] OPTIONS /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] OPTIONS /api/problems/theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] OPTIONS /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] OPTIONS /api/wrong-answers/calendar | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/study/meta | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/wrong-answers/calendar | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 조회 요청 - category: 운영체제
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-3] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: C언어
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: C언어(String)
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-4] INFO  c.e.i.c.ProblemApiController - [MVC2] 학습 메타 조회: randomSample=false, type=OBJECTIVE, category=null
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:03:20 [HikariPool-1 connection adder] DEBUG org.postgresql.Driver - Connecting with URL: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?external_id=gmhznnwecujoafdisscl&prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
-2026-06-09 17:03:20 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection - PostgreSQL JDBC Driver 42.7.4
-2026-06-09 17:03:20 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setDefaultFetchSize = 0
-2026-06-09 17:03:20 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setPrepareThreshold = 0
-2026-06-09 17:03:20 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Trying to establish a protocol version 3 connection to aws-1-ap-south-1.pooler.supabase.com:6543
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==>  Preparing: SELECT 'SUBJECTIVE' AS card_type, sp.id, sp.subject_id, sp.question AS front_text, sp.answer AS back_text, sp.explanation, sp.difficulty, sp.option1, sp.option2, sp.option3, sp.option4, sp.option5 FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE s.name = ? UNION ALL SELECT 'FLASHCARD' AS card_type, lc.id, lc.subject_id, lc.front_text, lc.back_text, lc.explanation, 0 AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM learning_card lc INNER JOIN subject s ON lc.subject_id = s.id WHERE s.name = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL, card_type FLASHCARD 하드코딩 SELECT 'FLASHCARD' AS card_type, pp.id, pp.subject_id, pp.question AS front_text, pp.answer AS back_text, pp.explanation, COALESCE(pp.difficulty, 0) AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM programming_language_problems pp WHERE (? = '프로그래밍언어') OR LOWER(pp.prog_language) = LOWER(?) ORDER BY card_type, id
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-3] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: C언어, 결과 수: 0
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-3] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: C언어, DTO 수: 0
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==> Parameters: 운영체제(String), 운영체제(String), 운영체제(String), 운영체제(String)
-[Backend Request] OPTIONS /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: Java
-2026-06-09 17:03:20 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Receive Buffer Size is 65,536
-2026-06-09 17:03:20 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Send Buffer Size is 65,536
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - <==      Total: 9
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 쿼리 결과 - category: 운영체제, 결과 수: 9
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 응답 - category: 운영체제, DTO 수: 9
-2026-06-09 17:03:20 [HikariPool-1 connection adder] DEBUG org.postgresql.ssl.MakeSSL - converting regular socket connection to ssl
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectStudyIdsByType - ==>  Preparing: SELECT p.id FROM problem p WHERE p.type = ? ORDER BY RANDOM() LIMIT ?
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectStudyIdsByType - ==> Parameters: OBJECTIVE(String), 5000(Integer)
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: Java(String)
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: Java, 결과 수: 0
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==>  Preparing: SELECT DATE(bookmarked_at) AS date, COUNT(*) AS count FROM wrong_answer_bookmark WHERE user_id = ? AND bookmarked_at >= ? AND bookmarked_at < ? GROUP BY DATE(bookmarked_at) ORDER BY date
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: Java, DTO 수: 0
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==> Parameters: 38(Long), 2026-06-01(LocalDate), 2026-07-01(LocalDate)
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectStudyIdsByType - <==      Total: 12
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-[Backend Request] OPTIONS /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] OPTIONS /api/problems/12 | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-2] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: Python
-[Backend Request] GET /api/problems/12 | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-8] INFO  c.e.i.c.ProblemApiController - [MVC2] 단건 문제 조회: id=12
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.hibernate.SQL - 
-    select
-        count(*) 
-    from
-        "subjective_problems" sp1_0
-Hibernate: 
-    select
-        count(*) 
-    from
-        "subjective_problems" sp1_0
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - <==      Total: 2
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.hibernate.SQL - 
-    select
-        count(ua1_0."id") 
-    from
-        "user_answer" ua1_0 
-    where
-        ua1_0."user_id"=? 
-        and ua1_0."item_type"=?
-Hibernate: 
-    select
-        count(ua1_0."id") 
-    from
-        "user_answer" ua1_0 
-    where
-        ua1_0."user_id"=? 
-        and ua1_0."item_type"=?
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [38]
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [SUBJECTIVE]
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:03:20 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@12032978
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:03:20 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: Python(String)
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Connection not added, stats (total=3, active=3, idle=0, waiting=1)
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG org.postgresql.Driver - Connecting with URL: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?external_id=gmhznnwecujoafdisscl&prepareThreshold=0&options=-c%20client_encoding%3Dutf8&sslmode=require
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection - PostgreSQL JDBC Driver 42.7.4
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setDefaultFetchSize = 0
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG org.postgresql.jdbc.PgConnection -   setPrepareThreshold = 0
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Trying to establish a protocol version 3 connection to aws-1-ap-south-1.pooler.supabase.com:6543
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-8] DEBUG c.e.i.m.P.selectById - ==>  Preparing: SELECT id, question, correct_answer, explanation, subject_id, category, type, difficulty, option1, option2, option3, option4, option5, is_ai_generated, programming_language FROM ( SELECT p.id, p.question, p.answer AS correct_answer, p.explanation, s.id AS subject_id, s.name AS category, p.type, p.difficulty, p.option1, p.option2, p.option3, p.option4, p.option5, p.is_ai_generated, NULL AS programming_language FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE p.id = ? UNION ALL SELECT sp.id, sp.question, sp.answer AS correct_answer, sp.explanation, s.id AS subject_id, s.name AS category, 'SUBJECTIVE' AS type, sp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, NULL AS programming_language FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE sp.id = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL로 되돌림 SELECT pp.id, pp.question, pp.answer AS correct_answer, pp.explanation, s.id AS subject_id, s.name AS category, 'PROGRAMMING_LANGUAGE' AS type, pp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, pp.prog_language AS programming_language FROM programming_language_problems pp INNER JOIN subject s ON pp.subject_id = s.id WHERE pp.id = ? ) AS combined LIMIT 1
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-8] DEBUG c.e.i.m.P.selectById - ==> Parameters: 12(Long), 12(Long), 12(Long)
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-2] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: Python, 결과 수: 0
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-2] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: Python, DTO 수: 0
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Receive Buffer Size is 65,536
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG o.p.core.v3.ConnectionFactoryImpl - Send Buffer Size is 65,536
-[Backend Request] OPTIONS /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/wrong-answers/calendar | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: 공통개념
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: 공통개념(String)
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-4] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-1] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-8] DEBUG c.e.i.m.P.selectById - <==      Total: 1
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-1] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG org.postgresql.ssl.MakeSSL - converting regular socket connection to ssl
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: 공통개념, 결과 수: 0
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: 공통개념, DTO 수: 0
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-4] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-4] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==>  Preparing: SELECT DATE(bookmarked_at) AS date, COUNT(*) AS count FROM wrong_answer_bookmark WHERE user_id = ? AND bookmarked_at >= ? AND bookmarked_at < ? GROUP BY DATE(bookmarked_at) ORDER BY date
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==> Parameters: 38(Long), 2026-06-01(LocalDate), 2026-07-01(LocalDate)
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - <==      Total: 2
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-4] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:03:21 [http-nio-0.0.0.0-9001-exec-4] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1cc4d548
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Connection not added, stats (total=4, active=0, idle=4, waiting=0)
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Connection not added, stats (total=4, active=0, idle=4, waiting=0)
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Connection not added, stats (total=4, active=0, idle=4, waiting=0)
-2026-06-09 17:03:21 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Connection not added, stats (total=4, active=0, idle=4, waiting=0)
-[Backend Request] GET /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:28 [http-nio-0.0.0.0-9001-exec-8] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: C언어
-2026-06-09 17:03:28 [http-nio-0.0.0.0-9001-exec-8] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:03:28 [http-nio-0.0.0.0-9001-exec-8] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: C언어(String)
-2026-06-09 17:03:28 [http-nio-0.0.0.0-9001-exec-8] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:03:28 [http-nio-0.0.0.0-9001-exec-8] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: C언어, 결과 수: 0
-2026-06-09 17:03:28 [http-nio-0.0.0.0-9001-exec-8] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: C언어, DTO 수: 0
-[Backend Request] GET /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:28 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: Java
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: Java(String)
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: Java, 결과 수: 0
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: Java, DTO 수: 0
-[Backend Request] GET /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-1] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: Python
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: Python(String)
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-1] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: Python, 결과 수: 0
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-1] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: Python, DTO 수: 0
-[Backend Request] GET /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-4] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: 공통개념
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: 공통개념(String)
-2026-06-09 17:03:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=4, active=1, idle=3, waiting=0)
-2026-06-09 17:03:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=4, active=1, idle=3, waiting=0)
-2026-06-09 17:03:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-4] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: 공통개념, 결과 수: 0
-2026-06-09 17:03:29 [http-nio-0.0.0.0-9001-exec-4] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: 공통개념, DTO 수: 0
-[Backend Request] OPTIONS /api/problems/theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:39 [http-nio-0.0.0.0-9001-exec-3] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 조회 요청 - category: 데이터베이스
-2026-06-09 17:03:39 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==>  Preparing: SELECT 'SUBJECTIVE' AS card_type, sp.id, sp.subject_id, sp.question AS front_text, sp.answer AS back_text, sp.explanation, sp.difficulty, sp.option1, sp.option2, sp.option3, sp.option4, sp.option5 FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE s.name = ? UNION ALL SELECT 'FLASHCARD' AS card_type, lc.id, lc.subject_id, lc.front_text, lc.back_text, lc.explanation, 0 AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM learning_card lc INNER JOIN subject s ON lc.subject_id = s.id WHERE s.name = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL, card_type FLASHCARD 하드코딩 SELECT 'FLASHCARD' AS card_type, pp.id, pp.subject_id, pp.question AS front_text, pp.answer AS back_text, pp.explanation, COALESCE(pp.difficulty, 0) AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM programming_language_problems pp WHERE (? = '프로그래밍언어') OR LOWER(pp.prog_language) = LOWER(?) ORDER BY card_type, id
-2026-06-09 17:03:39 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==> Parameters: 데이터베이스(String), 데이터베이스(String), 데이터베이스(String), 데이터베이스(String)
-2026-06-09 17:03:40 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - <==      Total: 9
-2026-06-09 17:03:40 [http-nio-0.0.0.0-9001-exec-3] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 쿼리 결과 - category: 데이터베이스, 결과 수: 9
-2026-06-09 17:03:40 [http-nio-0.0.0.0-9001-exec-3] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 응답 - category: 데이터베이스, DTO 수: 9
-[Backend Request] OPTIONS /api/problems/theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:42 [http-nio-0.0.0.0-9001-exec-6] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 조회 요청 - category: 소프트웨어공학
-2026-06-09 17:03:43 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==>  Preparing: SELECT 'SUBJECTIVE' AS card_type, sp.id, sp.subject_id, sp.question AS front_text, sp.answer AS back_text, sp.explanation, sp.difficulty, sp.option1, sp.option2, sp.option3, sp.option4, sp.option5 FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE s.name = ? UNION ALL SELECT 'FLASHCARD' AS card_type, lc.id, lc.subject_id, lc.front_text, lc.back_text, lc.explanation, 0 AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM learning_card lc INNER JOIN subject s ON lc.subject_id = s.id WHERE s.name = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL, card_type FLASHCARD 하드코딩 SELECT 'FLASHCARD' AS card_type, pp.id, pp.subject_id, pp.question AS front_text, pp.answer AS back_text, pp.explanation, COALESCE(pp.difficulty, 0) AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM programming_language_problems pp WHERE (? = '프로그래밍언어') OR LOWER(pp.prog_language) = LOWER(?) ORDER BY card_type, id
-2026-06-09 17:03:43 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==> Parameters: 소프트웨어공학(String), 소프트웨어공학(String), 소프트웨어공학(String), 소프트웨어공학(String)
-2026-06-09 17:03:43 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - <==      Total: 9
-2026-06-09 17:03:43 [http-nio-0.0.0.0-9001-exec-6] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 쿼리 결과 - category: 소프트웨어공학, 결과 수: 9
-2026-06-09 17:03:43 [http-nio-0.0.0.0-9001-exec-6] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 응답 - category: 소프트웨어공학, DTO 수: 9
-[Backend Request] OPTIONS /api/problems/theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:44 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 조회 요청 - category: 정보보안
-2026-06-09 17:03:44 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==>  Preparing: SELECT 'SUBJECTIVE' AS card_type, sp.id, sp.subject_id, sp.question AS front_text, sp.answer AS back_text, sp.explanation, sp.difficulty, sp.option1, sp.option2, sp.option3, sp.option4, sp.option5 FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE s.name = ? UNION ALL SELECT 'FLASHCARD' AS card_type, lc.id, lc.subject_id, lc.front_text, lc.back_text, lc.explanation, 0 AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM learning_card lc INNER JOIN subject s ON lc.subject_id = s.id WHERE s.name = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL, card_type FLASHCARD 하드코딩 SELECT 'FLASHCARD' AS card_type, pp.id, pp.subject_id, pp.question AS front_text, pp.answer AS back_text, pp.explanation, COALESCE(pp.difficulty, 0) AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM programming_language_problems pp WHERE (? = '프로그래밍언어') OR LOWER(pp.prog_language) = LOWER(?) ORDER BY card_type, id
-2026-06-09 17:03:44 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==> Parameters: 정보보안(String), 정보보안(String), 정보보안(String), 정보보안(String)
-2026-06-09 17:03:44 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - <==      Total: 9
-2026-06-09 17:03:44 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 쿼리 결과 - category: 정보보안, 결과 수: 9
-2026-06-09 17:03:44 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 응답 - category: 정보보안, DTO 수: 9
-[Backend Request] OPTIONS /api/problems/theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:45 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 조회 요청 - category: 애플리케이션테스트
-2026-06-09 17:03:45 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==>  Preparing: SELECT 'SUBJECTIVE' AS card_type, sp.id, sp.subject_id, sp.question AS front_text, sp.answer AS back_text, sp.explanation, sp.difficulty, sp.option1, sp.option2, sp.option3, sp.option4, sp.option5 FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE s.name = ? UNION ALL SELECT 'FLASHCARD' AS card_type, lc.id, lc.subject_id, lc.front_text, lc.back_text, lc.explanation, 0 AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM learning_card lc INNER JOIN subject s ON lc.subject_id = s.id WHERE s.name = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL, card_type FLASHCARD 하드코딩 SELECT 'FLASHCARD' AS card_type, pp.id, pp.subject_id, pp.question AS front_text, pp.answer AS back_text, pp.explanation, COALESCE(pp.difficulty, 0) AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM programming_language_problems pp WHERE (? = '프로그래밍언어') OR LOWER(pp.prog_language) = LOWER(?) ORDER BY card_type, id
-2026-06-09 17:03:45 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==> Parameters: 애플리케이션테스트(String), 애플리케이션테스트(String), 애플리케이션테스트(String), 애플리케이션테스트(String)
-2026-06-09 17:03:45 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - <==      Total: 9
-2026-06-09 17:03:45 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 쿼리 결과 - category: 애플리케이션테스트, 결과 수: 9
-2026-06-09 17:03:45 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 응답 - category: 애플리케이션테스트, DTO 수: 9
-[Backend Request] OPTIONS /api/problems/theory | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:46 [http-nio-0.0.0.0-9001-exec-4] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 조회 요청 - category: 프로그래밍언어
-2026-06-09 17:03:46 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==>  Preparing: SELECT 'SUBJECTIVE' AS card_type, sp.id, sp.subject_id, sp.question AS front_text, sp.answer AS back_text, sp.explanation, sp.difficulty, sp.option1, sp.option2, sp.option3, sp.option4, sp.option5 FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE s.name = ? UNION ALL SELECT 'FLASHCARD' AS card_type, lc.id, lc.subject_id, lc.front_text, lc.back_text, lc.explanation, 0 AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM learning_card lc INNER JOIN subject s ON lc.subject_id = s.id WHERE s.name = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL, card_type FLASHCARD 하드코딩 SELECT 'FLASHCARD' AS card_type, pp.id, pp.subject_id, pp.question AS front_text, pp.answer AS back_text, pp.explanation, COALESCE(pp.difficulty, 0) AS difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5 FROM programming_language_problems pp WHERE (? = '프로그래밍언어') OR LOWER(pp.prog_language) = LOWER(?) ORDER BY card_type, id
-2026-06-09 17:03:46 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - ==> Parameters: 프로그래밍언어(String), 프로그래밍언어(String), 프로그래밍언어(String), 프로그래밍언어(String)
-2026-06-09 17:03:46 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectTheoryCardsByCategory - <==      Total: 9
-2026-06-09 17:03:46 [http-nio-0.0.0.0-9001-exec-4] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 쿼리 결과 - category: 프로그래밍언어, 결과 수: 9
-2026-06-09 17:03:46 [http-nio-0.0.0.0-9001-exec-4] INFO  c.e.i.c.ProblemApiController - [MVC2] 이론 카드 응답 - category: 프로그래밍언어, DTO 수: 9
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/wrong-answers/calendar | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:47 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:03:47 [http-nio-0.0.0.0-9001-exec-3] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:03:47 [http-nio-0.0.0.0-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:03:47 [http-nio-0.0.0.0-9001-exec-3] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:03:47 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==>  Preparing: SELECT DATE(bookmarked_at) AS date, COUNT(*) AS count FROM wrong_answer_bookmark WHERE user_id = ? AND bookmarked_at >= ? AND bookmarked_at < ? GROUP BY DATE(bookmarked_at) ORDER BY date
-2026-06-09 17:03:47 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:03:47 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:03:47 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==> Parameters: 38(Long), 2026-06-01(LocalDate), 2026-07-01(LocalDate)
-2026-06-09 17:03:47 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:03:47 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:03:47 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - <==      Total: 2
-2026-06-09 17:03:47 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:03:48 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:03:48 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:03:48 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:03:48 [http-nio-0.0.0.0-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:03:48 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:03:48 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:03:48 [http-nio-0.0.0.0-9001-exec-7] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:03:48 [http-nio-0.0.0.0-9001-exec-7] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:03:48 [http-nio-0.0.0.0-9001-exec-7] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:03:48 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:03:48 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-2026-06-09 17:03:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=4, active=0, idle=4, waiting=0)
-2026-06-09 17:03:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=4, active=0, idle=4, waiting=0)
-2026-06-09 17:03:59 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-[Backend Request] OPTIONS /api/problems/6 | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/6 | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:25 [http-nio-0.0.0.0-9001-exec-2] INFO  c.e.i.c.ProblemApiController - [MVC2] 단건 문제 조회: id=6
-2026-06-09 17:04:25 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.P.selectById - ==>  Preparing: SELECT id, question, correct_answer, explanation, subject_id, category, type, difficulty, option1, option2, option3, option4, option5, is_ai_generated, programming_language FROM ( SELECT p.id, p.question, p.answer AS correct_answer, p.explanation, s.id AS subject_id, s.name AS category, p.type, p.difficulty, p.option1, p.option2, p.option3, p.option4, p.option5, p.is_ai_generated, NULL AS programming_language FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE p.id = ? UNION ALL SELECT sp.id, sp.question, sp.answer AS correct_answer, sp.explanation, s.id AS subject_id, s.name AS category, 'SUBJECTIVE' AS type, sp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, NULL AS programming_language FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE sp.id = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL로 되돌림 SELECT pp.id, pp.question, pp.answer AS correct_answer, pp.explanation, s.id AS subject_id, s.name AS category, 'PROGRAMMING_LANGUAGE' AS type, pp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, pp.prog_language AS programming_language FROM programming_language_problems pp INNER JOIN subject s ON pp.subject_id = s.id WHERE pp.id = ? ) AS combined LIMIT 1
-2026-06-09 17:04:25 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.P.selectById - ==> Parameters: 6(Long), 6(Long), 6(Long)
-2026-06-09 17:04:25 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.P.selectById - <==      Total: 1
-[Backend Request] GET /api/wrong-answers/calendar | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:26 [http-nio-0.0.0.0-9001-exec-8] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:26 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-8] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-5] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-8] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==>  Preparing: SELECT DATE(bookmarked_at) AS date, COUNT(*) AS count FROM wrong_answer_bookmark WHERE user_id = ? AND bookmarked_at >= ? AND bookmarked_at < ? GROUP BY DATE(bookmarked_at) ORDER BY date
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-8] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==> Parameters: 38(Long), 2026-06-01(LocalDate), 2026-07-01(LocalDate)
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-8] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - <==      Total: 2
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-10] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-10] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-10] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-10] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-10] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:04:27 [http-nio-0.0.0.0-9001-exec-10] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-[Backend Request] GET /api/problems/12 | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:28 [http-nio-0.0.0.0-9001-exec-1] INFO  c.e.i.c.ProblemApiController - [MVC2] 단건 문제 조회: id=12
-2026-06-09 17:04:28 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectById - ==>  Preparing: SELECT id, question, correct_answer, explanation, subject_id, category, type, difficulty, option1, option2, option3, option4, option5, is_ai_generated, programming_language FROM ( SELECT p.id, p.question, p.answer AS correct_answer, p.explanation, s.id AS subject_id, s.name AS category, p.type, p.difficulty, p.option1, p.option2, p.option3, p.option4, p.option5, p.is_ai_generated, NULL AS programming_language FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE p.id = ? UNION ALL SELECT sp.id, sp.question, sp.answer AS correct_answer, sp.explanation, s.id AS subject_id, s.name AS category, 'SUBJECTIVE' AS type, sp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, NULL AS programming_language FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE sp.id = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL로 되돌림 SELECT pp.id, pp.question, pp.answer AS correct_answer, pp.explanation, s.id AS subject_id, s.name AS category, 'PROGRAMMING_LANGUAGE' AS type, pp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, pp.prog_language AS programming_language FROM programming_language_problems pp INNER JOIN subject s ON pp.subject_id = s.id WHERE pp.id = ? ) AS combined LIMIT 1
-2026-06-09 17:04:28 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectById - ==> Parameters: 12(Long), 12(Long), 12(Long)
-2026-06-09 17:04:28 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectById - <==      Total: 1
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/wrong-answers/calendar | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-4] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-3] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-3] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==>  Preparing: SELECT DATE(bookmarked_at) AS date, COUNT(*) AS count FROM wrong_answer_bookmark WHERE user_id = ? AND bookmarked_at >= ? AND bookmarked_at < ? GROUP BY DATE(bookmarked_at) ORDER BY date
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==> Parameters: 38(Long), 2026-06-01(LocalDate), 2026-07-01(LocalDate)
-2026-06-09 17:04:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=4, active=2, idle=2, waiting=0)
-2026-06-09 17:04:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=4, active=2, idle=2, waiting=0)
-2026-06-09 17:04:29 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-4] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-4] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - <==      Total: 2
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-4] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-4] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:29 [http-nio-0.0.0.0-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:30 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:04:30 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:04:30 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:04:30 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:04:30 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:04:30 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:04:30 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-[Backend Request] OPTIONS /api/problems/1 | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/1 | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:30 [http-nio-0.0.0.0-9001-exec-6] INFO  c.e.i.c.ProblemApiController - [MVC2] 단건 문제 조회: id=1
-2026-06-09 17:04:30 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.P.selectById - ==>  Preparing: SELECT id, question, correct_answer, explanation, subject_id, category, type, difficulty, option1, option2, option3, option4, option5, is_ai_generated, programming_language FROM ( SELECT p.id, p.question, p.answer AS correct_answer, p.explanation, s.id AS subject_id, s.name AS category, p.type, p.difficulty, p.option1, p.option2, p.option3, p.option4, p.option5, p.is_ai_generated, NULL AS programming_language FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE p.id = ? UNION ALL SELECT sp.id, sp.question, sp.answer AS correct_answer, sp.explanation, s.id AS subject_id, s.name AS category, 'SUBJECTIVE' AS type, sp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, NULL AS programming_language FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE sp.id = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL로 되돌림 SELECT pp.id, pp.question, pp.answer AS correct_answer, pp.explanation, s.id AS subject_id, s.name AS category, 'PROGRAMMING_LANGUAGE' AS type, pp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, pp.prog_language AS programming_language FROM programming_language_problems pp INNER JOIN subject s ON pp.subject_id = s.id WHERE pp.id = ? ) AS combined LIMIT 1
-2026-06-09 17:04:30 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.P.selectById - ==> Parameters: 1(Long), 1(Long), 1(Long)
-2026-06-09 17:04:30 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.P.selectById - <==      Total: 1
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/wrong-answers/calendar | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:31 [http-nio-0.0.0.0-9001-exec-2] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:31 [http-nio-0.0.0.0-9001-exec-8] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:31 [http-nio-0.0.0.0-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:31 [http-nio-0.0.0.0-9001-exec-8] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-8] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==>  Preparing: SELECT DATE(bookmarked_at) AS date, COUNT(*) AS count FROM wrong_answer_bookmark WHERE user_id = ? AND bookmarked_at >= ? AND bookmarked_at < ? GROUP BY DATE(bookmarked_at) ORDER BY date
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-2] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-2] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-8] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==> Parameters: 38(Long), 2026-06-01(LocalDate), 2026-07-01(LocalDate)
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-8] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - <==      Total: 2
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-2] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-2] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-5] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-[Backend Request] OPTIONS /api/problems/11 | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/problems/11 | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-1] INFO  c.e.i.c.ProblemApiController - [MVC2] 단건 문제 조회: id=11
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-5] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectById - ==>  Preparing: SELECT id, question, correct_answer, explanation, subject_id, category, type, difficulty, option1, option2, option3, option4, option5, is_ai_generated, programming_language FROM ( SELECT p.id, p.question, p.answer AS correct_answer, p.explanation, s.id AS subject_id, s.name AS category, p.type, p.difficulty, p.option1, p.option2, p.option3, p.option4, p.option5, p.is_ai_generated, NULL AS programming_language FROM problem p INNER JOIN subject s ON p.subject_id = s.id WHERE p.id = ? UNION ALL SELECT sp.id, sp.question, sp.answer AS correct_answer, sp.explanation, s.id AS subject_id, s.name AS category, 'SUBJECTIVE' AS type, sp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, NULL AS programming_language FROM subjective_problems sp INNER JOIN subject s ON sp.subject_id = s.id WHERE sp.id = ? UNION ALL -- DEBUG: [2026-06-09 수정계획안18 → v74紧急복구] migration 005 미적용 → option1~5 NULL로 되돌림 SELECT pp.id, pp.question, pp.answer AS correct_answer, pp.explanation, s.id AS subject_id, s.name AS category, 'PROGRAMMING_LANGUAGE' AS type, pp.difficulty, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, FALSE AS is_ai_generated, pp.prog_language AS programming_language FROM programming_language_problems pp INNER JOIN subject s ON pp.subject_id = s.id WHERE pp.id = ? ) AS combined LIMIT 1
-2026-06-09 17:04:32 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectById - ==> Parameters: 11(Long), 11(Long), 11(Long)
-2026-06-09 17:04:33 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectById - <==      Total: 1
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/wrong-answers/calendar | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-3] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-4] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-3] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-4] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==>  Preparing: SELECT DATE(bookmarked_at) AS date, COUNT(*) AS count FROM wrong_answer_bookmark WHERE user_id = ? AND bookmarked_at >= ? AND bookmarked_at < ? GROUP BY DATE(bookmarked_at) ORDER BY date
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==> Parameters: 38(Long), 2026-06-01(LocalDate), 2026-07-01(LocalDate)
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - <==      Total: 2
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:04:34 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:04:35 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:04:35 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:04:35 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-[Backend Request] OPTIONS /api/statistics | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/statistics | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.hibernate.SQL - 
-    select
-        count(p1_0."id") 
-    from
-        "problem" p1_0 
-    where
-        p1_0."type"=?
-Hibernate: 
-    select
-        count(p1_0."id") 
-    from
-        "problem" p1_0 
-    where
-        p1_0."type"=?
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [OBJECTIVE]
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.hibernate.SQL - 
-    select
-        count(*) 
-    from
-        "subjective_problems" sp1_0
-Hibernate: 
-    select
-        count(*) 
-    from
-        "subjective_problems" sp1_0
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.hibernate.SQL - 
-    select
-        count(*) 
-    from
-        "programming_language_problems" plp1_0
-Hibernate: 
-    select
-        count(*) 
-    from
-        "programming_language_problems" plp1_0
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.M.selectUserAnswerOverall - ==>  Preparing: SELECT COUNT(*) AS attempted, COALESCE(SUM(CASE WHEN is_correct THEN 1 ELSE 0 END), 0) AS correct FROM user_answer WHERE user_id = ?
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.M.selectUserAnswerOverall - ==> Parameters: 38(Long)
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.M.selectUserAnswerOverall - <==      Total: 1
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.M.selectBranchStats - ==>  Preparing: SELECT ua.item_type AS problemType, COUNT(*) AS attempted, COALESCE(SUM(CASE WHEN ua.is_correct THEN 1 ELSE 0 END), 0) AS correct FROM user_answer ua WHERE ua.user_id = ? GROUP BY ua.item_type
-2026-06-09 17:04:39 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.M.selectBranchStats - ==> Parameters: 38(Long)
-2026-06-09 17:04:40 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.M.selectBranchStats - <==      Total: 1
-2026-06-09 17:04:40 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.M.selectObjectiveCategoryStats - ==>  Preparing: SELECT TRIM(s.name) AS category, COUNT(*) AS total, COALESCE(SUM(CASE WHEN ua.is_correct THEN 1 ELSE 0 END), 0) AS correct FROM user_answer ua INNER JOIN problem p ON ua.item_type = 'OBJECTIVE' AND ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? GROUP BY TRIM(s.name)
-2026-06-09 17:04:40 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.M.selectObjectiveCategoryStats - ==> Parameters: 38(Long)
-2026-06-09 17:04:40 [http-nio-0.0.0.0-9001-exec-6] DEBUG c.e.i.m.M.selectObjectiveCategoryStats - <==      Total: 4
-2026-06-09 17:04:40 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:04:40 [http-nio-0.0.0.0-9001-exec-6] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-[Backend Request] OPTIONS /api/wrong-answers | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/wrong-answers | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:40 [http-nio-0.0.0.0-9001-exec-2] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:40 [http-nio-0.0.0.0-9001-exec-2] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:40 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.M.selectWrongAnswers - ==>  Preparing: SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, p.question, p.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN problem p ON ua.item_type = 'OBJECTIVE' AND ua.reference_id = p.id WHERE ua.user_id = ? AND ua.is_correct = false UNION ALL SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, sp.question, sp.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN subjective_problems sp ON ua.item_type = 'SUBJECTIVE' AND ua.reference_id = sp.id WHERE ua.user_id = ? AND ua.is_correct = false UNION ALL SELECT ua.id, ua.item_type AS problemType, ua.reference_id AS referenceId, plp.question, plp.answer AS correctAnswer, ua.submitted_answer AS submittedAnswer, ua.submitted_at AS submittedAt FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.reference_id = plp.id WHERE ua.user_id = ? AND ua.is_correct = false ORDER BY submittedAt DESC, id DESC
-2026-06-09 17:04:40 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.M.selectWrongAnswers - ==> Parameters: 38(Long), 38(Long), 38(Long)
-2026-06-09 17:04:40 [http-nio-0.0.0.0-9001-exec-2] DEBUG c.e.i.m.M.selectWrongAnswers - <==      Total: 6
-[Backend Request] GET /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: C언어
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: C언어(String)
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-10] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: C언어, 결과 수: 0
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-10] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: C언어, DTO 수: 0
-[Backend Request] GET /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: Java
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: Java(String)
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-5] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: Java, 결과 수: 0
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-5] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: Java, DTO 수: 0
-[Backend Request] GET /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-1] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: Python
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: Python(String)
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-1] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-1] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: Python, 결과 수: 0
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-1] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: Python, DTO 수: 0
-[Backend Request] GET /api/problems/programming-theory | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-4] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 조회 요청 - language: 공통개념
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==>  Preparing: SELECT id, 'FLASHCARD' AS card_type, question AS front_text, answer AS back_text, explanation, NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5, prog_language AS category, difficulty FROM programming_language_problems WHERE LOWER(prog_language) = LOWER(?) ORDER BY id
-2026-06-09 17:04:47 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - ==> Parameters: 공통개념(String)
-2026-06-09 17:04:48 [http-nio-0.0.0.0-9001-exec-4] DEBUG c.e.i.m.P.selectProgrammingCardsByLanguage - <==      Total: 0
-2026-06-09 17:04:48 [http-nio-0.0.0.0-9001-exec-4] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 쿼리 결과 - language: 공통개념, 결과 수: 0
-2026-06-09 17:04:48 [http-nio-0.0.0.0-9001-exec-4] INFO  c.e.i.c.ProblemApiController - [MVC2] 프로그래밍 카드 응답 - language: 공통개념, DTO 수: 0
-[Backend Request] GET /api/wrong-answers/calendar | Origin: http://localhost:9000 | Host: localhost:9001
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:52 [http-nio-0.0.0.0-9001-exec-9] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:52 [http-nio-0.0.0.0-9001-exec-3] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:52 [http-nio-0.0.0.0-9001-exec-3] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:52 [http-nio-0.0.0.0-9001-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==>  Preparing: SELECT DATE(bookmarked_at) AS date, COUNT(*) AS count FROM wrong_answer_bookmark WHERE user_id = ? AND bookmarked_at >= ? AND bookmarked_at < ? GROUP BY DATE(bookmarked_at) ORDER BY date
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - ==> Parameters: 38(Long), 2026-06-01(LocalDate), 2026-07-01(LocalDate)
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-9] DEBUG c.e.i.m.M.selectWrongAnswerCountByDateRange - <==      Total: 2
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-3] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-3] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
-[Backend Request] GET /api/statistics/wrong-answer-ranking | Origin: http://localhost:9000 | Host: localhost:9001
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.hibernate.SQL - 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-Hibernate: 
-    select
-        u1_0."id",
-        u1_0."created_at",
-        u1_0."email",
-        u1_0."google_id",
-        u1_0."nickname",
-        u1_0."password",
-        u1_0."role",
-        u1_0."subscription_expires_at",
-        u1_0."subscription_started_at",
-        u1_0."trial_expires_at",
-        u1_0."trial_started_at",
-        u1_0."updated_at",
-        u1_0."username" 
-    from
-        "users" u1_0 
-    where
-        u1_0."username"=?
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-7] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [okskycar1]
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = true
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = false
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-7] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==>  Preparing: SELECT * FROM ( SELECT p.id AS problem_id, 'OBJECTIVE' AS item_type, p.id AS reference_id, TRIM(s.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(p.question, 1, 60)), ''), '(문제 없음)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN problem p ON ua.reference_id = p.id INNER JOIN subject s ON p.subject_id = s.id WHERE ua.user_id = ? AND ua.item_type = 'OBJECTIVE' AND ua.is_correct = false GROUP BY p.id, p.question, TRIM(s.name) UNION ALL SELECT sp.id AS problem_id, 'SUBJECTIVE' AS item_type, sp.id AS reference_id, TRIM(ss.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(sp.question, 1, 60)), ''), '(주관식 문제)') AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN subjective_problems sp ON ua.reference_id = sp.id INNER JOIN subject ss ON sp.subject_id = ss.id WHERE ua.user_id = ? AND ua.item_type = 'SUBJECTIVE' AND ua.is_correct = false GROUP BY sp.id, sp.question, TRIM(ss.name) UNION ALL SELECT plp.id AS problem_id, 'PROGRAMMING_LANGUAGE' AS item_type, plp.id AS reference_id, TRIM(sls.name) AS subject, COALESCE(NULLIF(TRIM(SUBSTRING(plp.question, 1, 60)), ''), '[프로그래밍] ' || COALESCE(plp.prog_language, '')) AS question_text, COUNT(*) AS wrong_count FROM user_answer ua INNER JOIN programming_language_problems plp ON ua.reference_id = plp.id INNER JOIN subject sls ON plp.subject_id = sls.id WHERE ua.user_id = ? AND ua.item_type = 'PROGRAMMING_LANGUAGE' AND ua.is_correct = false GROUP BY plp.id, plp.question, plp.prog_language, TRIM(sls.name) ) combined ORDER BY wrong_count DESC LIMIT ? OFFSET ?
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-7] DEBUG c.e.i.m.M.selectWrongAnswerRanking - ==> Parameters: 38(Long), 38(Long), 38(Long), 30(Integer), 0(Integer)
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-7] DEBUG c.e.i.m.M.selectWrongAnswerRanking - <==      Total: 5
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setAutoCommit = true
-2026-06-09 17:04:53 [http-nio-0.0.0.0-9001-exec-7] DEBUG org.postgresql.jdbc.PgConnection -   setReadOnly = false
+Caused by: java.lang.NumberFormatException: For input string: "programming"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Long.parseLong(Long.java:709)
+	at java.base/java.lang.Long.valueOf(Long.java:1157)
+	at org.springframework.util.NumberUtils.parseNumber(NumberUtils.java:206)
+	at org.springframework.beans.propertyeditors.CustomNumberEditor.setAsText(CustomNumberEditor.java:115)
+	at org.springframework.beans.TypeConverterDelegate.doConvertTextValue(TypeConverterDelegate.java:439)
+	at org.springframework.beans.TypeConverterDelegate.doConvertValue(TypeConverterDelegate.java:412)
+	at org.springframework.beans.TypeConverterDelegate.convertIfNecessary(TypeConverterDelegate.java:161)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:80)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:53)
+	at org.springframework.validation.DataBinder.convertIfNecessary(DataBinder.java:862)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:293)
+	... 101 common frames omitted
+[Backend Request] GET /api/problems/programming | Origin: null | Host: localhost:9001
+2026-06-10 21:59:02 [http-nio-0.0.0.0-9001-exec-5] ERROR c.e.i.c.RestApiExceptionLoggingAdvice - [API 오류] GET /api/problems/programming?language=%EA%B3%B5%ED%86%B5%EA%B0%9C%EB%85%90 | org.springframework.web.method.annotation.MethodArgumentTypeMismatchException — Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: "programming"
+org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: "programming"
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:301)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:136)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:224)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:178)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at com.example.informationexam.config.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at com.example.informationexam.config.SecurityConfig.lambda$filterChain$1(SecurityConfig.java:46)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.NumberFormatException: For input string: "programming"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Long.parseLong(Long.java:709)
+	at java.base/java.lang.Long.valueOf(Long.java:1157)
+	at org.springframework.util.NumberUtils.parseNumber(NumberUtils.java:206)
+	at org.springframework.beans.propertyeditors.CustomNumberEditor.setAsText(CustomNumberEditor.java:115)
+	at org.springframework.beans.TypeConverterDelegate.doConvertTextValue(TypeConverterDelegate.java:439)
+	at org.springframework.beans.TypeConverterDelegate.doConvertValue(TypeConverterDelegate.java:412)
+	at org.springframework.beans.TypeConverterDelegate.convertIfNecessary(TypeConverterDelegate.java:161)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:80)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:53)
+	at org.springframework.validation.DataBinder.convertIfNecessary(DataBinder.java:862)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:293)
+	... 101 common frames omitted
+2026-06-10 21:59:02 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Before cleanup stats (total=2, active=0, idle=2, waiting=0)
+2026-06-10 21:59:02 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - After cleanup  stats (total=2, active=0, idle=2, waiting=0)
+2026-06-10 21:59:02 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Fill pool skipped, pool has sufficient level or currently being filled.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  43.387 s
+[INFO] Finished at: 2026-06-10T21:59:06+09:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.3.5:run (default-cli) on project information-exam: Process terminated with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
