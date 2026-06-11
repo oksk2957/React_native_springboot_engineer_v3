@@ -47,8 +47,12 @@ public class UserService {
             email = supabaseTokenVerifierService.getEmail(supabaseToken);
             // Supabase JWT의 subject를 googleId로 사용
             googleId = supabaseTokenVerifierService.getSubject(supabaseToken);
-            name = email.split("@")[0]; // 이메일에서 이름 추출
-            log.info("[AUTH][{}][STEP1] Supabase JWT 검증 완료 - email: {}", traceId, email);
+            // DEBUG: [Modify47-2026-06-11] JWT user_metadata에서 실제 이름 추출
+            name = supabaseTokenVerifierService.getFullName(supabaseToken);
+            if (name == null || name.isBlank()) {
+                name = email.split("@")[0]; // fallback: 이메일에서 이름 추출
+            }
+            log.info("[AUTH][{}][STEP1] Supabase JWT 검증 완료 - email: {}, name: {}", traceId, email, name);
         } catch (Exception e) {
             log.error("[AUTH][{}][STEP1][FAIL] Supabase JWT 검증 실패: {}", traceId, e.getMessage());
             throw new IllegalArgumentException("Supabase token verification failed: " + e.getMessage());
@@ -83,9 +87,23 @@ public class UserService {
 
         // 3. 기존 사용자 또는 신규 사용자 생성
         if (existingUser.isPresent()) {
-            userHolder[0] = existingUser.get();
-            log.info("[AUTH][{}][STEP2][EXISTING] 기존 사용자 - id: {}, email: {}, username: {}",
-                    traceId, userHolder[0].getId(), userHolder[0].getEmail(), userHolder[0].getUsername());
+            User existing = existingUser.get();
+            // DEBUG: [Modify47-2026-06-11] 기존 사용자도 JWT에서 실제 이름으로 닉네임 업데이트
+            if (name != null && !name.isBlank()) {
+                String currentNickname = existing.getNickname();
+                // 현재 닉네임이 이메일 기반이거나 null/비어있으면 업데이트
+                if (currentNickname == null || currentNickname.isBlank()
+                        || currentNickname.equals(email.split("@")[0])
+                        || "사용자".equals(currentNickname)) {
+                    existing.updateNickname(name);
+                    userRepository.save(existing);
+                    log.info("[AUTH][{}][STEP2][EXISTING][NICKNAME_UPDATED] 기존 사용자 닉네임 업데이트: {} -> {}",
+                            traceId, currentNickname, name);
+                }
+            }
+            userHolder[0] = existing;
+            log.info("[AUTH][{}][STEP2][EXISTING] 기존 사용자 - id: {}, email: {}, nickname: {}",
+                    traceId, userHolder[0].getId(), userHolder[0].getEmail(), userHolder[0].getNickname());
         } else {
             String role = resolveRole(email);
             log.info("[AUTH][{}][STEP2][NEW] 신규 사용자 생성 - email: {}, role: {}", traceId, email, role);

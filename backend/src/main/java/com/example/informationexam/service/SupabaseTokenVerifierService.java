@@ -118,4 +118,36 @@ public class SupabaseTokenVerifierService {
         }
         return null;
     }
+
+    /**
+     * DEBUG: [Modify47-2026-06-11] JWT에서 Google 사용자 실제 이름 추출
+     * 원인: user_metadata.full_name을 사용해 실제 이름을 표시해야 함
+     * 해결: JWT payload의 user_metadata.full_name을 추출
+     */
+    @SuppressWarnings("unchecked")
+    public String getFullName(String token) {
+        try {
+            String[] parts = token.split("\\.");
+            if (parts.length >= 2) {
+                String payload = new String(java.util.Base64.getUrlDecoder().decode(parts[1]));
+                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                Map<String, Object> claims = mapper.readValue(payload, Map.class);
+                Map<String, Object> userMetadata = (Map<String, Object>) claims.get("user_metadata");
+                if (userMetadata != null) {
+                    // full_name 우선, 없으면 name
+                    String fullName = (String) userMetadata.get("full_name");
+                    if (fullName != null && !fullName.isBlank()) {
+                        return fullName;
+                    }
+                    String name = (String) userMetadata.get("name");
+                    if (name != null && !name.isBlank()) {
+                        return name;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.warn("[SupabaseTokenVerifier] JWT full_name 추출 실패: {}", e.getMessage());
+        }
+        return null;
+    }
 }

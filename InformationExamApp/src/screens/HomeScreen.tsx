@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import { useAuthStore } from '../stores/authStore';
 import { useNavigation } from '@react-navigation/native';
@@ -40,8 +41,9 @@ export default function HomeScreen() {
   const weekNumber = Math.ceil(todayDate / 7);
   const [loginDates, setLoginDates] = useState<string[]>([]);
 
-  // DEBUG: [수정42-2026-06-11] 로그인 기록 기반 잔디 배열 생성
-  const studyRecord = Array.from({ length: 30 }, (_, i) => {
+  // DEBUG: [수정42-2026-06-11] 로그인 기록 기반 잔디 배열 생성 — 실제 월별 일수 반영
+  const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+  const studyRecord = Array.from({ length: daysInMonth }, (_, i) => {
     const day = i + 1;
     const dateString = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     return loginDates.includes(dateString);
@@ -127,18 +129,49 @@ export default function HomeScreen() {
 
       <View style={[styles.grassSection, isDark && styles.sectionDark]}>
         <Text style={[styles.sectionTitle, isDark && styles.sectionTitleDark]}>
-          {new Date().getMonth() + 1}월 학습 기록
+          {currentMonth}월 학습 기록
         </Text>
+        {/* DEBUG: [수정42-2026-06-11] UX 개선 — 날짜 숫자 표시 + 오늘 하이라이트 + 범례 */}
         <View style={styles.grassGrid}>
-          {studyRecord.map((done, index) => (
-            <View
-              key={index}
-              style={[
-                styles.grassBlock,
-                done && styles.grassActive,
-              ]}
-            />
-          ))}
+          {studyRecord.map((done, index) => {
+            const day = index + 1;
+            const isToday = day === todayDate;
+            return (
+              <View
+                key={index}
+                style={[
+                  styles.grassBlock,
+                  done && styles.grassActive,
+                  isToday && styles.grassToday,
+                  isDark && styles.grassBlockDark,
+                  isDark && done && styles.grassActiveDark,
+                ]}
+              >
+                <Text style={[
+                  styles.grassText,
+                  done && styles.grassTextActive,
+                  isToday && styles.grassTextToday,
+                ]}>
+                  {day}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+        {/* DEBUG: [수정42-2026-06-11] 범례 — 미학습(회색) vs 학습완료(초록) */}
+        <View style={styles.grassLegend}>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendBlock, { backgroundColor: '#ebedf0' }]} />
+            <Text style={[styles.legendText, isDark && styles.legendTextDark]}>미학습</Text>
+          </View>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendBlock, { backgroundColor: '#48bb78' }]} />
+            <Text style={[styles.legendText, isDark && styles.legendTextDark]}>학습 완료</Text>
+          </View>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendBlock, styles.legendToday]} />
+            <Text style={[styles.legendText, isDark && styles.legendTextDark]}>오늘</Text>
+          </View>
         </View>
       </View>
 
@@ -227,21 +260,72 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginTop: 8,
   },
+  // DEBUG: [수정42-2026-06-11] UX 개선 — 블록 크기 증가로 날짜 표시 + 범례 추가
   grassGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'flex-start',
   },
   grassBlock: {
-    width: 14,
-    height: 14,
+    width: 28,
+    height: 28,
     backgroundColor: '#ebedf0',
-    borderRadius: 2,
-    marginRight: 3,
-    marginBottom: 3,
+    borderRadius: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 2,
+  },
+  grassBlockDark: {
+    backgroundColor: '#3d3d3d',
   },
   grassActive: {
     backgroundColor: '#48bb78',
+  },
+  grassActiveDark: {
+    backgroundColor: '#38a169',
+  },
+  grassToday: {
+    borderWidth: 2,
+    borderColor: '#e53e3e',
+  },
+  grassText: {
+    fontSize: 10,
+    color: '#a0aec0',
+    fontWeight: '500',
+  },
+  grassTextActive: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  grassTextToday: {
+    color: '#e53e3e',
+    fontWeight: 'bold',
+  },
+  grassLegend: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  legendBlock: {
+    width: 12,
+    height: 12,
+    borderRadius: 2,
+  },
+  legendToday: {
+    backgroundColor: '#ebedf0',
+    borderWidth: 2,
+    borderColor: '#e53e3e',
+  },
+  legendText: {
+    fontSize: 11,
+    color: '#718096',
+  },
+  legendTextDark: {
+    color: '#aaa',
   },
   sectionTitle: {
     fontSize: 18,

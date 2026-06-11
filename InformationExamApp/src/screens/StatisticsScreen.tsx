@@ -38,14 +38,14 @@ interface CalendarDayData {
   count: number;
 }
 
-// DEBUG: [AI-AUTHOR-2026-06-09] 오답 개수 → 색상 매핑
+// DEBUG: [수정45-2026-06-11] 오답 개수 → 색상 매핑 (50단위)
 function getWrongAnswerColor(count: number): string {
   if (count <= 0) return 'transparent';
-  if (count <= 5) return '#4a90e2';   // 파랑
-  if (count <= 10) return '#4caf50';  // 초록
-  if (count <= 15) return '#ffeb3b';  // 노랑
-  if (count <= 20) return '#ff9800';  // 주황
-  if (count <= 25) return '#f57c00';  // 진한 주황
+  if (count <= 50) return '#4a90e2';   // 파랑
+  if (count <= 100) return '#4caf50';  // 초록
+  if (count <= 150) return '#ffeb3b';  // 노랑
+  if (count <= 200) return '#ff9800';  // 주황
+  if (count <= 250) return '#f57c00';  // 진한 주황
   return '#e53e3e';                    // 빨강
 }
 
@@ -58,13 +58,11 @@ const MEDAL: Record<number, string> = {
 export default function StatisticsScreen() {
   const navigation = useNavigation<TabNav>();
   const { user, logout, darkMode, setDarkMode, isAuthenticated } = useAuthStore();
+  // DEBUG: [수정45-2026-06-11] 랭킹 top 50 한 번에 표시, 더보기 제거, 킹 섹션만 AJAX 로딩
   const [wrongAnswerRanking, setWrongAnswerRanking] = useState<WrongAnswerRankingItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const PAGE_SIZE = 30;
+  const [isRankingLoading, setIsRankingLoading] = useState(true);
+
+  const [rankingError, setRankingError] = useState<string | null>(null);
   const isDark = darkMode;
 
   // DEBUG: [AI-AUTHOR-2026-06-09] 오답 이력 달력 상태
@@ -74,49 +72,40 @@ export default function StatisticsScreen() {
   });
   const [calendarData, setCalendarData] = useState<Array<{date: string, count: number}>>([]);
 
-  // DEBUG: [AI-AUTHOR-2026-06-09] 오답 개수 → 색상 매핑 (6단계 히트맵)
+  // DEBUG: [수정45-2026-06-11] 오답 개수 → 색상 매핑 (6단계 히트맵, 50단위)
   const getHeatmapColor = (count: number): string => {
     if (count === 0) return '#e2e8f0';
-    if (count <= 5) return '#4a90e2';
-    if (count <= 10) return '#4caf50';
-    if (count <= 15) return '#ffeb3b';
-    if (count <= 20) return '#ff9800';
-    if (count <= 25) return '#f57c00';
+    if (count <= 50) return '#4a90e2';
+    if (count <= 100) return '#4caf50';
+    if (count <= 150) return '#ffeb3b';
+    if (count <= 200) return '#ff9800';
+    if (count <= 250) return '#f57c00';
     return '#e53e3e';
   };
 
-  const fetchRanking = useCallback(async (reset: boolean = true) => {
+  // DEBUG: [수정45-2026-06-11] 랭킹 top 50 한 번에 fetch (페이징 제거)
+  const fetchRanking = useCallback(async () => {
     if (!isAuthenticated || !user?.id) {
       setWrongAnswerRanking([]);
-      setIsLoading(false);
-      setErrorMessage('로그인이 필요합니다.');
+      setIsRankingLoading(false);
+      setRankingError('로그인이 필요합니다.');
       return;
     }
-    setIsLoading(true);
-    setErrorMessage(null);
+    setIsRankingLoading(true);
+    setRankingError(null);
     try {
-      // DEBUG: [AI-AUTHOR-2026-06-09-수정계획안08] 오답 카운트 랭킹 조회 (페이징)
-      const startOffset = reset ? 0 : offset;
-      const data = await statisticsService.getWrongAnswerRanking(startOffset, PAGE_SIZE);
-      if (reset) {
-        setWrongAnswerRanking(data ?? []);
-        setOffset(data.length);
-      } else {
-        setWrongAnswerRanking(prev => [...prev, ...(data ?? [])]);
-        setOffset(prev => prev + data.length);
-      }
-      setHasMore(data.length >= PAGE_SIZE);
+      const data = await statisticsService.getWrongAnswerRanking(0, 50);
+      setWrongAnswerRanking(data ?? []);
     } catch (error: any) {
       console.error('[WrongAnswerRanking] Failed to fetch:', error);
-      setErrorMessage(error?.response?.data?.message ?? '랭킹을 불러오지 못했습니다.');
+      setRankingError(error?.response?.data?.message ?? '랭킹을 불러오지 못했습니다.');
       setWrongAnswerRanking([]);
     } finally {
-      setIsLoading(false);
-      setIsLoadingMore(false);
+      setIsRankingLoading(false);
     }
-  }, [isAuthenticated, user?.id, offset]);
+  }, [isAuthenticated, user?.id]);
 
-  // DEBUG: [AI-AUTHOR-2026-06-09] 오답 달력 데이터 조회 (월별)
+  // DEBUG: [수정48-2026-06-11] 오답 달력 데이터 조회 — 셀만 업데이트, 오버레이 제거
   const fetchCalendar = useCallback(async () => {
     if (!isAuthenticated || !user?.id) {
       setCalendarData([]);
@@ -137,13 +126,6 @@ export default function StatisticsScreen() {
     fetchRanking();
     fetchCalendar();
   }, [fetchRanking, fetchCalendar]);
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchRanking();
-      fetchCalendar();
-    }, [fetchRanking, fetchCalendar])
-  );
 
   // DEBUG: [AI-AUTHOR-2026-06-09] 이번 주 월~일 날짜 계산
   const getWeekDates = (): Date[] => {
@@ -188,12 +170,7 @@ export default function StatisticsScreen() {
     return days;
   };
 
-  const handleLoadMore = () => {
-    if (!isLoadingMore && hasMore) {
-      setIsLoadingMore(true);
-      fetchRanking(false);
-    }
-  };
+
 
   useFocusEffect(
     useCallback(() => {
@@ -201,14 +178,24 @@ export default function StatisticsScreen() {
     }, [fetchRanking])
   );
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     Alert.alert('로그아웃', '정말 로그아웃하시겠습니까?', [
       { text: '취소', style: 'cancel' },
       {
         text: '로그아웃',
         style: 'destructive',
         onPress: async () => {
-          await logout();
+          try {
+            // DEBUG: [수정43-2026-06-11] 로그아웃 화면 전환 보장
+            // 원인: logout() 내부 async 작업 중 예외 발생 시 isAuthenticated:false가 적용 안 될 수 있음
+            // 해결: logout() 실패 시에도 authStore 상태를 직접 false로 설정
+            await logout();
+          } catch (error: any) {
+            console.warn('[StatisticsScreen] logout 예외 (방어 설정):', error.message);
+            // logout()이 부분 실패했더라도 화면 전환은 보장
+            const { useAuthStore } = await import('../stores/authStore');
+            useAuthStore.setState({ user: null, isAuthenticated: false });
+          }
         },
       },
     ]);
@@ -218,24 +205,7 @@ export default function StatisticsScreen() {
     await setDarkMode(enabled);
   };
 
-  if (isLoading) {
-    return (
-      <View style={[styles.loadingContainer, isDark && styles.containerDark]}>
-        <ActivityIndicator size="large" color="#4a90e2" />
-      </View>
-    );
-  }
 
-  if (errorMessage) {
-    return (
-      <View style={[styles.loadingContainer, isDark && styles.containerDark]}>
-        <Text style={[styles.errorText, isDark && styles.chartLabelDark]}>{errorMessage}</Text>
-        <TouchableOpacity style={styles.retryBtn} onPress={() => fetchRanking()}>
-          <Text style={styles.retryBtnText}>다시 시도</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
 
   return (
     <ScrollView style={[styles.container, isDark && styles.containerDark]}>
@@ -256,9 +226,26 @@ export default function StatisticsScreen() {
              랭킹
           </Text>
           <Text style={[styles.hint, isDark && styles.chartLabelDark]}>
-            문제별 오답 수 (메달 TOP3, 4~30위 번호, 31위+ 게시판)
+            문제별 오답 수 (메달 TOP3, 4~50위 번호)
           </Text>
-          {wrongAnswerRanking.length === 0 ? (
+          {/* DEBUG: [수정45-2026-06-11] 랭킹 섹션만 AJAX 로딩 */}
+          {isRankingLoading ? (
+            <View style={styles.ajaxLoadingContainer}>
+              <ActivityIndicator size="small" color="#4a90e2" />
+              <Text style={[styles.ajaxLoadingText, isDark && styles.chartLabelDark]}>
+                랭킹 불러오는 중...
+              </Text>
+            </View>
+          ) : rankingError ? (
+            <View style={styles.ajaxErrorContainer}>
+              <Text style={[styles.ajaxErrorText, isDark && styles.chartLabelDark]}>
+                {rankingError}
+              </Text>
+              <TouchableOpacity style={styles.ajaxRetryBtn} onPress={fetchRanking}>
+                <Text style={styles.ajaxRetryBtnText}>다시 시도</Text>
+              </TouchableOpacity>
+            </View>
+          ) : wrongAnswerRanking.length === 0 ? (
             <View style={styles.emptyContainer}>
               <Text style={[styles.emptyText, isDark && styles.chartLabelDark]}>
                 오답 데이터가 없습니다
@@ -306,19 +293,7 @@ export default function StatisticsScreen() {
                   </TouchableOpacity>
                 );
               })}
-              {hasMore && (
-                <TouchableOpacity
-                  style={[styles.loadMoreButton, isLoadingMore && styles.loadMoreButtonDisabled]}
-                  onPress={handleLoadMore}
-                  disabled={isLoadingMore}
-                >
-                  {isLoadingMore ? (
-                    <ActivityIndicator size="small" color="#fff" />
-                  ) : (
-                    <Text style={styles.loadMoreText}>더보기 (다음 30건)</Text>
-                  )}
-                </TouchableOpacity>
-              )}
+
             </>
           )}
         </View>
@@ -368,30 +343,42 @@ export default function StatisticsScreen() {
             })}
           </View>
         </View>
-        {/* DEBUG: [AI-AUTHOR-2026-06-09] 오답 이력 달력 */}
+        {/* DEBUG: [수정46-2026-06-11] 달력 네비게이션 범위 제한 (현재~다음연도) */}
         <View style={[styles.section, isDark && styles.sectionDark]}>
           <View style={styles.calendarHeader}>
-            <TouchableOpacity
-              onPress={() => {
-                const prev = new Date(currentMonth);
-                prev.setMonth(prev.getMonth() - 1);
-                setCurrentMonth(prev);
-              }}
-            >
-              <Text style={[styles.calendarNavButton, isDark && styles.textDark]}>◀</Text>
-            </TouchableOpacity>
-            <Text style={[styles.calendarTitle, isDark && styles.textDark]}>
-              {currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                const next = new Date(currentMonth);
-                next.setMonth(next.getMonth() + 1);
-                setCurrentMonth(next);
-              }}
-            >
-              <Text style={[styles.calendarNavButton, isDark && styles.textDark]}>▶</Text>
-            </TouchableOpacity>
+            {(() => {
+              const MIN_YEAR = new Date().getFullYear();
+              const MAX_YEAR = MIN_YEAR + 1;
+              const isPrevDisabled = currentMonth.getFullYear() <= MIN_YEAR && currentMonth.getMonth() === 0;
+              const isNextDisabled = currentMonth.getFullYear() >= MAX_YEAR && currentMonth.getMonth() === 11;
+              return (
+                <>
+                  <TouchableOpacity
+                    disabled={isPrevDisabled}
+                    onPress={() => {
+                      const prev = new Date(currentMonth);
+                      prev.setMonth(prev.getMonth() - 1);
+                      setCurrentMonth(prev);
+                    }}
+                  >
+                    <Text style={[styles.calendarNavButton, isDark && styles.textDark, { opacity: isPrevDisabled ? 0.2 : 1 }]}>◀</Text>
+                  </TouchableOpacity>
+                  <Text style={[styles.calendarTitle, isDark && styles.textDark]}>
+                    {currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월
+                  </Text>
+                  <TouchableOpacity
+                    disabled={isNextDisabled}
+                    onPress={() => {
+                      const next = new Date(currentMonth);
+                      next.setMonth(next.getMonth() + 1);
+                      setCurrentMonth(next);
+                    }}
+                  >
+                    <Text style={[styles.calendarNavButton, isDark && styles.textDark, { opacity: isNextDisabled ? 0.2 : 1 }]}>▶</Text>
+                  </TouchableOpacity>
+                </>
+              );
+            })()}
           </View>
           {/* 요일 헤더 */}
           <View style={styles.calendarGrid}>
@@ -400,8 +387,9 @@ export default function StatisticsScreen() {
                 {day}
               </Text>
             ))}
-
-            {/* 달력 날짜 셀 */}
+          </View>
+          {/* DEBUG: [수정48-2026-06-11] 셀만 AJAX 업데이트 — 오버레이 제거, 기존 데이터 유지 */}
+          <View style={styles.calendarCellContainer}>
             {generateCalendarDays().map((date, index) => {
               if (!date) {
                 return <View key={`empty-${index}`} style={styles.calendarCell} />;
@@ -418,8 +406,6 @@ export default function StatisticsScreen() {
                     isToday && styles.calendarCellToday
                   ]}
                 >
-                  {/* DEBUG: [수정41-2026-06-11] 날짜 + 출석이미지 1개만 표시 (카운트 숫자 제거) */}
-                  {/* DEBUG: [2026-06-09-fix] RN Web에서 Image-Text 형제 금지 → 각 Text를 View로 래핑 */}
                   <View>
                     <Text
                       style={[
@@ -443,7 +429,7 @@ export default function StatisticsScreen() {
               );
             })}
           </View>
-          {/* 범례 */}
+          {/* 범례 — DEBUG: [수정45-2026-06-11] 50단위 변경 */}
           <View style={styles.legendContainer}>
             <Text style={[styles.legendLabel, isDark && styles.textDark]}>적음</Text>
             <View style={styles.legendItem}>
@@ -452,27 +438,27 @@ export default function StatisticsScreen() {
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendColor, { backgroundColor: '#4a90e2' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>1-5</Text>
+              <Text style={[styles.legendText, isDark && styles.textDark]}>1-50</Text>
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendColor, { backgroundColor: '#4caf50' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>6-10</Text>
+              <Text style={[styles.legendText, isDark && styles.textDark]}>51-100</Text>
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendColor, { backgroundColor: '#ffeb3b' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>11-15</Text>
+              <Text style={[styles.legendText, isDark && styles.textDark]}>101-150</Text>
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendColor, { backgroundColor: '#ff9800' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>16-20</Text>
+              <Text style={[styles.legendText, isDark && styles.textDark]}>151-200</Text>
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendColor, { backgroundColor: '#f57c00' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>21-25</Text>
+              <Text style={[styles.legendText, isDark && styles.textDark]}>201-250</Text>
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendColor, { backgroundColor: '#e53e3e' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>26+</Text>
+              <Text style={[styles.legendText, isDark && styles.textDark]}>251+</Text>
             </View>
             <Text style={[styles.legendLabel, isDark && styles.textDark]}>많음</Text>
           </View>
@@ -656,6 +642,36 @@ const styles = StyleSheet.create({
   sectionDark: {
     backgroundColor: '#2d2d2d',
   },
+  // DEBUG: [수정45-2026-06-11] 랭킹 섹션 AJAX 로딩/에러 스타일
+  ajaxLoadingContainer: {
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+  ajaxLoadingText: {
+    fontSize: 13,
+    color: '#718096',
+    marginTop: 8,
+  },
+  ajaxErrorContainer: {
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+  ajaxErrorText: {
+    fontSize: 13,
+    color: '#e53e3e',
+    marginBottom: 8,
+  },
+  ajaxRetryBtn: {
+    backgroundColor: '#4a90e2',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  ajaxRetryBtnText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '600',
+  },
   sectionTitleDark: {
     color: '#fff',
   },
@@ -664,21 +680,6 @@ const styles = StyleSheet.create({
   },
   settingLabelDark: {
     color: '#fff',
-  },
-  loadMoreButton: {
-    marginTop: 16,
-    padding: 12,
-    backgroundColor: '#4a90e2',
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  loadMoreButtonDisabled: {
-    backgroundColor: '#a0aec0',
-  },
-  loadMoreText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
   },
   // DEBUG: [AI-AUTHOR-2026-06-09] 주간 대시보드 스타일
   section: {
@@ -768,7 +769,7 @@ const styles = StyleSheet.create({
   },
   calendarCell: {
     width: '14.28%',
-    minHeight: 50,
+    height: 60,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 2,
@@ -825,5 +826,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#718096',
     marginHorizontal: 8,
+  },
+  // DEBUG: [수정48-2026-06-11] 달력 셀 컨테이너 (AJAX 셀 업데이트)
+  calendarCellContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
 });

@@ -74,16 +74,53 @@ export default function ProgrammingScreen() {
   const isDark = darkMode;
   const themeColor = languageColors[currentLanguage] || '#4a90e2';
 
-  // DEBUG: [수정41 2026-06-11] 백엔드가 이미 언어별 필터링 수행 → 프론트엔드는 탭만 필터
-  // 원인: LANGUAGE_KEYWORDS 기반 이중 필터링이 card.category=undefined로 인해 플래시카드를 모두 걸러냄
-  // 해결: 백엔드 API가 언어별 카드를 반환하므로 프론트엔드는 탭(cardType)만 필터링
-  const filteredCards = allCards.filter(card => {
-    const tabMatch = activeTab === 'flash' ? card.cardType === 'FLASHCARD' : card.cardType === 'SUBJECTIVE';
-    return tabMatch;
-  });
+  // DEBUG: [수정48 2026-06-11] 언어 택 시 백엔드 재요청 — TheoryScreen 패턴 적용
+  // 원인: loadProgrammingData()가 모든 언어를 한 번에 로드 → currentLanguage 변경 시 필터링 안됨
+  // 해결: currentLanguage 변경 시 해당 언어만 fetchProgrammingCards() 호출
+  const loadProgrammingData = async (lang?: string) => {
+    if (!isMountedRef.current) return;
+
+    const targetLang = lang || currentLanguage;
+
+    if (allCards.length > 0 && lang === undefined) {
+      setIsContentLoading(true);
+    } else {
+      setIsLoading(true);
+    }
+
+    try {
+      console.log(`[ProgrammingScreen] fetchProgrammingCards 호출 - 언어: ${targetLang}`);
+      const data = await fetchProgrammingCards(targetLang);
+      if (isMountedRef.current) {
+        console.log(`[ProgrammingScreen] ${targetLang} loaded cards: ${data?.length ?? 0}`);
+        setAllCards(data || []);
+      }
+    } catch (error) {
+      console.error('Error loading programming data:', error);
+      Alert.alert('오류', '데이터베이스에서 프로그래밍 데이터를 불러오지 못했습니다.');
+      if (isMountedRef.current) {
+        setAllCards([]);
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setIsLoading(false);
+        setIsContentLoading(false);
+      }
+    }
+  };
+
+  // DEBUG: [수정48 2026-06-11] allCards는 이미 백엔드에서 언어 필터링됨 → 탭만 필터
+  const filteredCards = allCards.filter(card =>
+    activeTab === 'flash' ? card.cardType === 'FLASHCARD' : card.cardType === 'SUBJECTIVE'
+  );
 
   const currentCard = filteredCards[currentIndex] || null;
   const totalInTab = filteredCards.length;
+
+  // 초기 로드 + currentLanguage 변경 시 재로드 (TheoryScreen 패턴)
+  useEffect(() => {
+    loadProgrammingData(currentLanguage);
+  }, [currentLanguage]);
 
   // [지상 최고 개발자 조치] 오답 노트 연동: 특정 문제 포커싱 및 언어 자동 전환
   useEffect(() => {
@@ -137,10 +174,9 @@ export default function ProgrammingScreen() {
     console.log(`[ProgrammingScreen] targetProblemId received: ${targetProblemId}`);
   }, [targetProblemId]);
 
+  // DEBUG: [수정48] isMountedRef 마운트/언마운트 관리 (별도 분리)
   useEffect(() => {
     isMountedRef.current = true;
-    loadProgrammingData();
-
     return () => {
       isMountedRef.current = false;
     };
@@ -154,55 +190,6 @@ export default function ProgrammingScreen() {
       setSelectedOption(null);
     }
   }, [currentLanguage, activeTab]);
-
-  // DEBUG: [2026-06-09] TheoryScreen과 동일한 API 사용
-  const loadProgrammingData = async () => {
-    if (!isMountedRef.current) return;
-
-    if (allCards.length > 0) {
-      setIsContentLoading(true);
-    } else {
-      setIsLoading(true);
-    }
-
-    try {
-      // DEBUG: [2026-06-09] 수정계획안14 - 모든 언어별 카드 가져오기
-      console.log(`[ProgrammingScreen] fetchProgrammingCards 호출 - 모든 언어`);
-      const languages = ['C언어', 'Java', 'Python', '공통개념'];
-      const allProgrammingCards: TheoryCard[] = [];
-
-      for (const lang of languages) {
-        const data = await fetchProgrammingCards(lang);
-        if (isMountedRef.current) {
-          console.log(`[ProgrammingScreen] ${lang} loaded cards: ${data?.length ?? 0}`);
-          if (data && data.length > 0) {
-            allProgrammingCards.push(...data);
-          }
-        }
-      }
-
-      if (isMountedRef.current) {
-        console.log(`[ProgrammingScreen] total loaded cards: ${allProgrammingCards.length}`);
-        if (allProgrammingCards.length > 0) {
-          const subjectiveCount = allProgrammingCards.filter(c => c.cardType === 'SUBJECTIVE').length;
-          const flashcardCount = allProgrammingCards.filter(c => c.cardType === 'FLASHCARD').length;
-          console.log(`[ProgrammingScreen] 카드 유형별 개수 - SUBJECTIVE: ${subjectiveCount}, FLASHCARD: ${flashcardCount}`);
-        }
-        setAllCards(allProgrammingCards || []);
-      }
-    } catch (error) {
-      console.error('Error loading programming data:', error);
-      Alert.alert('오류', '데이터베이스에서 프로그래밍 데이터를 불러오지 못했습니다.');
-      if (isMountedRef.current) {
-        setAllCards([]);
-      }
-    } finally {
-      if (isMountedRef.current) {
-        setIsLoading(false);
-        setIsContentLoading(false);
-      }
-    }
-  };
 
   // DEBUG: [2026-06-09] 수정계획안13 - 오답노트 탭 삭제 (사용자 요청)
 
@@ -475,7 +462,7 @@ export default function ProgrammingScreen() {
                     </Text>
                     <TouchableOpacity
                       style={[styles.retryButton, { backgroundColor: themeColor }]}
-                      onPress={() => loadProgrammingData()}
+                      onPress={() => loadProgrammingData(currentLanguage)}
                     >
                       <Text style={styles.retryButtonText}>다시 불러오기</Text>
                     </TouchableOpacity>
@@ -636,8 +623,8 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
   content: {
-    padding: 20,
-    paddingTop: 30,
+    padding: 0,
+    paddingTop: 0,
   },
   progressText: {
     textAlign: 'center',

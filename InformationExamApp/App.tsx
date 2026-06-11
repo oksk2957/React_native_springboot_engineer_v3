@@ -237,7 +237,14 @@ function AppNavigator() {
       // DEBUG: [수정26-2026-06-10] 이미 로그인된 상태에서는 SIGNED_IN 이벤트 무시
       // 원인: isAuthenticated=true여도 SIGNED_IN 발생 시 /api/auth/google 중복 호출
       // 해결: 이미 인증된 상태면 early return
+      // DEBUG: [수정46-2026-06-11] isLoggingOut 체크 추가
+      // 원인: Web에서 signOut() 호출 시 SIGNED_IN 이벤트가 먼저 발생해 즉시 재로그인됨
+      // 해결: 로그아웃 진행 중이면 모든 auth 이벤트 무시
       const { isAuthenticated } = useAuthStore.getState();
+      if (isLoggingOut) {
+        console.log('[App] 로그아웃 진행 중 - auth 이벤트 무시');
+        return;
+      }
       if (isAuthenticated) {
         console.log('[App] 이미 로그인됨 - SIGNED_IN 이벤트 무시');
         return;
@@ -260,8 +267,8 @@ function AppNavigator() {
             const user = {
               id: session.user?.id ?? '0',
               email: session.user?.email ?? '',
-              nickname: session.user?.user_metadata?.name ?? '사용자',
-              username: session.user?.user_metadata?.name ?? '',
+              nickname: session.user?.user_metadata?.full_name ?? session.user?.user_metadata?.name ?? '사용자',
+              username: session.user?.user_metadata?.full_name ?? session.user?.user_metadata?.name ?? '',
               profileImage: session.user?.user_metadata?.avatar_url,
               role: 'free_user',
               isAdmin: false,
@@ -306,8 +313,8 @@ function AppNavigator() {
             const user = {
               id: session.user.id ?? '0',
               email: session.user.email ?? '',
-              nickname: session.user.user_metadata?.name ?? '사용자',
-              username: session.user.user_metadata?.name ?? '',
+              nickname: session.user.user_metadata?.full_name ?? session.user.user_metadata?.name ?? '사용자',
+              username: session.user.user_metadata?.full_name ?? session.user.user_metadata?.name ?? '',
               profileImage: session.user.user_metadata?.avatar_url,
               role: 'free_user',
               isAdmin: false,
