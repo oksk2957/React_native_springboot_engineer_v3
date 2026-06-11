@@ -1,14 +1,19 @@
 package com.example.informationexam.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
 
 /**
  * 인증 응답 DTO
  * Google OAuth 로그인 시 백엔드 JWT와 사용자 정보를 함께 반환합니다.
+ *
+ * DEBUG: 수정42-2 — @AllArgsConstructor 추가로 AuthResponse$AuthResponseBuilder NoClassDefFoundError 해결
+ * 원인: @Value + @Builder 조합에서 @AllArgsConstructor 누락 → Lombok이 Builder 클래스를 생성하지 못함
  */
 @Value
 @Builder
+@AllArgsConstructor
 public class AuthResponse {
     String token;        // 백엔드 JWT 토큰
     String username;     // 사용자명

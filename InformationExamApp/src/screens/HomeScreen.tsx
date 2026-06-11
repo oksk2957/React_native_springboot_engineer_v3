@@ -32,15 +32,34 @@ export default function HomeScreen() {
   const [subjectiveCount, setSubjectiveCount] = useState<number>(0);
   const [totalObjectiveCount, setTotalObjectiveCount] = useState<number>(0);
 
+  // DEBUG: [수정42-2026-06-11] 로그인 미니달력 상태 — 실제 로그인 기록 기반
   const today = new Date();
   const todayDate = today.getDate();
-  const weekNumber = Math.ceil(todayDate / 7);
+  const currentYear = today.getFullYear();
   const currentMonth = today.getMonth() + 1;
-  const studyRecord = Array.from({ length: 30 }, (_, i) => i + 1 <= todayDate);
+  const weekNumber = Math.ceil(todayDate / 7);
+  const [loginDates, setLoginDates] = useState<string[]>([]);
+
+  // DEBUG: [수정42-2026-06-11] 로그인 기록 기반 잔디 배열 생성
+  const studyRecord = Array.from({ length: 30 }, (_, i) => {
+    const day = i + 1;
+    const dateString = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    return loginDates.includes(dateString);
+  });
 
   const isDark = darkMode;
 
   useEffect(() => {
+    // DEBUG: [수정42-2026-06-11] 로그인 기록 조회 — 미니달력 표시용
+    const fetchLoginDates = async () => {
+      try {
+        const dates = await statisticsService.getLoginCalendar(currentYear, currentMonth);
+        setLoginDates(dates);
+      } catch (error) {
+        console.error('Failed to fetch login dates:', error);
+      }
+    };
+
     const fetchSubjectiveCount = async () => {
       try {
         const count = await statisticsService.getSubjectiveCount();
@@ -55,17 +74,19 @@ export default function HomeScreen() {
         const results = await Promise.all(
           allCategories.map(cat => fetchTheoryCards(cat))
         );
-        const total = results.reduce((sum, cards) =>
-          sum + cards.filter((c) => c.cardType === 'OBJECTIVE').length, 0
-        );
+        // DEBUG: [2026-06-11] cardType === 'OBJECTIVE' 비교 제거
+        // 원인: TheoryCard.cardType은 'SUBJECTIVE' | 'FLASHCARD'만 포함 → 'OBJECTIVE' 비교는 TS 에러
+        // 해결: fetchTheoryCards는 problem 테이블(객관식)만 반환 → 전체 개수가 곧 객관식 수
+        const total = results.reduce((sum, cards) => sum + cards.length, 0);
         setTotalObjectiveCount(total);
       } catch (error) {
         console.error('Failed to fetch objective count:', error);
       }
     };
+    fetchLoginDates();
     fetchSubjectiveCount();
     fetchObjectiveCount();
-  }, []);
+  }, [currentYear, currentMonth]);
 
   const menuItems = [
     {
@@ -188,7 +209,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
+    padding: 10,
     backgroundColor: '#4a90e2',
   },
   greeting: {

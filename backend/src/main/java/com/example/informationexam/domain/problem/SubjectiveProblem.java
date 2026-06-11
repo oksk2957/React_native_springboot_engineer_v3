@@ -44,7 +44,8 @@ public class SubjectiveProblem {
 
     private int difficulty;
 
-    @Column(name = "is_ai_generated", nullable = false)
+    // DEBUG: [수정42-2026-06-11] nullable=false 제거 — ddl-auto=update 시 ALTER 실패 방지
+    @Column(name = "is_ai_generated")
     private boolean isAiGenerated = false;
 
     @Column(name = "created_at")

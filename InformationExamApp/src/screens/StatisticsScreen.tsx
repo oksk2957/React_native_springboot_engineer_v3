@@ -250,8 +250,6 @@ export default function StatisticsScreen() {
           ) : null}
         </View>
 
-
-
         {/* Wrong Answer Ranking */}
         <View style={[styles.rankingSection, isDark && styles.sectionDark]}>
           <Text style={[styles.sectionTitle, isDark && styles.sectionTitleDark]}>
@@ -260,7 +258,6 @@ export default function StatisticsScreen() {
           <Text style={[styles.hint, isDark && styles.chartLabelDark]}>
             문제별 오답 수 (메달 TOP3, 4~30위 번호, 31위+ 게시판)
           </Text>
-
           {wrongAnswerRanking.length === 0 ? (
             <View style={styles.emptyContainer}>
               <Text style={[styles.emptyText, isDark && styles.chartLabelDark]}>
@@ -371,7 +368,6 @@ export default function StatisticsScreen() {
             })}
           </View>
         </View>
-
         {/* DEBUG: [AI-AUTHOR-2026-06-09] 오답 이력 달력 */}
         <View style={[styles.section, isDark && styles.sectionDark]}>
           <View style={styles.calendarHeader}>
@@ -397,7 +393,6 @@ export default function StatisticsScreen() {
               <Text style={[styles.calendarNavButton, isDark && styles.textDark]}>▶</Text>
             </TouchableOpacity>
           </View>
-
           {/* 요일 헤더 */}
           <View style={styles.calendarGrid}>
             {['월', '화', '수', '목', '금', '토', '일'].map((day, idx) => (
@@ -423,7 +418,7 @@ export default function StatisticsScreen() {
                     isToday && styles.calendarCellToday
                   ]}
                 >
-                  {/* DEBUG: [AI-AUTHOR-2026-06-09-출석이미지] 날짜 + 출석이미지 + 카운트 */}
+                  {/* DEBUG: [수정41-2026-06-11] 날짜 + 출석이미지 1개만 표시 (카운트 숫자 제거) */}
                   {/* DEBUG: [2026-06-09-fix] RN Web에서 Image-Text 형제 금지 → 각 Text를 View로 래핑 */}
                   <View>
                     <Text
@@ -444,16 +439,10 @@ export default function StatisticsScreen() {
                       />
                     </View>
                   )}
-                  {count > 0 && (
-                    <View>
-                      <Text style={styles.calendarCountText}>{count}</Text>
-                    </View>
-                  )}
                 </View>
               );
             })}
           </View>
-
           {/* 범례 */}
           <View style={styles.legendContainer}>
             <Text style={[styles.legendLabel, isDark && styles.textDark]}>적음</Text>
@@ -499,7 +488,6 @@ export default function StatisticsScreen() {
             <Switch value={darkMode} onValueChange={handleDarkModeToggle} />
           </View>
         </View>
-
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutText}>로그아웃</Text>
         </TouchableOpacity>
@@ -562,7 +550,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   hint: {
-      padding: 10,
+    padding: 0,
     fontSize: 12,
     color: '#718096',
     marginBottom: 0,

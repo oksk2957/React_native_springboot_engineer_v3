@@ -7,6 +7,8 @@ import com.example.informationexam.config.JwtTokenProvider;
 import com.example.informationexam.dto.AuthResponse;
 import com.example.informationexam.domain.useranswer.StudySessionRepository;
 import com.example.informationexam.domain.useranswer.UserAnswerRepository;
+import com.example.informationexam.domain.login.LoginHistory;
+import com.example.informationexam.domain.login.LoginHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,8 @@ public class UserService {
     private final SupabaseTokenVerifierService supabaseTokenVerifierService;
     private final StudySessionRepository studySessionRepository;
     private final UserAnswerRepository userAnswerRepository;
+    // DEBUG: [수정41-2026-06-11] login_history Repository — 로그인 출석 기록용
+    private final LoginHistoryRepository loginHistoryRepository;
 
     @Transactional
     public AuthResponse loginWithSupabase(String supabaseToken, String traceId) {
@@ -125,6 +129,25 @@ public class UserService {
 
         log.info("[AUTH][{}][STEP6] 응답 생성 - isAdmin: {}, trialExpired: {}, canAccessApp: {}",
                 traceId, isAdmin, trialExpired, canAccessApp);
+
+        // DEBUG: [수정42-2026-06-11] 로그인 기록 저장 — login_history 테이블에 UPSERT
+        try {
+            java.time.LocalDate today = java.time.LocalDate.now();
+            if (!loginHistoryRepository.existsByUserIdAndLoginDate(user.getId(), today)) {
+                LoginHistory loginRecord = LoginHistory.builder()
+                    .userId(user.getId())
+                    .loginDate(today)
+                    .build();
+                loginHistoryRepository.save(loginRecord);
+                log.info("[AUTH][{}][STEP6] 로그인 기록 저장 완료 - userId: {}, loginDate: {}",
+                    traceId, user.getId(), today);
+            } else {
+                log.debug("[AUTH][{}][STEP6] 오늘 이미 로그인 기록 존재 - userId: {}", traceId, user.getId());
+            }
+        } catch (Exception e) {
+            // 로그인 기록 실패해도 인증은 성공 처리 (논블로킹)
+            log.warn("[AUTH][{}][STEP6] 로그인 기록 저장 실패 (무시): {}", traceId, e.getMessage());
+        }
 
         return AuthResponse.builder()
                 .token(token)

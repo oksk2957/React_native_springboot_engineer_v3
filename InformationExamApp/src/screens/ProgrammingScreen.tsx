@@ -74,25 +74,12 @@ export default function ProgrammingScreen() {
   const isDark = darkMode;
   const themeColor = languageColors[currentLanguage] || '#4a90e2';
 
-  // DEBUG: [2026-06-09] 현재 탭에 맞는 카드 필터링
+  // DEBUG: [수정41 2026-06-11] 백엔드가 이미 언어별 필터링 수행 → 프론트엔드는 탭만 필터
+  // 원인: LANGUAGE_KEYWORDS 기반 이중 필터링이 card.category=undefined로 인해 플래시카드를 모두 걸러냄
+  // 해결: 백엔드 API가 언어별 카드를 반환하므로 프론트엔드는 탭(cardType)만 필터링
   const filteredCards = allCards.filter(card => {
-    // 탭 필터링
     const tabMatch = activeTab === 'flash' ? card.cardType === 'FLASHCARD' : card.cardType === 'SUBJECTIVE';
-    if (!tabMatch) return false;
-
-    // DEBUG: [2026-06-09] 언어 필터링 개선
-    // 원인: card.category는 '프로그래밍언어'이고, front_text에 언어명이 없는 경우 필터링됨
-    // 해결: front_text에서 언어 패턴을 더 유연하게 검색
-    if (currentLanguage === '공통개념') {
-      // 공통개념은 모든 카드 포함 (언어별 카드가 아닌 것들)
-      const isLanguageSpecific = ['C언어', 'c언어', 'C ', 'Java', 'java', 'Python', 'python']
-        .some(kw => `${card.frontText} ${card.category}`.toLowerCase().includes(kw.toLowerCase()));
-      return !isLanguageSpecific;
-    }
-
-    const keywords = LANGUAGE_KEYWORDS[currentLanguage] || [];
-    const searchText = `${card.frontText} ${card.category} ${card.backText}`.toLowerCase();
-    return keywords.some(keyword => searchText.includes(keyword.toLowerCase()));
+    return tabMatch;
   });
 
   const currentCard = filteredCards[currentIndex] || null;

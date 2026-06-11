@@ -50,7 +50,10 @@ public class ProgrammingLanguageProblem {
     @Column(name = "option5", length = 500)
     private String option5;
 
-    @Column(nullable = false)
+    // DEBUG: [수정42-2026-06-11] nullable=true 명시 — ddl-auto=update 시 ALTER 실패 방지
+    // 원인: 기존 DB 행에 NULL 값 존재 → Hibernate가 NOT NULL ALTER 시도 → PSQLException
+    // 해결: @Column(nullable = true) 명시적 추가 → Hibernate가 NOT NULL constraint 추가 안 함
+    @Column(nullable = true)
     private boolean isAiGenerated = false;
 
     @Column(name = "created_at")

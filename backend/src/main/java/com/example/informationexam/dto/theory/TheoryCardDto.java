@@ -25,6 +25,11 @@ public class TheoryCardDto {
     private String explanation;
     private Integer difficulty;    // null 허용 (플래시카드는 0)
 
+    // DEBUG: [수정41 2026-06-11] ProgrammingScreen 언어 필터링용 category 필드 추가
+    // 원인: 기존 DTO에 category 없어 프론트엔드 card.category가 undefined → 언어 필터링 실패
+    // 해결: SQL category 컬럼을 DTO에 매핑
+    private String category;
+
     // DEBUG: [주관식 보기] 주관식 퀴즈를 5개 보기 중 선택하는 형태로 변경
     // 원인: 사용자가 TextInput 대신 5개 보기 버튼 형태로 변경 요청
     // 해결: options 필드 추가하여 프론트엔드에 보기 데이터 전달
@@ -40,6 +45,7 @@ public class TheoryCardDto {
         dto.backText = (String) map.get("back_text");
         dto.explanation = (String) map.get("explanation");
         dto.difficulty = map.get("difficulty") != null ? ((Number) map.get("difficulty")).intValue() : null;
+        dto.category = (String) map.get("category");
 
         // DEBUG: [주관식 보기] fromMap에서 options 파싱 로직 추가
         // 원인: DB에서 option1~5 컬럼을 List<String>으로 변환 필요

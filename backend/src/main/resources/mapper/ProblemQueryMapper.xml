@@ -162,7 +162,7 @@
     <!-- 해결: subjective_problems에서 option1~5를 조회하여 프론트엔드에 전달 -->
     <!-- DEBUG: [2026-06-09] 프로그래밍 문제 UNION ALL 추가 -->
     <!-- 원인: ProgrammingScreen이 fetchTheoryCards('프로그래밍언어') 호출하지만 programming_language_problems 누락 -->
-    <!-- 해결: programming_language_problems를 UNION ALL로 추가하여 프로그래밍 문제도 조회 -->
+    <!-- DEBUG: [수정41 2026-06-11] 모든 UNION ALL 브랜치에 category 컬럼 추가 -->
     <select id="selectTheoryCardsByCategory" resultType="map">
         SELECT
             'SUBJECTIVE' AS card_type,
@@ -176,7 +176,8 @@
             sp.option2,
             sp.option3,
             sp.option4,
-            sp.option5
+            sp.option5,
+            s.name AS category
         FROM subjective_problems sp
         INNER JOIN subject s ON sp.subject_id = s.id
         WHERE s.name = #{category}
@@ -195,7 +196,8 @@
             NULL AS option2,
             NULL AS option3,
             NULL AS option4,
-            NULL AS option5
+            NULL AS option5,
+            s.name AS category
         FROM learning_card lc
         INNER JOIN subject s ON lc.subject_id = s.id
         WHERE s.name = #{category}
@@ -215,7 +217,13 @@
             NULL AS option2,
             NULL AS option3,
             NULL AS option4,
-            NULL AS option5
+            NULL AS option5,
+            CASE
+                WHEN LOWER(pp.prog_language) = 'c' THEN 'C언어'
+                WHEN LOWER(pp.prog_language) = 'java' THEN 'Java'
+                WHEN LOWER(pp.prog_language) = 'python' THEN 'Python'
+                ELSE '프로그래밍언어'
+            END AS category
         FROM programming_language_problems pp
         WHERE
             (#{category} = &apos;프로그래밍언어&apos;)
@@ -235,7 +243,8 @@
             p.option2,
             p.option3,
             p.option4,
-            p.option5
+            p.option5,
+            s.name AS category
         FROM problem p
         INNER JOIN subject s ON p.subject_id = s.id
         WHERE s.name = #{category}
@@ -474,10 +483,14 @@
     <!-- DEBUG: [2026-06-10 수정27] API 언어명 ↔ DB prog_language 매핑 -->
     <!-- 원인: API는 'C언어'로 호출, DB는 'c'로 저장 → 불일치로 빈 결과 -->
     <!-- 해결: CASE로 API 반환 시 언어명 복원 + WHERE에서 'C언어'→'c' 매칭 -->
+    <!-- DEBUG: [2026-06-11 수정41] ProgrammingScreen 플래시카드 데이터 파이프라인 수정 -->
+    <!-- 기존: programming_language_problems만 조회 → 모든 행이 option1 있음 → SUBJECTIVE만 반환 -->
+    <!-- 수정: learning_card 테이블에서 프로그래밍 언어 FLASHCARD도 함께 조회 -->
     <select id="selectProgrammingCardsByLanguage" resultType="map">
         SELECT
             id,
             CASE WHEN option1 IS NOT NULL THEN 'SUBJECTIVE' ELSE 'FLASHCARD' END AS card_type,
+            NULL AS subject_id,
             question AS front_text,
             answer AS back_text,
             explanation,
@@ -496,6 +509,32 @@
             OR (#{language} = 'Java' AND LOWER(prog_language) = 'java')
             OR (#{language} = 'Python' AND LOWER(prog_language) = 'python')
             OR LOWER(prog_language) = LOWER(#{language})
+
+        UNION ALL
+
+        -- DEBUG: [수정41 2026-06-11] learning_card에서 프로그래밍언어 FLASHCARD 전체 조회
+        -- 원인: LIKE 기반 언어 필터가 너무 strict하여 0건 반환
+        -- 해결: subject.name='프로그래밍언어'만 필터, category는 CASE로 계산
+        SELECT
+            lc.id,
+            'FLASHCARD' AS card_type,
+            NULL AS subject_id,
+            lc.front_text,
+            lc.back_text,
+            lc.explanation,
+            NULL AS option1, NULL AS option2, NULL AS option3, NULL AS option4, NULL AS option5,
+            CASE
+                WHEN LOWER(lc.front_text) LIKE '%c언어%' OR LOWER(lc.front_text) LIKE '%[c]%' OR LOWER(lc.back_text) LIKE '%c언어%' THEN 'C언어'
+                WHEN LOWER(lc.front_text) LIKE '%java%' OR LOWER(lc.back_text) LIKE '%java%' THEN 'Java'
+                WHEN LOWER(lc.front_text) LIKE '%python%' OR LOWER(lc.back_text) LIKE '%python%' THEN 'Python'
+                ELSE '공통개념'
+            END AS category,
+            0 AS difficulty
+        FROM learning_card lc
+        INNER JOIN subject s ON lc.subject_id = s.id
+        WHERE s.name = '프로그래밍언어'
+          AND lc.front_text IS NOT NULL
+
         ORDER BY id
     </select>
 
