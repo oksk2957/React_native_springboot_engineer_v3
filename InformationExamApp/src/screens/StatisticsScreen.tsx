@@ -209,8 +209,7 @@ export default function StatisticsScreen() {
 
   return (
     <ScrollView style={[styles.container, isDark && styles.containerDark]}>
-      <View> {/* DEBUG: [2026-06-09] ScrollView 직계 자식 key 경고 해결 */}
-        {/* Header */}
+      <View>
         <View style={[styles.header, isDark && styles.headerDark]}>
           <Text style={styles.title}>통계 / 마이페이지</Text>
           {user?.email ? (
@@ -219,8 +218,6 @@ export default function StatisticsScreen() {
             </Text>
           ) : null}
         </View>
-
-        {/* Wrong Answer Ranking */}
         <View style={[styles.rankingSection, isDark && styles.sectionDark]}>
           <Text style={[styles.sectionTitle, isDark && styles.sectionTitleDark]}>
              랭킹
@@ -251,9 +248,7 @@ export default function StatisticsScreen() {
                 오답 데이터가 없습니다
               </Text>
             </View>
-          ) : (
-            <>
-              {wrongAnswerRanking.map((item, index) => {
+          ) : wrongAnswerRanking.map((item, index) => {
                 const rank = index + 1;
                 const medal = MEDAL[rank];
                 const typeLabel = item.itemType === 'OBJECTIVE' ? '객관식'
@@ -262,49 +257,21 @@ export default function StatisticsScreen() {
                   <TouchableOpacity
                     key={item.problemId}
                     style={[styles.rankingItem, isDark && styles.rankingItemDark, rank <= 3 && styles.rankingItemTop3]}
-                    // DEBUG: [타입수정] mode 리터럴 타입 보존을 위해 as const 적용
                     onPress={() => navigation.navigate('Problem', { problemId: item.referenceId, mode: 'normal' as const })}
                   >
-                    <View style={styles.rankContainer}>
-                      {medal ? (
-                        <Text style={styles.medalText}>{medal}</Text>
-                      ) : (
-                        <Text style={[styles.rankNumber, isDark && styles.chartLabelDark]}>
-                          {rank}
-                        </Text>
-                      )}
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <Text
+                    <View style={styles.rankContainer}>{medal ? (<Text style={styles.medalText}>{medal}</Text>) : (<Text style={[styles.rankNumber, isDark && styles.chartLabelDark]}>{rank}</Text>)}</View><View style={{ flex: 1 }}><Text
                         style={[
                           styles.subjectName,
                           isDark && styles.titleDark,
                           rank <= 3 && styles.subjectNameBold,
                         ]}
                         numberOfLines={2}
-                      >
-                        {/* DEBUG: [2026-06-09] 문제: {substring} 과목: {subject} 형식으로 변경 */}
-                        문제: {item.questionText || `#${item.problemId}`} 과목: {item.subject}
-                      </Text>
-                    </View>
-                    <Text style={[styles.attemptedCount, isDark && styles.titleDark]}>
-                      {item.wrongCount}회
-                    </Text>
+                      >문제: {item.questionText || `#${item.problemId}`} 과목: {item.subject}</Text></View><Text style={[styles.attemptedCount, isDark && styles.titleDark]}>{item.wrongCount}회</Text>
                   </TouchableOpacity>
                 );
-              })}
-
-            </>
-          )}
+              })
+          }
         </View>
-
-
-
-
-
-
-
-        {/* DEBUG: [AI-AUTHOR-2026-06-09] 이번 주 오답 대시보드 */}
         <View style={[styles.section, isDark && styles.sectionDark]}>
           <Text style={[styles.sectionTitle, isDark && styles.sectionTitleDark]}>
             이번 주 오답 최대값
@@ -315,35 +282,22 @@ export default function StatisticsScreen() {
               const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
               const isToday = date.toDateString() === new Date().toDateString();
               return (
-                <View key={index} style={styles.weeklyDay}>
-                  <Text style={[styles.weeklyDayName, isDark && styles.textDark, isToday && styles.todayText]}>
-                    {dayNames[index]}
-                  </Text>
-                  <Text style={[styles.weeklyDate, isDark && styles.textDark]}>
-                    {date.getDate()}
-                  </Text>
-                  <View
+                <View key={index} style={styles.weeklyDay}><Text style={[styles.weeklyDayName, isDark && styles.textDark, isToday && styles.todayText]}>{dayNames[index]}</Text><Text style={[styles.weeklyDate, isDark && styles.textDark]}>{date.getDate()}</Text><View
                     style={[
                       styles.weeklyCountCircle,
                       { backgroundColor: count > 0 ? getHeatmapColor(count) : 'transparent' },
                       count > 0 && styles.weeklyCountCircleWithBg
                     ]}
-                  >
-                    <Text
+                  ><Text
                       style={[
                         styles.weeklyCountText,
                         count > 0 ? styles.weeklyCountTextWhite : isDark && styles.textDark
                       ]}
-                    >
-                      {count}
-                    </Text>
-                  </View>
-                </View>
+                    >{count}</Text></View></View>
               );
             })}
           </View>
         </View>
-        {/* DEBUG: [수정46-2026-06-11] 달력 네비게이션 범위 제한 (현재~다음연도) */}
         <View style={[styles.section, isDark && styles.sectionDark]}>
           <View style={styles.calendarHeader}>
             {(() => {
@@ -351,44 +305,30 @@ export default function StatisticsScreen() {
               const MAX_YEAR = MIN_YEAR + 1;
               const isPrevDisabled = currentMonth.getFullYear() <= MIN_YEAR && currentMonth.getMonth() === 0;
               const isNextDisabled = currentMonth.getFullYear() >= MAX_YEAR && currentMonth.getMonth() === 11;
-              return (
-                <>
-                  <TouchableOpacity
-                    disabled={isPrevDisabled}
-                    onPress={() => {
-                      const prev = new Date(currentMonth);
-                      prev.setMonth(prev.getMonth() - 1);
-                      setCurrentMonth(prev);
-                    }}
-                  >
-                    <Text style={[styles.calendarNavButton, isDark && styles.textDark, { opacity: isPrevDisabled ? 0.2 : 1 }]}>◀</Text>
-                  </TouchableOpacity>
-                  <Text style={[styles.calendarTitle, isDark && styles.textDark]}>
-                    {currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월
-                  </Text>
-                  <TouchableOpacity
-                    disabled={isNextDisabled}
-                    onPress={() => {
-                      const next = new Date(currentMonth);
-                      next.setMonth(next.getMonth() + 1);
-                      setCurrentMonth(next);
-                    }}
-                  >
-                    <Text style={[styles.calendarNavButton, isDark && styles.textDark, { opacity: isNextDisabled ? 0.2 : 1 }]}>▶</Text>
-                  </TouchableOpacity>
-                </>
-              );
+              return (<View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',flex:1}}><TouchableOpacity
+                  disabled={isPrevDisabled}
+                  onPress={() => {
+                    const prev = new Date(currentMonth);
+                    prev.setMonth(prev.getMonth() - 1);
+                    setCurrentMonth(prev);
+                  }}
+                >
+                  <Text style={[styles.calendarNavButton, isDark && styles.textDark, { opacity: isPrevDisabled ? 0.2 : 1 }]}>◀</Text>
+                </TouchableOpacity><Text style={[styles.calendarTitle, isDark && styles.textDark]}>{currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월</Text><TouchableOpacity
+                  disabled={isNextDisabled}
+                  onPress={() => {
+                    const next = new Date(currentMonth);
+                    next.setMonth(next.getMonth() + 1);
+                    setCurrentMonth(next);
+                  }}
+                >
+                  <Text style={[styles.calendarNavButton, isDark && styles.textDark, { opacity: isNextDisabled ? 0.2 : 1 }]}>▶</Text>
+                </TouchableOpacity></View>);
             })()}
           </View>
-          {/* 요일 헤더 */}
           <View style={styles.calendarGrid}>
-            {['월', '화', '수', '목', '금', '토', '일'].map((day, idx) => (
-              <Text key={idx} style={[styles.calendarDayHeader, isDark && styles.textDark]}>
-                {day}
-              </Text>
-            ))}
+            {['월', '화', '수', '목', '금', '토', '일'].map((day, idx) => (<Text key={idx} style={[styles.calendarDayHeader, isDark && styles.textDark]}>{day}</Text>))}
           </View>
-          {/* DEBUG: [수정48-2026-06-11] 셀만 AJAX 업데이트 — 오버레이 제거, 기존 데이터 유지 */}
           <View style={styles.calendarCellContainer}>
             {generateCalendarDays().map((date, index) => {
               if (!date) {
@@ -406,73 +346,27 @@ export default function StatisticsScreen() {
                     isToday && styles.calendarCellToday
                   ]}
                 >
-                  <View>
-                    <Text
+                  <View><Text
                       style={[
                         styles.calendarDateText,
                         count > 0 ? styles.calendarDateTextWhite : isDark && styles.textDark
                       ]}
-                    >
-                      {date.getDate()}
-                    </Text>
-                  </View>
-                  {count > 0 && (
-                    <View>
-                      <Image
+                    >{date.getDate()}</Text></View>{count > 0 && (<View><Image
                         source={ATTENDANCE_STAMP}
                         style={styles.calendarAttendanceImage}
                         resizeMode="contain"
-                      />
-                    </View>
-                  )}
+                      /></View>)}
                 </View>
               );
             })}
           </View>
-          {/* 범례 — DEBUG: [수정45-2026-06-11] 50단위 변경 */}
           <View style={styles.legendContainer}>
-            <Text style={[styles.legendLabel, isDark && styles.textDark]}>적음</Text>
-            <View style={styles.legendItem}>
-              <View style={[styles.legendColor, { backgroundColor: '#e2e8f0' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>0</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <View style={[styles.legendColor, { backgroundColor: '#4a90e2' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>1-50</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <View style={[styles.legendColor, { backgroundColor: '#4caf50' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>51-100</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <View style={[styles.legendColor, { backgroundColor: '#ffeb3b' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>101-150</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <View style={[styles.legendColor, { backgroundColor: '#ff9800' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>151-200</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <View style={[styles.legendColor, { backgroundColor: '#f57c00' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>201-250</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <View style={[styles.legendColor, { backgroundColor: '#e53e3e' }]} />
-              <Text style={[styles.legendText, isDark && styles.textDark]}>251+</Text>
-            </View>
-            <Text style={[styles.legendLabel, isDark && styles.textDark]}>많음</Text>
+            <Text style={[styles.legendLabel, isDark && styles.textDark]}>적음</Text><View style={styles.legendItem}><View style={[styles.legendColor, { backgroundColor: '#e2e8f0' }]} /><Text style={[styles.legendText, isDark && styles.textDark]}>0</Text></View><View style={styles.legendItem}><View style={[styles.legendColor, { backgroundColor: '#4a90e2' }]} /><Text style={[styles.legendText, isDark && styles.textDark]}>1-50</Text></View><View style={styles.legendItem}><View style={[styles.legendColor, { backgroundColor: '#4caf50' }]} /><Text style={[styles.legendText, isDark && styles.textDark]}>51-100</Text></View><View style={styles.legendItem}><View style={[styles.legendColor, { backgroundColor: '#ffeb3b' }]} /><Text style={[styles.legendText, isDark && styles.textDark]}>101-150</Text></View><View style={styles.legendItem}><View style={[styles.legendColor, { backgroundColor: '#ff9800' }]} /><Text style={[styles.legendText, isDark && styles.textDark]}>151-200</Text></View><View style={styles.legendItem}><View style={[styles.legendColor, { backgroundColor: '#f57c00' }]} /><Text style={[styles.legendText, isDark && styles.textDark]}>201-250</Text></View><View style={styles.legendItem}><View style={[styles.legendColor, { backgroundColor: '#e53e3e' }]} /><Text style={[styles.legendText, isDark && styles.textDark]}>251+</Text></View><Text style={[styles.legendLabel, isDark && styles.textDark]}>많음</Text>
           </View>
         </View>
-
-
-
-        {/* Settings */}
         <View style={[styles.settingsSection, isDark && styles.sectionDark]}>
           <Text style={[styles.sectionTitle, isDark && styles.sectionTitleDark]}>설정</Text>
-          <View style={styles.settingItem}>
-            <Text style={[styles.settingLabel, isDark && styles.settingLabelDark]}>다크 모드</Text>
-            <Switch value={darkMode} onValueChange={handleDarkModeToggle} />
-          </View>
+          <View style={styles.settingItem}><Text style={[styles.settingLabel, isDark && styles.settingLabelDark]}>다크 모드</Text><Switch value={darkMode} onValueChange={handleDarkModeToggle} /></View>
         </View>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutText}>로그아웃</Text>
@@ -718,6 +612,7 @@ const styles = StyleSheet.create({
   },
   weeklyCountCircleWithBg: {
     borderWidth: 0,
+    borderColor: 'transparent', // DEBUG: [수정47-2026-06-11] TS 타입 오류 수정 — borderColor 필수
   },
   weeklyCountText: {
     fontSize: 14,

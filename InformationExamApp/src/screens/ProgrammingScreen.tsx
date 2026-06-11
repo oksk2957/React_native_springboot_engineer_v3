@@ -74,15 +74,16 @@ export default function ProgrammingScreen() {
   const isDark = darkMode;
   const themeColor = languageColors[currentLanguage] || '#4a90e2';
 
-  // DEBUG: [수정48 2026-06-11] 언어 택 시 백엔드 재요청 — TheoryScreen 패턴 적용
-  // 원인: loadProgrammingData()가 모든 언어를 한 번에 로드 → currentLanguage 변경 시 필터링 안됨
-  // 해결: currentLanguage 변경 시 해당 언어만 fetchProgrammingCards() 호출
+  // DEBUG: [수정50 2026-06-11] AJAX 로딩 UX 개선 — TheoryScreen과 동일 패턴
+  // 원인: lang !== undefined이면 isLoading=true → 언어 변경 시 전체 화면 로딩
+  // 해결: 이미 데이터가 있으면 무조건 isContentLoading=true (콘텐츠 영역만 로딩)
   const loadProgrammingData = async (lang?: string) => {
     if (!isMountedRef.current) return;
 
     const targetLang = lang || currentLanguage;
 
-    if (allCards.length > 0 && lang === undefined) {
+    // DEBUG: [수정50] TheoryScreen 패턴 적용 — 데이터 유무로만 판단
+    if (allCards.length > 0) {
       setIsContentLoading(true);
     } else {
       setIsLoading(true);

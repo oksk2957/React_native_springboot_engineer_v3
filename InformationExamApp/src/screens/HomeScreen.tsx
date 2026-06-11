@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   grassSection: {
-    padding: 20,
+    padding: 12,
     backgroundColor: '#fff',
     marginTop: 8,
   },
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
     color: '#2d3748',
   },
   menuSection: {
-    padding: 20,
+    padding: 12,
     marginTop: 8,
     backgroundColor: '#fff',
   },
@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   categorySection: {
-    padding: 20,
+    padding: 12,
     marginTop: 8,
     backgroundColor: '#fff',
   },
@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
   },
   categoryItem: {
     width: '48%',
-    backgroundColor: '#f4f7f6',
+    backgroundColor: '#c7e6ab',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
@@ -391,9 +391,9 @@ const styles = StyleSheet.create({
     color: '#2d3748',
   },
   noticeSection: {
-    padding: 20,
+    padding: 12,
     marginTop: 8,
-    marginBottom: 20,
+    marginBottom: 10,
     backgroundColor: '#fff',
   },
   noticeItem: {
