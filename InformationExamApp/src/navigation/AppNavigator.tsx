@@ -58,9 +58,13 @@ const MainTab = () => {
         name="Problem"
         component={ProblemScreen}
         options={{
-          title: '학습',
+          title: '전체 학습',
           tabBarIcon: ({ color, size }) => <BookOpen color={color} size={size} />,
         }}
+        // DEBUG: [수정41-2026-06-11] Problem 탭 기본 모드를 multiple(객관식 랜덤)로 설정
+        // 원인: 사용자가 탭 진입 시 자동으로 모든 객관식 랜덤 학습을 원함
+        // 해결: initialParams로 mode='multiple' 전달 → ProblemScreen에서 자동 시작
+        initialParams={{ mode: 'multiple' }}
       />
       <Tab.Screen
         name="Wrong"

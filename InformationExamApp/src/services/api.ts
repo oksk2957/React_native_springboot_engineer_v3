@@ -471,6 +471,16 @@ export const statisticsService = {
     });
     return response.data;
   },
+
+  // DEBUG: [수정42-2026-06-11] 로그인 기록 조회 — 미니달력(잔디) 표시용
+  // 백엔드: GET /statistics/login-calendar?year=2026&month=6
+  // 응답: ["2026-06-01", "2026-06-03", "2026-06-05", ...]
+  getLoginCalendar: async (year: number, month: number): Promise<string[]> => {
+    const response = await api.get('/statistics/login-calendar', {
+      params: { year, month },
+    });
+    return response.data;
+  },
 };
 
 export default api;
