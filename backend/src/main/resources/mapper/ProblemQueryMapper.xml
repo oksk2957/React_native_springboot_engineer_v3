@@ -177,7 +177,8 @@
             sp.option3,
             sp.option4,
             sp.option5,
-            s.name AS category
+            s.name AS category,
+            sp.question_text AS question_text
         FROM subjective_problems sp
         INNER JOIN subject s ON sp.subject_id = s.id
         WHERE s.name = #{category}
@@ -197,7 +198,8 @@
             NULL AS option3,
             NULL AS option4,
             NULL AS option5,
-            s.name AS category
+            s.name AS category,
+            NULL AS question_text
         FROM learning_card lc
         INNER JOIN subject s ON lc.subject_id = s.id
         WHERE s.name = #{category}
@@ -223,7 +225,8 @@
                 WHEN LOWER(pp.prog_language) = 'java' THEN 'Java'
                 WHEN LOWER(pp.prog_language) = 'python' THEN 'Python'
                 ELSE '프로그래밍언어'
-            END AS category
+            END AS category,
+            NULL AS question_text
         FROM programming_language_problems pp
         WHERE
             (#{category} = &apos;프로그래밍언어&apos;)
@@ -244,7 +247,8 @@
             p.option3,
             p.option4,
             p.option5,
-            s.name AS category
+            s.name AS category,
+            NULL AS question_text
         FROM problem p
         INNER JOIN subject s ON p.subject_id = s.id
         WHERE s.name = #{category}
@@ -486,6 +490,7 @@
     <!-- DEBUG: [2026-06-11 수정41] ProgrammingScreen 플래시카드 데이터 파이프라인 수정 -->
     <!-- 기존: programming_language_problems만 조회 → 모든 행이 option1 있음 → SUBJECTIVE만 반환 -->
     <!-- 수정: learning_card 테이블에서 프로그래밍 언어 FLASHCARD도 함께 조회 -->
+    <!-- DEBUG: [2026-06-11 수정52] question_text 컬럼 추가 → 2~3줄 상세 지문 + 빈칸(_____) 형식 -->
     <select id="selectProgrammingCardsByLanguage" resultType="map">
         SELECT
             id,
@@ -501,7 +506,8 @@
                 WHEN LOWER(prog_language) = 'python' THEN 'Python'
                 ELSE prog_language
             END AS category,
-            difficulty
+            difficulty,
+            question_text
         FROM programming_language_problems
         WHERE
             (#{language} = '공통개념')
@@ -513,8 +519,6 @@
         UNION ALL
 
         -- DEBUG: [수정41 2026-06-11] learning_card에서 프로그래밍언어 FLASHCARD 전체 조회
-        -- 원인: LIKE 기반 언어 필터가 너무 strict하여 0건 반환
-        -- 해결: subject.name='프로그래밍언어'만 필터, category는 CASE로 계산
         SELECT
             lc.id,
             'FLASHCARD' AS card_type,
@@ -529,7 +533,8 @@
                 WHEN LOWER(lc.front_text) LIKE '%python%' OR LOWER(lc.back_text) LIKE '%python%' THEN 'Python'
                 ELSE '공통개념'
             END AS category,
-            0 AS difficulty
+            0 AS difficulty,
+            NULL AS question_text
         FROM learning_card lc
         INNER JOIN subject s ON lc.subject_id = s.id
         WHERE s.name = '프로그래밍언어'

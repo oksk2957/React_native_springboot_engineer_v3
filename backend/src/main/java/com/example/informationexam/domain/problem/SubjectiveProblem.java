@@ -22,6 +22,10 @@ public class SubjectiveProblem {
     @Column(nullable = false, length = 1000)
     private String question;
 
+    // DEBUG: [수정52 2026-06-11] 실제 시험지 스타일 상세 지문 (2~3줄 + 빈칸)
+    @Column(name = "question_text", length = 3000)
+    private String questionText;
+
     @Column(nullable = false, length = 500)
     private String answer;
 
@@ -55,11 +59,12 @@ public class SubjectiveProblem {
     private LocalDateTime updatedAt;
 
     @Builder
-    public SubjectiveProblem(Subject subject, String question, String answer, String explanation,
+    public SubjectiveProblem(Subject subject, String question, String questionText, String answer, String explanation,
                               int difficulty, boolean isAiGenerated,
                               String option1, String option2, String option3, String option4, String option5) {
         this.subject = subject;
         this.question = question;
+        this.questionText = questionText;
         this.answer = answer;
         this.explanation = explanation;
         this.difficulty = difficulty;

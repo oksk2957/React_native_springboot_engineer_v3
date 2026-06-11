@@ -1,4 +1,4 @@
-# Plan Index (v93 — 2026-06-10 수정계획안20 ✅ 완료)
+# Plan Index (v94 — 2026-06-11 5-Step Memory 정리 완료)
 
 **구조**: 개별 .md 파일 → archive/로 이동. 잔존 항목은 이 MEMORY.md에서만 추적.
 
@@ -6,8 +6,12 @@
 
 **plan_미완료 폴더 비어 있음 — 모든 항목 완료 또는 archive 이동**
 
-## 🟡 기타 잔존
+## 🟡 기타 잔존 (project_프로젝트/ 폴더에서 추적)
 - **wrong_answer_count FK 누락 (P1)**: `../project_프로젝트/project-wrong-answer-count-fk-missing-2026-06-10.md`
+
+## ✅ 최근 완료 (v94 — 5-Step Memory 정리 2026-06-11)
+- **진흙 2개 → archive 이동**: `2026-06-10_5step-memory-cleanup.md`, `2026-06-11_우선순위_수정계획안.md`
+- 판정 근거: 과거 정리 작업의 완료 기록(로그), 역할 종료
 
 ## ✅ 최근 완료 (v93 — 수정24 코드탭 SQL 완료)
 - **수정계획안20 → archive/completed**: DDL 블로커 해결 (migration 005 적용됨), SQL 실제 컬럼 참조 + card_type 동적 판별 완료 (ProblemQueryMapper.xml:474-489)

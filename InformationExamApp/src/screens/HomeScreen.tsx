@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   grassSection: {
     padding: 12,
     backgroundColor: '#fff',
-    marginTop: 8,
+    marginTop: 0,
   },
   // DEBUG: [수정42-2026-06-11] UX 개선 — 블록 크기 증가로 날짜 표시 + 범례 추가
   grassGrid: {
@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
   },
   categoryItem: {
     width: '48%',
-    backgroundColor: '#c7e6ab',
+    backgroundColor: '#d8e6bf',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',

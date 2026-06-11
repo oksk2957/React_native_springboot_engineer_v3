@@ -316,11 +316,38 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.warn('[AuthStore] Supabase signOut 경고:', error.message);
+        // DEBUG: [수정52-2026-06-11] signOut 실패 시 Web localStorage 직접 정리
+        // 원인: signOut 실패 시 localStorage에 Supabase 세션 잔여 → 앱 재시작 시 자동 재로그인
+        // 해결: Web 환경에서 localStorage 직접 제거
+        if (Platform.OS === 'web') {
+          try {
+            Object.keys(localStorage).forEach(key => {
+              if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
+                localStorage.removeItem(key);
+                console.log('[AuthStore] localStorage Supabase 세션 직접 제거:', key);
+              }
+            });
+          } catch (storageError: any) {
+            console.warn('[AuthStore] localStorage 정리 실패 (무시):', storageError.message);
+          }
+        }
       } else {
         console.log('[AuthStore] Supabase 세션 해제 완료');
       }
     } catch (e: any) {
       console.warn('[AuthStore] Supabase signOut 예외 (무시):', e.message);
+      // DEBUG: [수정52-2026-06-11] 예외 발생 시에도 Web localStorage 정리
+      if (Platform.OS === 'web') {
+        try {
+          Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
+              localStorage.removeItem(key);
+            }
+          });
+        } catch (storageError) {
+          // 무시
+        }
+      }
     }
 
     // DEBUG: [수정26-2026-06-10] 로그아웃 완료 플래그 해제

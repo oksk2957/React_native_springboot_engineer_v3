@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "command": "bunx cowsay -f cat \"완료냥~\" 2>/dev/null"
+      }
+    ]
+  }
+}

@@ -347,19 +347,21 @@ export default function ProgrammingScreen() {
                                 )}
                               </View>
                             ) : (
-                              <View style={styles.cardContent}>
-                                <Text style={styles.hintTitle}>문제</Text>
-                                <Text style={[styles.definitionText, isDark && styles.textWhite]}>{currentCard.frontText}</Text>
+                              <View style={[styles.cardContent, isDark && styles.cardContentDark]}>
+                                <Text style={[styles.hintTitle, isDark && styles.hintTitleDark]}>문제</Text>
+                                <Text style={[styles.definitionText, isDark && styles.definitionTextDark]}>
+                                  {currentCard.questionText || currentCard.frontText}
+                                </Text>
                               </View>
                             )}
-                            <Text style={styles.flipGuide}>탭하여 뒤집기 🔄</Text>
+                            <Text style={[styles.flipGuide, isDark && styles.flipGuideDark]}>탭하여 뒤집기 🔄</Text>
                           </TouchableOpacity>
                         ) : (
                           // 주관식 퀴즈 (TheoryScreen과 동일 - 5개 보기 선택)
                           <View style={[styles.subjectiveCard, isDark && styles.flashCardDark]}>
-                            <Text style={styles.hintTitle}>문제</Text>
-                            <View style={styles.definitionBox}>
-                              <Text style={[styles.definitionText, isDark && styles.textWhite]}>{currentCard.frontText}</Text>
+                            <Text style={[styles.hintTitle, isDark && styles.hintTitleDark]}>문제</Text>
+                            <View style={[styles.definitionBox, isDark && styles.definitionBoxDark]}>
+                              <Text style={[styles.definitionText, isDark && styles.definitionTextDark]}>{currentCard.frontText}</Text>
                             </View>
 
                             {/* DEBUG: [2026-06-09] 5개 보기 버튼 (TheoryScreen 패턴) */}
@@ -688,7 +690,8 @@ const styles = StyleSheet.create({
     minHeight: 450,
     backgroundColor: '#fff',
     borderRadius: 25,
-    padding: 24,
+    //카드안에문제패딩css부분
+    padding: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.1,
@@ -726,7 +729,7 @@ const styles = StyleSheet.create({
   },
   definitionBox: {
     backgroundColor: '#f1f5f9',
-    padding: 20,
+    padding: 10,
     borderRadius: 15,
     marginBottom: 20,
   },
@@ -749,6 +752,22 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#94a3b8',
   },
+  // DEBUG: [2026-06-11] 수정50 - 코드탭 크모드 문제 텍스트 가독성 수정
+  cardContentDark: {
+    backgroundColor: '#2a2a2a',
+  },
+  hintTitleDark: {
+    color: '#b0b0b0',
+  },
+  definitionTextDark: {
+    color: '#e8e8e8',
+  },
+  definitionBoxDark: {
+    backgroundColor: '#2a2a2a',
+  },
+  flipGuideDark: {
+    color: '#b0b0b0',
+  },
   optionsContainer: {
     marginTop: 20,
     width: '100%',
@@ -770,6 +789,7 @@ const styles = StyleSheet.create({
   optionButtonSelected: {
     borderWidth: 2,
     backgroundColor: 'rgba(74, 144, 226, 0.1)',
+    borderColor: '#e2e8f0',
   },
   optionButtonCorrect: {
     backgroundColor: 'rgba(72, 187, 120, 0.2)',

@@ -74,6 +74,9 @@ export default function TheoryScreen() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
 
+  // DEBUG: [수정52 2026-06-11] 해설 확장/축소 상태 — 정답(1줄) + 해설(2줄) 확장 가능 구조
+  const [explanationExpanded, setExplanationExpanded] = useState(false);
+
   const isDark = darkMode;
   const themeColor = categoryColors[currentCategory] || '#4a90e2';
 
@@ -202,8 +205,8 @@ export default function TheoryScreen() {
     setIsFlipped(false);
     setShowAnswer(false);
     setAnswer('');
-    // DEBUG: [주관식 보기] 다음 문제로 이동 시 선택 상태 초기화
     setSelectedOption(null);
+    setExplanationExpanded(false); // DEBUG: [수정52] 다음 문제 이동 시 해설 확장 상태 초기화
   };
 
   const handlePrev = () => {
@@ -212,8 +215,8 @@ export default function TheoryScreen() {
     setIsFlipped(false);
     setShowAnswer(false);
     setAnswer('');
-    // DEBUG: [주관식 보기] 이전 문제로 이동 시 선택 상태 초기화
     setSelectedOption(null);
+    setExplanationExpanded(false); // DEBUG: [수정52] 이전 문제 이동 시 해설 확장 상태 초기화
   };
 
   // DEBUG: [오답 서버 저장] 주관식 오답을 wrong_answer_bookmark에 저장
@@ -373,16 +376,24 @@ export default function TheoryScreen() {
                       <View style={[styles.subjectiveCard, isDark && styles.flashCardDark]}>
                         <Text style={styles.hintTitle}>문제</Text>
                         <View style={styles.definitionBox}>
-                          {/* frontText 카멜케이스 사용 */}
-                          <Text style={[styles.definitionText, isDark && styles.textWhite]}>{currentCard.frontText}</Text>
+                          {/* DEBUG: [수정50-다크모드] definitionBox 배경은 밝은색 유지 → textWhite 제거하여 가독성 확보
+                          // 원인: definitionBox(배경 #f1f5f9) + textWhite(텍스트 #fff) = 흰 배경에 흰 글씨로 문제 미표시
+                          // 해결: isDark && styles.textWhite 제거, definitionText 기본 색상(#334155)으로 정상 표시 */}
+                          {/* DEBUG: [수정52 2026-06-11] 상세 지문 표시 — questionText 우선, 없으면 frontText fallback
+                          // 원인: 실제 시험지 스타일 2~3줄 지문 + 빈칸(    ) 형태로 변경
+                          // 해결: card.questionText 있으면 상세 지문, 없으면 기존 frontText 사용 */}
+                          <Text style={styles.definitionText}>{currentCard.questionText || currentCard.frontText}</Text>
                         </View>
 
                         {/* DEBUG: [주관식 보기] TextInput을 5개 보기 버튼으로 변경 */}
                         {/* 원인: 사용자가 TextInput 대신 5개 보기 버튼 형태로 변경 요청 */}
                         {/* 해결: options가 있으면 보기 버튼 표시, 없으면 기존 TextInput 유지 */}
+                        {/* DEBUG: [수정52 2026-06-11] 4지선다 — 5개 보기를 4개로 변경
+                        // 원인: 실제 시험지 스타일 1~4지선다 요청
+                        // 해결: shuffledOptions.slice(0, 4)로 최대 4개만 표시 */}
                         {shuffledOptions.length > 0 ? (
                           <View style={styles.optionsContainer}>
-                            {shuffledOptions.map((option, index) => {
+                            {shuffledOptions.slice(0, 4).map((option, index) => {
                               const isSelected = selectedOption === option;
                               const isCorrect = option.toLowerCase() === (currentCard.backText || '').toLowerCase();
                               const showResult = showAnswer;
@@ -454,12 +465,30 @@ export default function TheoryScreen() {
                           </TouchableOpacity>
                         )}
 
+                        {/* DEBUG: [수정52 2026-06-11] 정답/해설 표시 — 접이식 제거, 항상 표시 + 해설 확장/축소
+                        // 원인: 오답 시 정답(1줄) + 해설(2줄) 구조, 해설은 확장성 고려
+                        // 해결: showAnswer일 때 정답 항상 표시, 해설은 explanationExpanded 상태로 토글 */}
                         {showAnswer && (
                           <View style={styles.answerResult}>
-                            {/* backText 카멜케이스 사용 */}
-                            <Text style={[styles.answerLabel, { color: themeColor }]}>정답: {currentCard.backText}</Text>
+                            <Text style={[styles.answerLabel, { color: themeColor }]}>
+                              정답: {currentCard.backText}
+                            </Text>
                             {currentCard.explanation && (
-                              <Text style={[styles.resultExplanationText, isDark && styles.textWhite]}>{currentCard.explanation}</Text>
+                              <>
+                                <TouchableOpacity
+                                  onPress={() => setExplanationExpanded(!explanationExpanded)}
+                                  style={styles.explanationToggle}
+                                >
+                                  <Text style={[styles.explanationToggleText, isDark && styles.textWhite]}>
+                                    {explanationExpanded ? '해설 숨기기 ▲' : '해설 보기 ▼'}
+                                  </Text>
+                                </TouchableOpacity>
+                                {explanationExpanded && (
+                                  <Text style={[styles.resultExplanationText, isDark && styles.textWhite]}>
+                                    {currentCard.explanation}
+                                  </Text>
+                                )}
+                              </>
                             )}
                           </View>
                         )}
@@ -564,13 +593,14 @@ const styles = StyleSheet.create({
   flashCardDark: { backgroundColor: '#222', borderColor: '#333' },
   cardContent: { alignItems: 'center' },
   hintTitle: { fontSize: 12, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10 },
+  hintTitleDark: { color: '#94a3b8' }, // DEBUG: [수정50-다크모드] 다크모드에서도 동일한 색상 사용 (밝은 배경 위에서 가독성 확보)
   termTitle: { fontSize: 12, fontWeight: 'bold', marginBottom: 10 },
   termText: { fontSize: 32, fontWeight: 'bold', color: '#1e293b', textAlign: 'center' },
   explanationBox: { marginTop: 20, paddingTop: 20, borderTopWidth: 1, borderTopColor: '#e2e8f0', width: '100%' },
   explanationText: { fontSize: 16, color: '#64748b', textAlign: 'center', lineHeight: 24 },
   definitionText: { fontSize: 18, color: '#334155', textAlign: 'center', lineHeight: 28 },
   flipGuide: { position: 'absolute', bottom: 20, fontSize: 12, color: '#94a3b8' },
-  subjectiveCard: { width: '100%', minHeight: 450, backgroundColor: '#fff', borderRadius: 25, padding: 24 },
+  subjectiveCard: { width: '100%', minHeight: 450, backgroundColor: '#fff', borderRadius: 25, padding: 10 },
   definitionBox: { backgroundColor: '#f1f5f9', padding: 20, borderRadius: 15, marginBottom: 20 },
   answerInput: { backgroundColor: '#f8fafc', borderWidth: 1, borderColor: '#e2e8f0', borderRadius: 15, padding: 16, fontSize: 16, marginBottom: 16 },
   inputDark: { backgroundColor: '#333', borderColor: '#444', color: '#fff' },

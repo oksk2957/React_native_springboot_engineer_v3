@@ -13,12 +13,15 @@
       "command": "cmd",
       "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-github"],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "sbp_26e0c181a5da0a1699695c5799db510fe6b161f3"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "sbp_0901573c67034441b14f7c0c1d63010c564b0c48"
       }
     },
     "supabase": {
       "command": "cmd",
-      "args": ["/c", "npx", "-y", "@supabase/mcp-server-supabase@latest", "--project-ref", "gmhznnwecujoafdisscl"]
+      "args": ["/c", "npx", "-y", "@supabase/mcp-server-supabase@latest", "--project-ref", "gmhznnwecujoafdisscl"],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_0901573c67034441b14f7c0c1d63010c564b0c48"
+      }
     }
   }
 }

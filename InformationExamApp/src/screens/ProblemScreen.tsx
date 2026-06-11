@@ -406,11 +406,18 @@ export default function ProblemScreen() {
                 styles.optionButton,
                 isDark && styles.optionButtonDark,
                 selectedAnswer === option && styles.optionSelected,
+                selectedAnswer === option && isDark && styles.optionSelectedDark,
                 showResult && currentProblem.correctAnswer === option && styles.optionCorrect,
+                showResult && currentProblem.correctAnswer === option && isDark && styles.optionCorrectDark,
                 showResult &&
                   selectedAnswer === option &&
                   selectedAnswer !== currentProblem.correctAnswer &&
                   styles.optionWrong,
+                showResult &&
+                  selectedAnswer === option &&
+                  selectedAnswer !== currentProblem.correctAnswer &&
+                  isDark &&
+                  styles.optionWrongDark,
               ]}
               onPress={() => !showResult && !isNavLoading && setSelectedAnswer(option)}
               disabled={showResult || isNavLoading}
@@ -669,6 +676,24 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   optionTextDark: {
+    color: '#fff',
+  },
+  optionSelectedDark: {
+    backgroundColor: '#1a3a5c',
+    borderColor: '#4a90e2',
+  },
+  optionCorrectDark: {
+    backgroundColor: '#1a3a2a',
+    borderColor: '#38a169',
+  },
+  optionWrongDark: {
+    backgroundColor: '#3a1a1a',
+    borderColor: '#e53e3e',
+  },
+  optionLabelSelectedDark: {
+    color: '#fff',
+  },
+  optionTextSelectedDark: {
     color: '#fff',
   },
 });

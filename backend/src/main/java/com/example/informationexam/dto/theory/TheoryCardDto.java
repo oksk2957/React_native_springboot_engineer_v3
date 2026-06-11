@@ -22,6 +22,9 @@ public class TheoryCardDto {
     private String cardType;       // "SUBJECTIVE" or "FLASHCARD"
     private String frontText;
     private String backText;
+
+    // DEBUG: [수정52 2026-06-11] 실제 시험지 스타일 상세 지문 (2~3줄 + 빈칸)
+    private String questionText;
     private String explanation;
     private Integer difficulty;    // null 허용 (플래시카드는 0)
 
@@ -43,6 +46,7 @@ public class TheoryCardDto {
         dto.cardType = (String) map.get("card_type");
         dto.frontText = (String) map.get("front_text");
         dto.backText = (String) map.get("back_text");
+        dto.questionText = (String) map.get("question_text"); // DEBUG: [수정52] 상세 지문
         dto.explanation = (String) map.get("explanation");
         dto.difficulty = map.get("difficulty") != null ? ((Number) map.get("difficulty")).intValue() : null;
         dto.category = (String) map.get("category");
